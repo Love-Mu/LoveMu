@@ -8,8 +8,10 @@ router.get('/', (req, res) => {
   res.redirect('/api');
 });
 
-router.get('/api/spotifyAuth', spotify.spotifyAuth);
+router.get('/api/spotify/auth', spotify.Auth);
 
-router.get('/api/spotifyCallback', spotify.spotifyCallback);
+router.get('/api/spotify/callback', spotify.Callback);
+
+router.get('/api/spotify/refresh', spotify.Refresh);
 
 module.exports = router;
