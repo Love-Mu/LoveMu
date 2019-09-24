@@ -38,6 +38,12 @@ exports.spotifyCallback = (req, res) => {
 
     request.get(options, (error, response, body) => {
       console.log(body);
-    })
+    });
+
+    res.redirect('/#' +
+      queryString.stringify({
+        access_token: access_token,
+        refresh_token: refresh_token
+      }));
   });
 };
