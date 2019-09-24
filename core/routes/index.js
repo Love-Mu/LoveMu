@@ -10,4 +10,6 @@ router.get('/', (req, res) => {
 
 router.get('/api/spotifyAuth', spotify.spotifyAuth);
 
+router.get('/api/spotifyCallback', spotify.spotifyCallback);
+
 module.exports = router;

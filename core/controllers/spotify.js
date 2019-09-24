@@ -1,18 +1,13 @@
 const request = require('request');
 const queryString = require('query-string');
+const Buffer = require('safer-buffer').Buffer;
 
 const clientId = '7cf1414999bf4006b28cb368b2d45693';
 const sClientId = process.env.SECRET;
-const redirectUri = 'http://lovemu.compsoc.ie:8001/api/spotifyAuthCallback';
+const redirectUri = 'http://lovemu.compsoc.ie:8001/api/spotifyCallback';
 
 exports.spotifyAuth = (req, res) => {
-  const scope = 'user-library-read';
-  res.redirect(`https://accounts.spotify.com/authorize?${queryString.stringify({
-    response_type: 'code',
-    client_id: clientId,
-    scope,
-    redirect_uri: redirectUri,
-  })}`);
+  res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`);
 };
 
 exports.spotifyCallback = (req, res) => {
@@ -24,7 +19,7 @@ exports.spotifyCallback = (req, res) => {
       redirect_uri: redirectUri,
     },
     headers: {
-      'Authorization': 'Basic ' + clientId + ':' + sClientId,
+      'Authorization': 'Basic ' + (Buffer.from(clientId + ':' + sClientId)).toString('base64'),
     },
     json: true,
   };
@@ -35,7 +30,9 @@ exports.spotifyCallback = (req, res) => {
 
     const options = {
       url: 'https://api.spotify.com/v1/me',
-      headers: {'Authorization': 'Bearer ' + accessToken},
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      },
       json: true,
     };
 

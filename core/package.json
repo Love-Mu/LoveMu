@@ -12,7 +12,8 @@
     "express": "~4.16.1",
     "morgan": "~1.9.1",
     "query-string": "^6.8.3",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "safer-buffer": "^2.1.2"
   },
   "devDependencies": {
     "eslint": "^6.4.0",
