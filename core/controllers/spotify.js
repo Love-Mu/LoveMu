@@ -7,7 +7,7 @@ const sClientId = process.env.SECRET;
 const redirectUri = 'http://lovemu.compsoc.ie:8001/api/spotify/callback';
 
 exports.Auth = (req, res) => {
-  const scope = 'user-top-read'
+  const scope = 'user-top-read';
   res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`);
 };
 
