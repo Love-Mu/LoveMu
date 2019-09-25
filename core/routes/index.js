@@ -4,9 +4,7 @@ const spotify = require('../controllers/spotify');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.redirect('/api');
-});
+router.get('/api/spotify/userProfile', spotify.UserProfile);
 
 router.get('/api/spotify/auth', spotify.Auth);
 
