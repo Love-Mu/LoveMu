@@ -12,4 +12,6 @@ router.get('/api/spotify/callback', spotify.Callback);
 
 router.get('/api/spotify/refresh', spotify.Refresh);
 
+router.get('/api/spotify/refresh', spotify.RetrieveArtists);
+
 module.exports = router;

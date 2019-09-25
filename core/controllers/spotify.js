@@ -7,7 +7,8 @@ const sClientId = process.env.SECRET;
 const redirectUri = 'http://lovemu.compsoc.ie:8001/api/spotify/callback';
 
 exports.Auth = (req, res) => {
-  res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`);
+  const scope = 'user-top-read'
+  res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`);
 };
 
 exports.Callback = (req, res) => {
@@ -29,22 +30,16 @@ exports.Callback = (req, res) => {
     const refreshToken = body.refresh_token;
 
     const options = {
-      url: 'https://api.spotify.com/v1/me',
+      url: 'https://api.spotify.com/v1/me/top/artists',
       headers: {
-        'Authorization': 'Bearer ' + accessToken
+        'Authorization': 'Bearer ' + accessToken,
       },
       json: true,
     };
 
     request.get(options, (error, response, body) => {
-      console.log(body);
+      res.json(body);
     });
-
-    res.redirect('/#' +
-      queryString.stringify({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      }));
   });
 };
 
@@ -63,13 +58,23 @@ exports.Refresh = (req, res) => {
   };
 
   request.post(authOptions, (err, response, body) => {
-    if (!error && response.statusCode === 200) {
+    if (!err && response.statusCode === 200) {
       const accessToken = body.access_token;
-      res.send({
-        'access_token': accessToken,
-      });
+      res.send(accessToken);
     }
   });
+};
 
-  res.redirect('/');
+exports.retrieveArtists = (req, res) => {
+  const options = {
+    url: `https://api.spotify.com/v1/users/${req.id}/top/artists`,
+    headers: {
+      'Authorization': 'Basic ' + req.accessToken,
+    },
+    artists: 50,
+    json: true
+  };
+  request.get(options, (err, response, body) => {
+    console.log(body);
+  });
 };
