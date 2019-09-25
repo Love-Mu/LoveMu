@@ -30,7 +30,7 @@ exports.Callback = (req, res) => {
     const refreshToken = body.refresh_token;
 
     const options = {
-      url: 'https://api.spotify.com/v1/me/top/artists',
+      url: 'https://api.spotify.com/v1/me/',
       headers: {
         'Authorization': 'Bearer ' + accessToken,
       },
@@ -38,7 +38,8 @@ exports.Callback = (req, res) => {
     };
 
     request.get(options, (error, response, body) => {
-      res.json(body);
+      console.log(body);
+      res.redirect(`/api/spotify/retrieveArtists?options`);
     });
   });
 };
@@ -65,16 +66,16 @@ exports.Refresh = (req, res) => {
   });
 };
 
-exports.retrieveArtists = (req, res) => {
+exports.RetrieveArtists = (req, res) => {
   const options = {
-    url: `https://api.spotify.com/v1/users/${req.id}/top/artists`,
+    url: `https://api.spotify.com/v1/me/top/artists`,
     headers: {
-      'Authorization': 'Basic ' + req.accessToken,
+      'Authorization': 'Bearer ' +  req.accessToken,
     },
     artists: 50,
-    json: true
+    json: true,
   };
   request.get(options, (err, response, body) => {
-    console.log(body);
+    res.json(body);
   });
 };
