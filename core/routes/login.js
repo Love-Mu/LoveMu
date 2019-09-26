@@ -7,3 +7,5 @@ const router = express.Router();
 router.post('/', login.LogIn);
 
 router.post('/register', login.Register);
+
+module.exports = router;
