@@ -24,7 +24,7 @@ exports.Register = (req, res) => {
       throw err;
     }
     if (user) {
-      res.json({ message: 'Email already in use' });
+      await res.json({message: 'Email already in use' });
     } else {
       const usr = new User();
       usr.fName = req.body.fName;
@@ -33,6 +33,7 @@ exports.Register = (req, res) => {
       usr.password = await usr.generateHash(req.body.password, crypto.randomBytes(32));
       usr.email = req.body.email;
       usr.save();
+      res.json({ message: 'Success!' });
     }
   });
 };

@@ -9,6 +9,7 @@ const UserSchema = new Schema({
   sName: String,
   dob: Date,
   password: String,
+  accessToken: String,
   refreshToken: String,
 });
 

@@ -25,7 +25,7 @@ exports.Callback = (req, res) => {
     json: true,
   };
 
-  request.post(authOptions, (error, response, body) => {
+  /* request.post(authOptions, (error, response, body) => {
     const accessToken = body.access_token;
     const refreshToken = body.refresh_token;
 
@@ -35,11 +35,7 @@ exports.Callback = (req, res) => {
         'Authorization': 'Bearer ' + accessToken,
       },
       json: true,
-    };
-
-    request.get(options, (error, response, body) => {
-      res.json(body);
-    });
+    }; */
   });
 };
 
