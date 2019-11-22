@@ -3,8 +3,8 @@ const queryString = require('query-string');
 const Buffer = require('safer-buffer').Buffer;
 
 const clientId = '7cf1414999bf4006b28cb368b2d45693';
-const sClientId = process.env.SECRET;
-const redirectUri = 'http://lovemu.compsoc.ie:8001/api/spotify/callback';
+const sClientId = process.env.spotifySecret;
+const redirectUri = 'http://localhost:3000/spotify/callback';
 
 exports.Auth = (req, res) => {
   const scope = 'user-top-read';
@@ -25,7 +25,7 @@ exports.Callback = (req, res) => {
     json: true,
   };
 
-  request.post(authOptions, (error, response, body) => {
+  /* request.post(authOptions, (error, response, body) => {
     const accessToken = body.access_token;
     const refreshToken = body.refresh_token;
 
@@ -35,11 +35,7 @@ exports.Callback = (req, res) => {
         'Authorization': 'Bearer ' + accessToken,
       },
       json: true,
-    };
-
-    request.get(options, (error, response, body) => {
-      res.json(body);
-    });
+    }; */
   });
 };
 
