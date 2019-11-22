@@ -2,17 +2,19 @@ const crypto = require('crypto');
 const User = require('../models/User');
 
 exports.Login = (req, res) => {
-  User.findOne({ email: req.body.email }).exec((err, user) => {
+  User.findOne({ email: req.body.email }).then(async (err, user) => {
     if (err) {
       throw err;
     }
     if (!user) {
-      res.json({ message: 'No account exists associated with this email' });
+      await res.json({message: 'No account exists associated with this email'});
     }
-    if (!user.comparePassword(req.body.password)) {
-      res.json({ message: 'Password is incorrect' });
+    const test = await user.comparePassword(req.body.password);
+    if (test) {
+      await res.json({ message: 'Successful Login' });
+    } else {
+      await res.json({ message: 'Incorrect Password' });
     }
-    console.log('Login Successful!');
   });
 };
 
