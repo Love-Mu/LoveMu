@@ -1,5 +1,4 @@
 const request = require('request');
-const queryString = require('query-string');
 const Buffer = require('safer-buffer').Buffer;
 
 const clientId = '7cf1414999bf4006b28cb368b2d45693';
