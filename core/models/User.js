@@ -22,7 +22,7 @@ UserSchema.methods.comparePassword = function (candidatePassword, next) {
     if (err) {
       return next(err);
     }
-    return next(null, isMatch);
+    next(null, isMatch);
   });
 };
 
