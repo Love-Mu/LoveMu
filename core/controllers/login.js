@@ -1,6 +1,24 @@
-const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
+
+exports.checkToken = (req, res, next) => {
+  let token = req.headers['x-access-token'] || req.headers.authorization;
+  if (token.startsWith('Bearer ')) {
+    token = token.slice(7, token.length);
+  }
+  if (token) {
+    jwt.verify(token, process.env.secret, (err, decoded) => {
+      if (err) {
+        return res.json({ success: false, message: 'Invalid Token' });
+      }
+      req.decoded = decoded;
+      next();
+    });
+  } else {
+    return res.json({ success: false, message: 'No Authorization Token Provided' });
+  }
+};
 
 exports.Login = (req, res) => {
   User.findOne({ email: req.body.email }).then((user) => {
@@ -8,15 +26,14 @@ exports.Login = (req, res) => {
       res.json({ message: 'No account exists associated with this email' });
       return;
     }
-    bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      if (isMatch) {
-        res.json({ message: 'Successful Login' });
+    user.comparePassword(req.body.password, (err, result) => {
+      if (result) {
+        const token = jwt.sign({ username: req.body.username },
+          process.env.secret,
+          { expiresIn: '24h' });
+        res.json({ success: true, message: 'Authentication Successful', token });
       } else {
-        res.json({ message: 'Incorrect Password' });
+        res.send(400).json( { success: false, message: 'Authentication Failed!' } );
       }
     });
   }).catch((err) => console.log(err));

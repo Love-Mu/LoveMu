@@ -8,7 +8,7 @@ const logger = require('morgan');
 const spotifyRouter = require('./routes/spotify');
 const loginRouter = require('./routes/login');
 
-const mongoURL = `mongodb://${process.env.dbUser}:${process.env.dbPass}@danu7.it.nuigalway.ie:8717/${process.env.DB}`; // Complete db URL (...)
+const mongoURL = `mongodb://${process.env.dbUser}:${process.env.dbPass}@danu7.it.nuigalway.ie:8717/${process.env.DB}`;
 
 mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
