@@ -27,12 +27,13 @@
     "passport-local": "^1.0.0",
     "query-string": "^6.8.3",
     "request": "^2.88.0",
-    "safer-buffer": "^2.1.2"
+    "safer-buffer": "^2.1.2",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "nodemon": "^1.19.2"
+    "nodemon": "^1.19.4"
   }
 }

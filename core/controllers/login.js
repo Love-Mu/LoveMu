@@ -1,39 +1,42 @@
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+
 const User = require('../models/User');
 
 exports.Login = (req, res) => {
-  User.findOne({ email: req.body.email }).then(async (err, user) => {
-    if (err) {
-      throw err;
-    }
+  User.findOne({ email: req.body.email }).then((user) => {
     if (!user) {
-      await res.json({message: 'No account exists associated with this email'});
+      res.json({ message: 'No account exists associated with this email' });
+      return;
     }
-    const test = await user.comparePassword(req.body.password);
-    if (test) {
-      await res.json({ message: 'Successful Login' });
-    } else {
-      await res.json({ message: 'Incorrect Password' });
-    }
-  });
+    bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      if (isMatch) {
+        res.json({ message: 'Successful Login' });
+      } else {
+        res.json({ message: 'Incorrect Password' });
+      }
+    });
+  }).catch((err) => console.log(err));
 };
 
 exports.Register = (req, res) => {
-  User.findOne({ email: req.body.email }).exec(async (err, user) => {
-    if (err) {
-      throw err;
-    }
+  User.findOne({ email: req.body.email }).then(async (user) => {
     if (user) {
-      await res.json({message: 'Email already in use' });
+      await res.json({ message: 'Email already in use' });
     } else {
-      const usr = new User();
-      usr.fName = req.body.fName;
-      usr.sName = req.body.sName;
-      usr.dob = req.body.dob;
-      usr.password = await usr.generateHash(req.body.password, crypto.randomBytes(32));
-      usr.email = req.body.email;
+      const usr = new User({
+        fName: req.body.fName,
+        sName: req.body.sName,
+        dob: req.body.dob,
+        email: req.body.email,
+      });
+      usr.password = await usr.generateHash(req.body.password);
+      console.log(usr);
       usr.save();
-      res.json({ message: 'Success!' });
+      await res.json({ message: 'Success!' });
     }
-  });
+  }).catch((err) => console.log(err));
 };
