@@ -35,8 +35,8 @@ exports.Callback = (req, res) => {
         'Authorization': 'Bearer ' + accessToken,
       },
       json: true,
-    }; */
-  });
+    };
+  }); */
 };
 
 exports.Refresh = (req, res) => {

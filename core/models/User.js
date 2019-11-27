@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { argon2i } = require('argon2-ffi');
+const bcrypt = require('bcrypt');
 
 const { Schema } = mongoose;
 
@@ -13,15 +13,6 @@ const UserSchema = new Schema({
   refreshToken: String,
 });
 
-UserSchema.methods.generateHash = (password, salt) => argon2i.hash(password, salt);
-
-UserSchema.methods.comparePassword = async (password) => {
-  return argon2i.verify(this.password, password, (err) => {
-    if (err) {
-      throw err;
-    }
-    return true;
-  });
-};
+UserSchema.methods.generateHash = async (password) => bcrypt.hash(password, 10);
 
 module.exports = mongoose.model('User', UserSchema);
