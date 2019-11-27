@@ -35,7 +35,6 @@ exports.Login = (req, res) => {
       } else {
         res.send(400).json( { success: false, message: 'Authentication Failed!' } );
       }
-      }
     });
   }).catch((err) => console.log(err));
 };
