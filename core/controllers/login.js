@@ -33,7 +33,7 @@ exports.Login = (req, res) => {
           { expiresIn: '24h' });
         res.json({ success: true, message: 'Authentication Successful', token });
       } else {
-        res.send(400).json( { success: false, message: 'Authentication Failed!' } );
+        res.sendStatus(400).json({ success: false, message: 'Authentication Failed!' });
       }
     });
   }).catch((err) => console.log(err));
