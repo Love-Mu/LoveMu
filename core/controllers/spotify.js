@@ -1,72 +1,46 @@
-const request = require('request');
+const clientId = process.env.clientID;
+const secretId = process.env.secretID;
+const redirectUri = 'http://localhost:8000/spotify/reqCallback';
+const scope = 'user-top-read';
 const Buffer = require('safer-buffer').Buffer;
 
-const clientId = '7cf1414999bf4006b28cb368b2d45693';
-const sClientId = process.env.spotifySecret;
-const redirectUri = 'http://localhost:3000/spotify/callback';
+/* We need to save the access and refresh tokens to each user
+  - The access token is used to make calls to the Spotify API and
+  retrieve the user's data
+  - The refresh token is used in the event of an access token expiring,
+  the token will be included in the request body (refreshToken route)
+  the new access token must be saved to User */
 
-exports.Auth = (req, res) => {
-  const scope = 'user-top-read';
-  res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`);
-};
+module.exports = {
+  requestAccess: (req, res, next) => {
+    res.redirect(`https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`);
+  },
 
-exports.Callback = (req, res) => {
-  const authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      grant_type: 'authorization_code',
-      code: req.query.code,
-      redirect_uri: redirectUri,
-    },
-    headers: {
-      'Authorization': 'Basic ' + (Buffer.from(clientId + ':' + sClientId)).toString('base64'),
-    },
-    json: true,
-  };
+  callbackAccess: (req, res, next) => {
+    const code = req.query.code || null;
 
-  /* request.post(authOptions, (error, response, body) => {
-    const accessToken = body.access_token;
-    const refreshToken = body.refresh_token;
-
-    const options = {
-      url: 'https://api.spotify.com/v1/me/top/artists',
+    const authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: code,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code',
+      },
       headers: {
-        'Authorization': 'Bearer ' + accessToken,
+        'Authorization': `Basic${
+          (Buffer.from(clientId + ':' + sClientId)).toString('base64')
+        }`,
       },
       json: true,
     };
-  }); */
-};
 
-exports.Refresh = (req, res) => {
-  const refreshToken = req.query.refresh_token;
-  const authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    headers: {
-      'Authorization': 'Basic ' + (Buffer.from(clientId + ':' + sClientId)).toString('base64'),
-    },
-    form: {
-      grantType: 'refresh_token',
-      refresh_token: refreshToken,
-    },
-    json: true,
-  };
+    request.post(authOptions, (err, response, body) => {
+      if (!err && response.status == 200) {
+        const accessToken = body.access_token;
+        const refreshToken = body.refresh_token;
 
-  request.post(authOptions, (err, response, body) => {
-    if (!err && response.statusCode === 200) {
-      const accessToken = body.access_token;
-      res.send(accessToken);
-    }
-  });
-};
-
-exports.RetrieveArtists = (req, res) => {
-  const options = {
-    url: `https://api.spotify.com/v1/me/top/artists`,
-    headers: {
-      'Authorization': 'Bearer ' + req.accessToken,
-    },
-    artists: 50,
-    json: true,
-  };
+        // Save tokens here
+      }
+    });
+  },
 };
