@@ -9,8 +9,10 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "mongoose": "^5.8.3",
     "morgan": "~1.9.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "serialize-javascript": ">=2.1.1"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

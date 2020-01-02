@@ -27,7 +27,7 @@ module.exports = {
         grant_type: 'authorization_code',
       },
       headers: {
-        'Authorization': `Basic${
+        'Authorization': `Basic ${
           (Buffer.from(clientId + ':' + sClientId)).toString('base64')
         }`,
       },
@@ -41,6 +41,43 @@ module.exports = {
 
         // Save tokens here
       }
+    });
+  },
+
+  refreshAccess: (req, res, next) => {
+    const requestToken = query.body.refresh_token;
+    const authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      headers: {'Authorization': `Basic ${
+        new Buffer(clientId + ':' + secretId).toString('base64')
+      }`},
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: refresh_token,
+      },
+      json: true,
+    };
+    request.post(authOptions, (error, response, body) => {
+      if (!error && response.status === 200) {
+        const accessToken = body.access_token;
+
+        // Save new access and refresh token here
+      }
+    });
+  },
+
+  retrieveArtists: (req, res, next) => {
+    const accessToken = req.accessToken;
+    const authOptions = {
+      url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
+      headers: {'Authorization': `Bearer ${accessToken}`},
+      json: true,
+    };
+    request.get(authOptions, (err, response, next) => {
+      res.json(response);
+      /* Need to save Artist data here
+      https://developer.spotify.com/documentation/web-api/reference/personalization/get-users-top-artists-and-tracks/
+      for response formmat */
     });
   },
 };
