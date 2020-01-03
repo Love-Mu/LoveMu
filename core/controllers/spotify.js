@@ -61,7 +61,7 @@ module.exports = {
       if (!error && response.status === 200) {
         const accessToken = body.access_token;
 
-        // Save new access and refresh token here
+        // Save new access token here
       }
     });
   },
@@ -73,6 +73,9 @@ module.exports = {
       headers: {'Authorization': `Bearer ${accessToken}`},
       json: true,
     };
+
+    request.get(`https://localhost:8000/spotify/refreshToken?request_token=${}`); // Need to insert current user's request token here
+
     request.get(authOptions, (err, response, next) => {
       res.json(response);
       /* Need to save Artist data here
