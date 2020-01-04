@@ -74,7 +74,7 @@ module.exports = {
       json: true,
     };
 
-    request.get(`https://localhost:8000/spotify/refreshToken?request_token=${}`); // Need to insert current user's request token here
+    request.get(`https://localhost:8000/spotify/refreshToken?request_token=`); // Need to insert current user's request token here
 
     request.get(authOptions, (err, response, next) => {
       res.json(response);

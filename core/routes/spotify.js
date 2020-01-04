@@ -1,5 +1,4 @@
 const express = require('express');
-const request = require('request');
 
 const Spotify = require('../controllers/spotify');
 
