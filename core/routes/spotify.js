@@ -1,15 +1,15 @@
 const express = require('express');
 
 const Spotify = require('../controllers/spotify');
-
+const Assets = require('../assets/sessionChecker');
 const router = express.Router();
 
-router.get('/reqAccess', Spotify.requestAccess);
+router.get('/reqAccess', Assets.checkSession, Spotify.requestAccess);
 
 router.get('/reqCallback', Spotify.callbackAccess);
 
-router.get('/refToken', Spotify.refreshAccess);
+router.get('/refToken', Assets.checkSession, Spotify.refreshAccess);
 
-router.get('/retArtists', Spotify.retrieveArtists);
+router.get('/retArtists', Assets.checkSession, Spotify.retrieveArtists);
 
 module.exports = router;
