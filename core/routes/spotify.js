@@ -1,7 +1,7 @@
 const express = require('express');
 
 const Spotify = require('../controllers/spotify');
-const Assets = require('../assets/sessionChecker');
+const Assets = require('../assets/miscAssets');
 const router = express.Router();
 
 router.get('/reqAccess', Assets.checkSession, Spotify.requestAccess);
