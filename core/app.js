@@ -29,7 +29,4 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-app.use('/spotify', spotifyRouter);
-app.use('/auth', authRouter);
-
 module.exports = app;

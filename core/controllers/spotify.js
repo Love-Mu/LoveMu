@@ -1,9 +1,12 @@
+const Buffer = require('safer-buffer').Buffer;
+const request = require('request');
+
+const User = require('./models/User');
+
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
 const redirectUri = 'https://lovemu.azurewebsites.net/spotify/reqCallback';
 const scope = 'user-top-read';
-const Buffer = require('safer-buffer').Buffer;
-const request = require('request');
 
 /* We need to save the access and refresh tokens to each user
   - The access token is used to make calls to the Spotify API and
@@ -67,21 +70,51 @@ module.exports = {
     });
   },
 
-  retrieveArtists: (req, res, next) => {
-    const accessToken = req.accessToken;
+  retrievePersonalizationDetails: (req, res, next) => {
+    let accessToken = req.accessToken;
+
+    request.get(`https://lovemu.azurewebsites.net/spotify/refreshToken?request_token=${accessToken}`, (error, response, body) => {
+      if (!error) {
+        accessToken = body.accessToken;
+      }
+    });
+
+    let genreArray = {};
+    let artistArray = {};
+
     const authOptions = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${accessToken}`},
       json: true,
     };
 
-    request.get(`https://lovemu.azurewebsites.net/spotify/refreshToken?request_token=${query.accessToken}`); // Need to insert current user's request token here
-
-    request.get(authOptions, (err, response, next) => {
-      res.json(response);
-      /* Need to save Artist data here
-      https://developer.spotify.com/documentation/web-api/reference/personalization/get-users-top-artists-and-tracks/
-      for response formmat */
+    request.get(authOptions, (err, response, body) => {
+      const items = JSON.parse(body.items);
+      items.forEach((item, index) => {
+        const genres = item.genres;
+        genres.forEach((item, index) => {
+          if(isNaN(genreArray[item]])) {
+            genreArray[item] = 0;
+          }
+          genreArray[item]++;
+        });
+        if (!artistArray.includes(item.name)) {
+          artistArray.add(item.name);
+        }
+      });
     });
+
+    authOptions.url = `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term`;
+
+    request.get(authOptions, (err, response, body) => {
+      const items = JSON.parse(body.items);
+      items.forEach((item, index) => {
+        const artist = item.album.artists[0].name;
+        if (!artistArray.includes(artist)) {
+          artistArray.add(artist);
+        }
+      });
+    });
+      // Need to save Artist and Genre data here
   },
 };
