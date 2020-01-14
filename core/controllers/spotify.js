@@ -1,8 +1,9 @@
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
-const redirectUri = 'http://localhost:8000/spotify/reqCallback';
+const redirectUri = 'https://lovemu.azurewebsites.net/spotify/reqCallback';
 const scope = 'user-top-read';
 const Buffer = require('safer-buffer').Buffer;
+const request = require('request');
 
 /* We need to save the access and refresh tokens to each user
   - The access token is used to make calls to the Spotify API and
@@ -28,7 +29,7 @@ module.exports = {
       },
       headers: {
         'Authorization': `Basic ${
-          (Buffer.from(clientId + ':' + sClientId)).toString('base64')
+          (Buffer.from(clientId + ':' + secretId)).toString('base64')
         }`,
       },
       json: true,
@@ -38,7 +39,7 @@ module.exports = {
       if (!err && response.status == 200) {
         const accessToken = body.access_token;
         const refreshToken = body.refresh_token;
-
+        res.json({accessToken, refreshToken});
         // Save tokens here
       }
     });
@@ -60,8 +61,8 @@ module.exports = {
     request.post(authOptions, (error, response, body) => {
       if (!error && response.status === 200) {
         const accessToken = body.access_token;
-
         // Save new access token here
+        res.json(accessToken);
       }
     });
   },
@@ -74,7 +75,7 @@ module.exports = {
       json: true,
     };
 
-    request.get(`https://localhost:8000/spotify/refreshToken?request_token=`); // Need to insert current user's request token here
+    request.get(`https://lovemu.azurewebsites.net/spotify/refreshToken?request_token=${query.accessToken}`); // Need to insert current user's request token here
 
     request.get(authOptions, (err, response, next) => {
       res.json(response);

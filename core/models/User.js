@@ -9,6 +9,8 @@ User.pre('save', async function hashPass() {
     if (err) throw err;
     argon2i.hash(User.password, salt).then((hash) => {
       // Save hashed password here
+
+
       next();
     })
   });
@@ -18,8 +20,10 @@ User.methods.comparePassword = async function compPass(password) {
   argon2i.verify(storedHash, password).then((correct) => {
     if (correct) {
       // Create user session
+      req.session.userId = this.userId;
     } else {
       // Incorrect password
+      res.send('Incorrect Password!');
     }
   })
 }

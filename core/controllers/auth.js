@@ -1,8 +1,4 @@
 module.exports = {
-  requireLogin: (req, res, next) => {
-    
-  },
-
   registerUser: (req, res, next) => {
     // Create a User object here, ensuring that a User with the same email/username doesn't currently exist
   },
