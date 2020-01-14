@@ -10,6 +10,6 @@ router.get('/reqCallback', Spotify.callbackAccess);
 
 router.get('/refToken', Spotify.refreshAccess);
 
-router.get('/retArtists', Spotify.retrieveArtists);
+router.get('/retrievePersonalDetails', Spotify.retrievePersonalizationDetails);
 
 module.exports = router;

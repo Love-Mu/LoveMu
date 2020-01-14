@@ -1,7 +1,7 @@
 const Buffer = require('safer-buffer').Buffer;
 const request = require('request');
 
-const User = require('./models/User');
+const User = require('../models/User');
 
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
@@ -79,8 +79,8 @@ module.exports = {
       }
     });
 
-    let genreArray = {};
-    let artistArray = {};
+    const genreArray = {};
+    const artistArray = {};
 
     const authOptions = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
@@ -93,7 +93,7 @@ module.exports = {
       items.forEach((item, index) => {
         const genres = item.genres;
         genres.forEach((item, index) => {
-          if(isNaN(genreArray[item]])) {
+          if (isNaN(genreArray[item])) {
             genreArray[item] = 0;
           }
           genreArray[item]++;
@@ -114,7 +114,6 @@ module.exports = {
           artistArray.add(artist);
         }
       });
-    });
-      // Need to save Artist and Genre data here
+    }); // Need to save Artist and Genre data here
   },
 };
