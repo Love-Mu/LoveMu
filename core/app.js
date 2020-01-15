@@ -12,7 +12,7 @@ const app = express();
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(`mongodb://${process.env.USER}:${process.env.PASS}`, {useNewUrlParser: true}); // Insert DB URL here, username and passwords are environment variables
+mongoose.connect(`mongodb://${process.env.USER}:${process.env.PASS}@danu7.it.nuigalway.ie:8717/mongodb5380`, {useNewUrlParser: true}); // Insert DB URL here, username and passwords are environment variables
 
 mongoose.connection.on('error', (err) => {
   console.log("MONGOOSE CONNECTION ERROR", err);
@@ -28,5 +28,8 @@ app.use(session({
   resave: true,
   saveUninitialized: false,
 }));
+
+app.use('/auth', authRouter);
+app.use('/spotify', spotifyRouter);
 
 module.exports = app;

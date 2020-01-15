@@ -1,8 +1,8 @@
 const express = require('express');
+const router = express.Router();
 
 const Spotify = require('../controllers/spotify');
 const Assets = require('../assets/miscAssets');
-const router = express.Router();
 
 router.get('/reqAccess', Spotify.requestAccess);
 

@@ -1,11 +1,11 @@
 const Buffer = require('safer-buffer').Buffer;
-const request = require('request');
+const request = require('request-promise');
 
 const User = require('../models/User');
 
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
-const redirectUri = 'https://lovemu.azurewebsites.net/spotify/reqCallback';
+const redirectUri = 'http://localhost:8000/spotify/reqCallback';
 const scope = 'user-top-read';
 
 /* We need to save the access and refresh tokens to each user
@@ -28,22 +28,22 @@ module.exports = {
       form: {
         code: code,
         redirect_uri: redirectUri,
-        grant_type: 'authorization_code',
+        grant_type: 'authorization_code'
       },
       headers: {
-        'Authorization': `Basic ${
-          (Buffer.from(clientId + ':' + secretId)).toString('base64')
-        }`,
+        'Authorization': 'Basic ' + (Buffer.from(clientId + ':' + secretId)).toString('base64'),
       },
       json: true,
     };
 
-    request.post(authOptions, (err, response, body) => {
-      if (!err && response.status == 200) {
+    request.post(authOptions, async function(err, response, body) {
+      if (!err && response.statusCode === 200) {
         const accessToken = body.access_token;
         const refreshToken = body.refresh_token;
-        res.json({accessToken, refreshToken});
         // Save tokens here
+
+      } else {
+        throw (err);
       }
     });
   },
@@ -71,12 +71,12 @@ module.exports = {
   },
 
   retrievePersonalizationDetails: (req, res, next) => {
-    let accessToken = req.accessToken;
-
-    request.get(`https://lovemu.azurewebsites.net/spotify/refreshToken?request_token=${accessToken}`, (error, response, body) => {
-      if (!error) {
-        accessToken = body.accessToken;
-      }
+    User.findOne({_id: req.session.uId}).then((error, user) => {
+      request.get(`https://localhost:8000/spotify/refreshToken?request_token=${user.accessToken}`, (error, response, body) => {
+        if (!error) {
+          accessToken = body.accessToken;
+        }
+      });
     });
 
     const genreArray = {};
