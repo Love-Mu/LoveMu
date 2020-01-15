@@ -1,32 +1,35 @@
 const mongoose = require('mongoose');
-const argon2i = require('argon2-ffi').argon2i;
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const Schema = mongoose.Schema;
 
 // Define User model here
-const User = new Schema({});
+const User = new Schema({
 
-User.pre('save', async function hashPass() {
-  crypto.randomBytes(32, function(err, salt) {
-    if (err) throw err;
-    argon2i.hash(User.password, salt).then((hash) => {
+});
+
+User.pre('save', async function hashPass(next) {
+  bcrypt.genSalt(10, function(err, salt) {
+    if (err) {
+      return next(err);
+    }
+    bcrypt.hash(this.password, salt, function(err, hash) {
+      if (err) {
+        return next(err);
+      }
       // Save hashed password here
-
 
       next();
     });
   });
 });
 
-User.methods.comparePassword = async function compPass(password) {
-  argon2i.verify(storedHash, password).then((correct) => {
-    if (correct) {
-      // Create user session
-      req.session.userId = this.userId;
-    } else {
-      // Incorrect password
-      res.send('Incorrect Password!');
+User.methods.comparePassword = async function compPass(password, callback) {
+  bcrypt.compare(password, this.password, function(err, result) {
+    if (err) {
+      return callback(err);
     }
+    callback(null, result);
   });
 };
-
 module.exports = mongoose.model('User', User);
