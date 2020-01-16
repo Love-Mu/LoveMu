@@ -1,6 +1,6 @@
 const User = require('../models/User');
 
-// Need to write validation functions to parse and validate user data 
+// Need to write validation functions to parse and validate user data
 
 module.exports = {
   registerUser: (req, res, next) => {
