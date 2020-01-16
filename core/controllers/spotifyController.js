@@ -1,5 +1,6 @@
 const Buffer = require('safer-buffer').Buffer;
 const request = require('request-promise');
+const similarity = require('compute-cosine-similarity');
 
 const User = require('../models/User');
 
@@ -41,7 +42,6 @@ module.exports = {
         const accessToken = body.access_token;
         const refreshToken = body.refresh_token;
         // Save tokens here
-
       } else {
         throw (err);
       }
@@ -49,15 +49,15 @@ module.exports = {
   },
 
   refreshAccess: (req, res, next) => {
-    const requestToken = query.body.refresh_token;
+    const refreshToken = query.body.refresh_token;
     const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       headers: {'Authorization': `Basic ${
-        new Buffer(clientId + ':' + secretId).toString('base64')
-      }`},
+            new Buffer(clientId + ':' + secretId).toString('base64')
+        }`},
       form: {
         grant_type: 'refresh_token',
-        refresh_token: refresh_token,
+        refresh_token: refreshToken,
       },
       json: true,
     };
@@ -79,7 +79,7 @@ module.exports = {
       });
     });
 
-    const genreArray = {};
+    const genreMap = new Map();
     const artistArray = {};
 
     const authOptions = {
@@ -93,16 +93,22 @@ module.exports = {
       items.forEach((item, index) => {
         const genres = item.genres;
         genres.forEach((item, index) => {
-          if (isNaN(genreArray[item])) {
-            genreArray[item] = 0;
+          if (!genreMap.has(item)) {
+            genreMap.set(item, 0);
           }
-          genreArray[item]++;
+          genreMap.set(item, genreMap.get(item));
         });
         if (!artistArray.includes(item.name)) {
           artistArray.add(item.name);
         }
       });
+      // Calculating cosine similarity here
+      const scores = {};
+      // Retrieve all relevant users genres and artists here
+      const allGenres = {};
     });
+
+
 
     authOptions.url = `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term`;
 

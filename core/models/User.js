@@ -8,7 +8,7 @@ const User = new Schema({
 
 });
 
-User.pre('save', async function hashPass(next) {
+User.pre('save', function hashPass(next) {
   bcrypt.genSalt(10, function(err, salt) {
     if (err) {
       return next(err);
@@ -24,7 +24,7 @@ User.pre('save', async function hashPass(next) {
   });
 });
 
-User.methods.comparePassword = async function compPass(password, callback) {
+User.methods.comparePassword = function compPass(password, callback) {
   bcrypt.compare(password, this.password, function(err, result) {
     if (err) {
       return callback(err);

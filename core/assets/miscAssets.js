@@ -1,8 +1,23 @@
+const jwt = require('jsonwebtoken');
+
 module.exports = {
-  checkSession: (req, res, next) => {
-    if (req.session.userId) { // userId is a unique variable assigned upon user login
-      return next();
+  authMiddleware: (req, res, next) => {
+    let token = req.headers['x-access-token'] || req.headers['authorization'];
+
+    if (token) {
+      jwt.verify(token, process.env.SECRET, (err, decoded) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Token is not valid',
+          });
+        } else {
+          req.decoded = decoded;
+          next();
+        }
+      });
+    } else {
+      res.json({success: false, message: 'Token is not supplied'});
     }
-    res.redirect('/');
   },
 };
