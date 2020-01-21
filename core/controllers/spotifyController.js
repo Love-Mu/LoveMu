@@ -4,9 +4,8 @@ const similarity = require('compute-cosine-similarity');
 
 const User = require('../models/User');
 
-const config = require('../../config.js');
-const clientId = config.clientID;
-const secretId = config.secretID;
+const clientId = process.env.clientID;
+const secretId = process.env.secretID;
 const redirectUri = 'https://lovemu.compsoc.ie/spotify/reqCallback';
 const scope = 'user-top-read';
 
