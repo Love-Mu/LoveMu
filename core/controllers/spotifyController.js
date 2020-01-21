@@ -7,7 +7,7 @@ const User = require('../models/User');
 const config = require('../../config.js');
 const clientId = config.clientID;
 const secretId = config.secretID;
-const redirectUri = 'http://localhost:8000/spotify/reqCallback';
+const redirectUri = 'https://lovemu.compsoc.ie/spotify/reqCallback';
 const scope = 'user-top-read';
 
 /* We need to save the access and refresh tokens to each user
@@ -33,7 +33,7 @@ module.exports = {
         grant_type: 'authorization_code'
       },
       headers: {
-        'Authorization': 'Basic ' + (Buffer.from(clientId + ':' + secretId)).toString('base64'),
+       'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
       },
       json: true,
     };
@@ -53,9 +53,9 @@ module.exports = {
     const refreshToken = query.body.refresh_token;
     const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
-      headers: {'Authorization': `Basic ${
-            new Buffer(clientId + ':' + secretId).toString('base64')
-        }`},
+      headers: {
+        'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
+      },
       form: {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
@@ -72,13 +72,7 @@ module.exports = {
   },
 
   retrievePersonalizationDetails: (req, res, next) => {
-    User.findOne({_id: req.session.uId}).then((error, user) => {
-      request.get(`https://localhost:8000/spotify/refreshToken?request_token=${user.accessToken}`, (error, response, body) => {
-        if (!error) {
-          accessToken = body.accessToken;
-        }
-      });
-    });
+    // Find User here and refresh token
 
     const genreMap = new Map();
     const artistArray = {};
@@ -97,19 +91,13 @@ module.exports = {
           if (!genreMap.has(item)) {
             genreMap.set(item, 0);
           }
-          genreMap.set(item, genreMap.get(item));
+          genreMap.set(item, genreMap.get(item) + 1);
         });
         if (!artistArray.includes(item.name)) {
           artistArray.add(item.name);
         }
       });
-      // Calculating cosine similarity here
-      const scores = {};
-      // Retrieve all relevant users genres and artists here
-      const allGenres = {};
     });
-
-
 
     authOptions.url = `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term`;
 
@@ -121,6 +109,9 @@ module.exports = {
           artistArray.add(artist);
         }
       });
-    }); // Need to save Artist and Genre data here
+    });
+    const scores = {};
+
+    // Need to save Artist and Genre data here
   },
 };
