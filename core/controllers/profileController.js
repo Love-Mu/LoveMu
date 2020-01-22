@@ -17,22 +17,23 @@ module.exports = {
       usrScore.push(val);
     });
     users.forEach((usr) => {
-      const tempMainUsrScore = usrScore;
-      const tempScore = {};
+      const tempScore = usrScore;
+      const tempUsrScore = {};
+      const currGenres = usr.genres;
       usrGenreArr.forEach((val) => {
         if (!usr.has(val)) {
-          tempScore.push(0);
+          tempUsrScore.push(0);
         } else {
-          tempScore.push(usr.genres.get(val));
+          tempUsrScore.push(currGenres.get(val));
         }
       });
-      usr.genres.forEach((val, key, map) => {
+      currGenres.forEach((val, key, map) => {
         if (!usrGenreArr.includes(key)) {
-          tempMainUsrScore.push(0);
-          tempScore.push(usr.genres.get(key));
+          tempScore.push(0);
+          tempUsrScore.push(currGenres.get(key));
         }
       });
-      usr.score = similarity(tempMainUsrScore, tempScore);
+      usr.score = similarity(tempScore, tempUsrScore);
     });
     res.json(users.sort((a, b) => (a.score >= b.score) ? 1 : -1));
   },

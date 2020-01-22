@@ -24,6 +24,6 @@ module.exports = (passport) => {
     passwordField: 'password',
     passReqToCallback: true,
   }, function(req, email, password, done) {
-    // Verify no user with email exists, then save new user
+    // Verify no user with email exists, then create and save new user
   }));
 };

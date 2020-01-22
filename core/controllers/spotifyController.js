@@ -49,9 +49,8 @@ module.exports = {
   },
 
   refreshAccess: (req, res, next) => {
-    const refreshToken = query.body.refresh_token;
-
-    let authOptions = {
+    const refreshToken = req.session.passport.user; // use this to find User's refresh token
+    const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       headers: {
         'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
@@ -69,11 +68,14 @@ module.exports = {
         res.json(accessToken);
       }
     });
-
+  },
+  retrieveDetails: (req, res, next) => {
+    // Retrieve current user's refresh token, then use refresh route
+    // Retrieve current user's access token
     const genreMap = new Map();
     const artistArray = {};
 
-    authOptions = {
+    const authOptions = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${accessToken}`},
       json: true,
@@ -88,7 +90,7 @@ module.exports = {
             genreMap.set(genre, 0);
           }
           genreMap.set(genre, genreMap.get(genre) + 1);
-        })
+        });
       });
     });
 
@@ -100,6 +102,6 @@ module.exports = {
         artistArray.push(item);
       });
     });
-    // Save map and array here
+    // Save map and array here to current user
   },
 };
