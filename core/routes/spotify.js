@@ -7,8 +7,6 @@ router.get('/reqAccess', Spotify.requestAccess);
 
 router.get('/reqCallback', Spotify.callbackAccess);
 
-router.get('/refToken', Spotify.refreshAccess);
-
-router.get('/retrievePersonalDetails', Spotify.retrievePersonalizationDetails);
+router.post('/refToken', Spotify.refreshAccess);
 
 module.exports = router;

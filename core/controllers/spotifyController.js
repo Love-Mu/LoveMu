@@ -1,6 +1,5 @@
 const Buffer = require('safer-buffer').Buffer;
 const request = require('request-promise');
-const similarity = require('compute-cosine-similarity');
 
 const User = require('../models/User');
 
@@ -32,16 +31,17 @@ module.exports = {
         grant_type: 'authorization_code'
       },
       headers: {
-       'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
+        'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
       },
       json: true,
     };
 
-    request.post(authOptions, async function(err, response, body) {
+    request.post(authOptions, function (err, response, body) {
       if (!err && response.statusCode === 200) {
         const accessToken = body.access_token;
         const refreshToken = body.refresh_token;
         // Save tokens here
+
       } else {
         throw (err);
       }
@@ -50,7 +50,8 @@ module.exports = {
 
   refreshAccess: (req, res, next) => {
     const refreshToken = query.body.refresh_token;
-    const authOptions = {
+
+    let authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       headers: {
         'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
@@ -68,15 +69,11 @@ module.exports = {
         res.json(accessToken);
       }
     });
-  },
-
-  retrievePersonalizationDetails: (req, res, next) => {
-    // Find User here and refresh token
 
     const genreMap = new Map();
     const artistArray = {};
 
-    const authOptions = {
+    authOptions = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${accessToken}`},
       json: true,
@@ -86,11 +83,11 @@ module.exports = {
       const items = JSON.parse(body.items);
       items.forEach((item, index) => {
         const genres = item.genres;
-        genres.forEach((item, index) => {
-          if (!genreMap.has(item)) {
-            genreMap.set(item, 0);
+        genres.forEach((genre, index) => {
+          if (!genreMap.has(genre)) {
+            genreMap.set(genre, 0);
           }
-          genreMap.set(item, genreMap.get(item) + 1);
+          genreMap.set(genre, genreMap.get(genre) + 1);
         });
         if (!artistArray.includes(item.name)) {
           artistArray.add(item.name);
@@ -103,14 +100,13 @@ module.exports = {
     request.get(authOptions, (err, response, body) => {
       const items = JSON.parse(body.items);
       items.forEach((item, index) => {
-        const artist = item.album.artists[0].name;
-        if (!artistArray.includes(artist)) {
-          artistArray.add(artist);
+        for (let i = 0; i < item.album.artists.length(); i++) {
+          if (!artistArray.includes(item.album.artists[i].name)) {
+            artistArray.add(item.album.artists[i].name);
+          }
         }
       });
     });
-    const scores = {};
-
-    // Need to save Artist and Genre data here
+    // Save map and array here
   },
 };
