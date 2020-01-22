@@ -7,6 +7,7 @@ module.exports = {
     /* Insert DB call to return all profiles and store in array,
     ensure we don't send password, can be used to retrieve
     sexuality/gender in future*/
+    // Current user _id can be retrieved with req.session.passport.user
     const users = {};
     const currUser = User.genres;
     const usrGenreArr = {};
@@ -33,7 +34,6 @@ module.exports = {
       });
       usr.score = similarity(tempMainUsrScore, tempScore);
     });
-
     res.json(users.sort((a, b) => (a.score >= b.score) ? 1 : -1));
   },
   getProfile: (req, res, next) => {

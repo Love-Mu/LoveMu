@@ -88,10 +88,7 @@ module.exports = {
             genreMap.set(genre, 0);
           }
           genreMap.set(genre, genreMap.get(genre) + 1);
-        });
-        if (!artistArray.includes(item.name)) {
-          artistArray.add(item.name);
-        }
+        })
       });
     });
 
@@ -100,11 +97,7 @@ module.exports = {
     request.get(authOptions, (err, response, body) => {
       const items = JSON.parse(body.items);
       items.forEach((item, index) => {
-        for (let i = 0; i < item.album.artists.length(); i++) {
-          if (!artistArray.includes(item.album.artists[i].name)) {
-            artistArray.add(item.album.artists[i].name);
-          }
-        }
+        artistArray.push(item);
       });
     });
     // Save map and array here
