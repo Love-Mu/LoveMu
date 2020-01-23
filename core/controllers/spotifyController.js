@@ -6,7 +6,7 @@ const User = require('../models/User');
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
 const redirectUri = 'https://lovemu.compsoc.ie/spotify/reqCallback';
-onst scope = 'user-top-read';
+const scope = 'user-top-read';
 
 /* We need to save the access and refresh tokens to each user
   - The access token is used to make calls to the Spotify API and
