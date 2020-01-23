@@ -1,12 +1,10 @@
 const Buffer = require('safer-buffer').Buffer;
 const request = require('request-promise');
-const similarity = require('compute-cosine-similarity');
 
 const User = require('../models/User');
 
-const config = require('../../config.js');
-const clientId = config.clientID;
-const secretId = config.secretID;
+const clientId = process.env.clientID;
+const secretId = process.env.secretID;
 const redirectUri = 'http://localhost:8000/spotify/reqCallback';
 const scope = 'user-top-read';
 

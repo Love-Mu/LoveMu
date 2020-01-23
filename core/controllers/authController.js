@@ -5,6 +5,23 @@ const User = require('../models/User');
 module.exports = {
   register: (req, res, next) => {
     // Create a User object here, ensuring that a User with the same email/username doesn't currently exist
+    
+    //check if exists already
+    if(db.getCollection('user').find({'email' : req.email }).count() > 0){
+      res.json({
+        success: false,
+        message: 'Email already part of account',
+      });
+    }
+    else if(db.getCollection('user').find({'user_name' : req.user_name }).count() > 0){
+      res.json({
+        success: false,
+        message: 'Username in use',
+      });
+    }
+    else{
+      db.getCollection('user').save({email:req.email});
+    }
 
 
     const token = jwt.sign({id: user._id}, process.env.SECRET, {

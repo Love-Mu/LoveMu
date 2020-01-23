@@ -4,7 +4,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 
-const config = require('../config.js');
 const profileRouter = require('./routes/profile');
 const spotifyRouter = require('./routes/spotify');
 const authRouter = require('./routes/authentication');
@@ -13,7 +12,7 @@ const app = express();
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(`mongodb://${config.USER}:${config.PASS}@danu7.it.nuigalway.ie:8717/${config.DB}`, {useNewUrlParser: true}); // Insert DB URL here, username and passwords are environment variables
+mongoose.connect(`mongodb://${process.env.dbUSER}:${process.env.dbPASS}@danu7.it.nuigalway.ie:8717/${process.env.DB}`, {useNewUrlParser: true}); // Insert DB URL here, username and passwords are environment variables
 
 mongoose.connection.on('error', (err) => {
   console.log("MONGOOSE CONNECTION ERROR", err);
