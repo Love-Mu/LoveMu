@@ -27,14 +27,14 @@ module.exports = {
         return res.json({message: 'Sucessfully Registered User'});
       });
     });
-    //check if exists already
   },
   login: (req, res, next) => {
     // Find User based on email and use comparePassword method
-    passport.authenticate('local-login', {
-      successRedirect: '/profile/',
-      failureRedirect: '/auth/login',
-    })
+    
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json({errors: errors.array()});
+    }
   },
 
   logout: (req, res, next) => {

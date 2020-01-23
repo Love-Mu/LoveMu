@@ -8,6 +8,7 @@ module.exports = {
     ensure we don't send password, can be used to retrieve
     sexuality/gender in future*/
     // Current user _id can be retrieved with req.session.passport.user
+    console.log(req.user);
     const users = {};
     const currUser = User.genres;
     const usrGenreArr = {};

@@ -19,8 +19,19 @@ passport.use('local-login', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
   passReqToCallback: true,
-}, function(email, pass, done) {
+}, function(req, email, pass, done) {
   // Search for a user here that matches email
-  
+  User.findOne({'email' : req.body.email }).exec((err, user) => {
+    if (err) {
+      return done(err);
+    }
+    if (!user) {
+      return done(null, false, {message: 'Email not linked to account'})
+    }
+    if(!user.comparePassword(req.body.password)){
+      return done(null, false, {message: 'Wrong Password'});
+    }
+    return done(null, user);
+  });
   }
 ));

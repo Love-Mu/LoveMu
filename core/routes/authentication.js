@@ -8,7 +8,10 @@ const router = express.Router();
 
 router.post('/register', [check('email').isEmail(), check('password')], Authentication.register);
 
-router.post('/login', Authentication.login);
+router.post('/login',passport.authenticate('local-login', {
+    successRedirect: '/profile/',
+    failureRedirect: '/auth/login',
+  }));
 
 router.post('/logout', Authentication.logout);
 
