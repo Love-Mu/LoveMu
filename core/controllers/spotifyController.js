@@ -6,7 +6,7 @@ const User = require('../models/User');
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
 const redirectUri = 'https://lovemu.compsoc.ie/spotify/reqCallback';
-onst scope = 'user-top-read';
+const scope = 'user-top-read';
 
 /* We need to save the access and refresh tokens to each user
   - The access token is used to make calls to the Spotify API and
@@ -49,7 +49,7 @@ module.exports = {
   },
 
   refreshAccess: (req, res, next) => {
-    const refreshToken = req.session.passport.user; // use this to find User's refresh token
+    const refreshToken = req.user.refresh_token; // use this to find User's refresh token
     const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       headers: {
@@ -65,12 +65,13 @@ module.exports = {
       if (!error && response.status === 200) {
         const accessToken = body.access_token;
         // Save new access token here
-        res.json(accessToken);
       }
     });
   },
   retrieveDetails: (req, res, next) => {
     // Retrieve current user's refresh token, then use refresh route
+    request.get(`https://lovemu.compsoc.ie/spotify/refAccess?refTok=${req.user.refresh_token}`
+    )
     // Retrieve current user's access token
     const genreMap = new Map();
     const artistArray = {};
@@ -103,5 +104,6 @@ module.exports = {
       });
     });
     // Save map and array here to current user
+    
   },
 };

@@ -10,11 +10,13 @@ const profileRouter = require('./routes/profile');
 const spotifyRouter = require('./routes/spotify');
 const authRouter = require('./routes/authentication');
 
+const theSecret = "HENLO FREN";
+
 const app = express();
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(`mongodb://${process.env.dbUSER}:${process.env.dbPASS}@danu7.it.nuigalway.ie:8717/${process.env.DB}`, {useNewUrlParser: true}); // Insert DB URL here, username and passwords are environment variables
+mongoose.connect(`mongodb://mongodb5388ol:tu8fyw@danu7.it.nuigalway.ie:8717/mongodb5388`, {useNewUrlParser: true}); // Insert DB URL here, username and passwords are environment variables
 
 mongoose.connection.on('error', (err) => {
   console.log("MONGOOSE CONNECTION ERROR", err);
@@ -26,12 +28,14 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-  secret: process.env.SECRET,
+  secret: theSecret,
   resave: true,
   saveUninitialized: true,
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+require("./config/passport");
 
 app.use('/auth', authRouter);
 app.use('/spotify', spotifyRouter);
