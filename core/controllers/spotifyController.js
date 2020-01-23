@@ -41,7 +41,18 @@ module.exports = {
         const accessToken = body.access_token;
         const refreshToken = body.refresh_token;
         // Save tokens here
-
+        User.findOne({_id: req.user._id}).exec((err, user) => {
+          if (err) {
+            return res.json({error: err});
+          }
+          if (!user) {
+            return res.json({message: 'User not found'});
+          }
+          user.access_token = accessToken;
+          user.refresh_token = refreshToken;
+          user.save();
+          res.json({message: 'Success!'});
+        });
       } else {
         throw (err);
       }
@@ -64,14 +75,27 @@ module.exports = {
     request.post(authOptions, (error, response, body) => {
       if (!error && response.status === 200) {
         const accessToken = body.access_token;
-        // Save new access token here
+        res.json(accessToken);
       }
     });
   },
   retrieveDetails: (req, res, next) => {
     // Retrieve current user's refresh token, then use refresh route
-    request.get(`https://lovemu.compsoc.ie/spotify/refAccess?refTok=${req.user.refresh_token}`
-    )
+    request.get(`https://lovemu.compsoc.ie/spotify/refAccess?refTok=${req.user.refresh_token}`, (error, response, body) => {
+      if (!error) {
+        User.findOne({_id: req.user._id}).exec((err, user) => {
+          if (err) {
+            return res.json({error: err});
+          }
+          if (!user) {
+            return res.json({message: 'User not found'});
+          }
+          user.access_token = body.accessToken;
+          user.save();
+        });
+      }
+    });
+
     // Retrieve current user's access token
     const genreMap = new Map();
     const artistArray = {};
@@ -104,6 +128,17 @@ module.exports = {
       });
     });
     // Save map and array here to current user
-    
+    User.findOne({_id: req.user._id}).exec((err, user) => {
+      if (err) {
+        return res.json({error: err});
+      }
+      if (!user) {
+        return res.json({message: 'User not found'});
+      }
+      user.genres = genreMap;
+      user.artists = artistArray;
+      user.save();
+      res.json(user);
+    });
   },
 };
