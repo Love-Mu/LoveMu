@@ -41,6 +41,14 @@ module.exports = {
   getProfile: (req, res, next) => {
     const uId = req.params.id;
     // Find user based on this id and serve it
-    res.json(usr);
+    User.findOne({_id: uId}).exec((err, user) => {
+      if (err) {
+        return res.json({error: err});
+      }
+      if (!user) {
+        return res.json({message: 'User does not exist'});
+      }
+      res.json(user);
+    });
   },
 };
