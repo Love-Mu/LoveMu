@@ -46,12 +46,12 @@ module.exports = {
             return res.json({error: err});
           }
           if (!user) {
-            return res.json({message: "User not found")
+            return res.json({message: 'User not found'});
           }
           user.access_token = accessToken;
           user.refresh_token = refreshToken;
           user.save();
-          res.json({message: "Success!"})
+          res.json({message: 'Success!'});
         });
       } else {
         throw (err);
@@ -88,7 +88,7 @@ module.exports = {
             return res.json({error: err});
           }
           if (!user) {
-            return res.json({message: "User not found"});
+            return res.json({message: 'User not found'});
           }
           user.access_token = body.accessToken;
           user.save();
@@ -133,11 +133,12 @@ module.exports = {
         return res.json({error: err});
       }
       if (!user) {
-        return res.json({message: "User not found"});
+        return res.json({message: 'User not found'});
       }
       user.genres = genreMap;
       user.artists = artistArray;
       user.save();
+      res.json(user);
     });
   },
 };
