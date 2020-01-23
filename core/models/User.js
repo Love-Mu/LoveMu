@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
+const passport = require('passport');
+
 const Schema = mongoose.Schema;
 
-require('./util'); //Util contains login details, remove file before posting to github
-
 // Define User model here
-const User = new Schema({
+const userSchema = new Schema({
   email: {type: String},
   salt: {type: String},
   hash: {type: String},
@@ -22,28 +21,11 @@ const User = new Schema({
   bio: {type: String, default: ""}
 });
 
-User.pre('save', function hashPass(next) {
-  bcrypt.genSalt(10, function(err, salt) {
-    if (err) {
-      return next(err);
-    }
-    bcrypt.hash(this.password, salt, function(err, hash) {
-      if (err) {
-        return next(err);
-      }
-      // Save hashed password here
-
-      next();
-    });
-  });
-});
-
-User.methods.comparePassword = function compPass(password, callback) {
-  bcrypt.compare(password, this.password, function(err, result) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, result);
-  });
+userSchema.methods.hashPassword = function(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
-module.exports = mongoose.model('User', User);
+
+userSchema.methods.comparePassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
+module.exports = mongoose.model('User', userSchema);

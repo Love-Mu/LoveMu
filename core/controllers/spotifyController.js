@@ -5,8 +5,8 @@ const User = require('../models/User');
 
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
-const redirectUri = 'http://localhost:8000/spotify/reqCallback';
-const scope = 'user-top-read';
+const redirectUri = 'https://lovemu.compsoc.ie/spotify/reqCallback';
+onst scope = 'user-top-read';
 
 /* We need to save the access and refresh tokens to each user
   - The access token is used to make calls to the Spotify API and
@@ -31,16 +31,17 @@ module.exports = {
         grant_type: 'authorization_code'
       },
       headers: {
-        'Authorization': 'Basic ' + (Buffer.from(clientId + ':' + secretId)).toString('base64'),
+        'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
       },
       json: true,
     };
 
-    request.post(authOptions, async function(err, response, body) {
+    request.post(authOptions, function (err, response, body) {
       if (!err && response.statusCode === 200) {
         const accessToken = body.access_token;
         const refreshToken = body.refresh_token;
         // Save tokens here
+
       } else {
         throw (err);
       }
@@ -48,12 +49,12 @@ module.exports = {
   },
 
   refreshAccess: (req, res, next) => {
-    const refreshToken = query.body.refresh_token;
+    const refreshToken = req.session.passport.user; // use this to find User's refresh token
     const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
-      headers: {'Authorization': `Basic ${
-            new Buffer(clientId + ':' + secretId).toString('base64')
-        }`},
+      headers: {
+        'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
+      },
       form: {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
@@ -68,16 +69,9 @@ module.exports = {
       }
     });
   },
-
-  retrievePersonalizationDetails: (req, res, next) => {
-    User.findOne({_id: req.session.uId}).then((error, user) => {
-      request.get(`https://localhost:8000/spotify/refreshToken?request_token=${user.accessToken}`, (error, response, body) => {
-        if (!error) {
-          accessToken = body.accessToken;
-        }
-      });
-    });
-
+  retrieveDetails: (req, res, next) => {
+    // Retrieve current user's refresh token, then use refresh route
+    // Retrieve current user's access token
     const genreMap = new Map();
     const artistArray = {};
 
@@ -91,34 +85,23 @@ module.exports = {
       const items = JSON.parse(body.items);
       items.forEach((item, index) => {
         const genres = item.genres;
-        genres.forEach((item, index) => {
-          if (!genreMap.has(item)) {
-            genreMap.set(item, 0);
+        genres.forEach((genre, index) => {
+          if (!genreMap.has(genre)) {
+            genreMap.set(genre, 0);
           }
-          genreMap.set(item, genreMap.get(item));
+          genreMap.set(genre, genreMap.get(genre) + 1);
         });
-        if (!artistArray.includes(item.name)) {
-          artistArray.add(item.name);
-        }
       });
-      // Calculating cosine similarity here
-      const scores = {};
-      // Retrieve all relevant users genres and artists here
-      const allGenres = {};
     });
-
-
 
     authOptions.url = `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term`;
 
     request.get(authOptions, (err, response, body) => {
       const items = JSON.parse(body.items);
       items.forEach((item, index) => {
-        const artist = item.album.artists[0].name;
-        if (!artistArray.includes(artist)) {
-          artistArray.add(artist);
-        }
+        artistArray.push(item);
       });
-    }); // Need to save Artist and Genre data here
+    });
+    // Save map and array here to current user
   },
 };
