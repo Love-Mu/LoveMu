@@ -12,7 +12,9 @@ const authRouter = require('./routes/authentication');
 
 const app = express();
 
-mongoose.connect(`mongodb+srv://${process.env.dbUSER}:${process.env.dbPASS}@cluster0-5qz0t.azure.mongodb.net/test?retryWrites=true&w=majority`, {useNewUrlParser: true, useUnifiedTopology: true}); // Insert DB URL here, username and passwords are environment variables
+mongoose.Promise = global.Promise;
+
+mongoose.connect(`mongodb://${process.env.dbUSER}:${process.env.dbPASS}@danu7.it.nuigalway.ie:8717/${process.env.DB}`, {useNewUrlParser: true}); // Insert DB URL here, username and passwords are environment variables
 
 mongoose.connection.on('error', (err) => {
   console.log("MONGOOSE CONNECTION ERROR", err);
