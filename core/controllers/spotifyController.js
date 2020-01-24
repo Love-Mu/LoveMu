@@ -1,11 +1,11 @@
 const Buffer = require('safer-buffer').Buffer;
-const request = require('request-promise');
+const request = require('request');
 
 const User = require('../models/User');
 
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
-const redirectUri = 'https://lovemu.compsoc.ie/spotify/reqCallback';
+const redirectUri = 'http://danu7.it.nuigalway.ie:8632/spotify/reqCallback';
 const scope = 'user-top-read';
 
 /* We need to save the access and refresh tokens to each user
@@ -51,7 +51,8 @@ module.exports = {
           user.access_token = accessToken;
           user.refresh_token = refreshToken;
           user.save();
-          res.json({message: 'Success!'});
+          res.redirect('/spotify/retrieveDetails');
+
         });
       } else {
         throw (err);
@@ -81,7 +82,7 @@ module.exports = {
   },
   retrieveDetails: (req, res, next) => {
     // Retrieve current user's refresh token, then use refresh route
-    request.get(`https://lovemu.compsoc.ie/spotify/refAccess?refTok=${req.user.refresh_token}`, (error, response, body) => {
+    request.get(`http://danu7.it.nuigalway.ie:8632/spotify/refAccess?refTok=${req.user.refresh_token}`, (error, response, body) => {
       if (!error) {
         User.findOne({_id: req.user._id}).exec((err, user) => {
           if (err) {
@@ -96,18 +97,52 @@ module.exports = {
       }
     });
 
-    // Retrieve current user's access token
-    const genreMap = new Map();
-    const artistArray = {};
-
     const authOptions = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
-      headers: {'Authorization': `Bearer ${accessToken}`},
+      headers: {'Authorization': `Bearer ${req.user.access_token}`},
       json: true,
     };
+    mapGenres(authOptions).then((map) => {
+      User.findOne({_id: req.user._id}).exec((err, user) => {
+        if (err) {
+          return res.json({error: err});
+        }
+        if (!user) {
+          return res.json({message: 'User not found'});
+        }
+        user.genres = map;
+        user.save();
+      });
+    }).catch((err) => console.log(err));
 
+    authOptions.url = `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term`;
+
+    arrayArtists(authOptions).then((array) => {
+      User.findOne({_id: req.user._id}).exec((err, user) => {
+        if (err) {
+          return res.json({error: err});
+        }
+        if (!user) {
+          return res.json({message: 'User not found'});
+        }
+        user.artists = array;
+        user.save();
+      });
+    }).catch((err) => console.log(err));
+    // Save map and array here to current user
+    res.redirect('/profile/' + req.user._id);
+  },
+};
+
+// Promise to return hash map of Genres
+function mapGenres(authOptions) {
+  return new Promise((resolve, reject) => {
+    const genreMap = new Map();
     request.get(authOptions, (err, response, body) => {
-      const items = JSON.parse(body.items);
+      if (err) {
+        reject(err);
+      }
+      const items = body.items;
       items.forEach((item, index) => {
         const genres = item.genres;
         genres.forEach((genre, index) => {
@@ -117,28 +152,22 @@ module.exports = {
           genreMap.set(genre, genreMap.get(genre) + 1);
         });
       });
+      resolve(genreMap);
     });
+  });
+}
 
-    authOptions.url = `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term`;
-
+function arrayArtists(authOptions) {
+  return new Promise((resolve, reject) =>
     request.get(authOptions, (err, response, body) => {
-      const items = JSON.parse(body.items);
+      const artistArray = [];
+      if (err) {
+        reject(err);
+      }
+      const items = body.items;
       items.forEach((item, index) => {
         artistArray.push(item);
       });
-    });
-    // Save map and array here to current user
-    User.findOne({_id: req.user._id}).exec((err, user) => {
-      if (err) {
-        return res.json({error: err});
-      }
-      if (!user) {
-        return res.json({message: 'User not found'});
-      }
-      user.genres = genreMap;
-      user.artists = artistArray;
-      user.save();
-      res.json(user);
-    });
-  },
-};
+      resolve(artistArray);
+    }));
+}

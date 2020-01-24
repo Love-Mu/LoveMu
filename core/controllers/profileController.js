@@ -8,20 +8,20 @@ module.exports = {
     ensure we don't send password, can be used to retrieve
     sexuality/gender in future*/
     // Current user _id can be retrieved with req.user
-    User.find({}).exec((err, users) => {
+    User.find({_id: {$ne: req.user.id}}).exec((err, users) => {
       const currUser = req.user.genres;
-      const usrGenreArr = {};
-      const usrScore = {};
+      const usrGenreArr = [];
+      const usrScore = [];
       currUser.forEach((val, key, map) => {
         usrGenreArr.push(key);
         usrScore.push(val);
       });
       users.forEach((usr) => {
         const tempScore = usrScore;
-        const tempUsrScore = {};
+        const tempUsrScore = [];
         const currGenres = usr.genres;
         usrGenreArr.forEach((val) => {
-          if (!usr.has(val)) {
+          if (!currGenres.has(val)) {
             tempUsrScore.push(0);
           } else {
             tempUsrScore.push(currGenres.get(val));
@@ -34,6 +34,7 @@ module.exports = {
           }
         });
         usr.score = similarity(tempScore, tempUsrScore);
+        console.log(usr.score);
       });
       res.json(users.sort((a, b) => (a.score >= b.score) ? 1 : -1));
     });
