@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
-const redirectUri = 'http://localhost:8000/spotify/reqCallback';
+const redirectUri = 'http://danu7.it.nuigalway.ie:8632/spotify/reqCallback';
 const scope = 'user-top-read';
 
 /* We need to save the access and refresh tokens to each user
@@ -82,7 +82,7 @@ module.exports = {
   },
   retrieveDetails: (req, res, next) => {
     // Retrieve current user's refresh token, then use refresh route
-    request.get(`https://localhost:8000/spotify/refAccess?refTok=${req.user.refresh_token}`, (error, response, body) => {
+    request.get(`http://danu7.it.nuigalway.ie:8632/spotify/refAccess?refTok=${req.user.refresh_token}`, (error, response, body) => {
       if (!error) {
         User.findOne({_id: req.user._id}).exec((err, user) => {
           if (err) {
@@ -98,14 +98,14 @@ module.exports = {
     });
 
     const authOptions = {
-      url: `https://api.spotify.com/v1/me/top/artists?limit=10&time_range=long_term`,
+      url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${req.user.access_token}`},
       json: true,
     };
     mapGenres(authOptions).then((map) => {
       User.findOne({_id: req.user._id}).exec((err, user) => {
         if (err) {
-         return res.json({error: err});
+          return res.json({error: err});
         }
         if (!user) {
           return res.json({message: 'User not found'});
