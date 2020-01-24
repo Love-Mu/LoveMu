@@ -9,34 +9,41 @@ module.exports = {
     sexuality/gender in future*/
     // Current user _id can be retrieved with req.user
     User.find({_id: {$ne: req.user.id}}).exec((err, users) => {
-      const currUser = req.user.genres;
+      const currUsrMap = req.user.genres;
       const usrGenreArr = [];
-      const usrScore = [];
-      currUser.forEach((val, key, map) => {
+      currUsrMap.forEach((val, key, map) => {
         usrGenreArr.push(key);
-        usrScore.push(val);
       });
       users.forEach((usr) => {
-        const tempScore = usrScore;
+        const tempScore = [];
         const tempUsrScore = [];
-        const currGenres = usr.genres;
-        usrGenreArr.forEach((val) => {
-          if (!currGenres.has(val)) {
-            tempUsrScore.push(0);
-          } else {
-            tempUsrScore.push(currGenres.get(val));
+        const checkGenreArr = [];
+        const checkUsrMap = usr.genres;
+        checkUsrMap.forEach((val, key, map) => {
+          checkGenreArr.push(key);
+        });
+        checkGenreArr.concat(usrGenreArr);
+        usrGenreArr.forEach((val, idx) => {
+          if (!checkGenreArr.includes(val)) {
+            usrGenreArr.push(val);
           }
         });
-        currGenres.forEach((val, key, map) => {
-          if (!usrGenreArr.includes(key)) {
+        checkGenreArr.forEach((item, idx) => {
+          if (currUsrMap.has(item)) {
+            tempScore.push(currUsrMap.get(item));
+          } else {
             tempScore.push(0);
-            tempUsrScore.push(currGenres.get(key));
+          }
+          if (checkUsrMap.has(item)) {
+            tempUsrScore.push(checkUsrMap.get(item));
+          } else {
+            tempUsrScore.push(0);
           }
         });
         usr.score = similarity(tempScore, tempUsrScore);
-        console.log(usr.score);
+        console.log(usr.email + ' : ' + usr.score);
       });
-      res.json(users.sort((a, b) => (a.score >= b.score) ? 1 : -1));
+      res.json(users.sort((a, b) => (a.score >= b.score) ? -1 : 1));
     });
   },
   getProfile: (req, res, next) => {
