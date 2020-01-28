@@ -114,8 +114,6 @@ module.exports = {
         if (!user) {
           return res.json({message: 'User not found'});
         }
-        console.log(values[0]);
-        console.log(values[1]);
         user.artists = values[0];
         user.genres = values[1];
         user.save((err, usr) => {
