@@ -8,7 +8,7 @@ module.exports = {
     ensure we don't send password, can be used to retrieve
     sexuality/gender in future*/
     // Current user _id can be retrieved with req.user
-    User.find({_id: {$ne: req.user.id}}).exec((err, users) => {
+    User.find({_id: {$ne: req.user.id}}).select('-password').exec((err, users) => {
       const currUsrMap = req.user.genres;
       const usrGenreArr = [];
       currUsrMap.forEach((val, key, map) => {
@@ -49,7 +49,7 @@ module.exports = {
   getProfile: (req, res, next) => {
     const uId = req.params.id;
     // Find user based on this id and serve it
-    User.findOne({_id: uId}).exec((err, user) => {
+    User.findOne({_id: uId}).select('-password').exec((err, user) => {
       if (err) {
         return res.json({error: err});
       }

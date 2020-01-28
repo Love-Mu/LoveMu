@@ -14,7 +14,7 @@ router.post('/register', [check('email').isEmail(), check('password')], Authenti
 
 router.post('/login', passport.authenticate('local-login', {
     successRedirect: '/profile/',
-    failureRedirect: '/auth/login',
+    failureRedirect: '/',
   }));
 
 router.post('/logout', Authentication.logout);

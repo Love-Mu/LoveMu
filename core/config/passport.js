@@ -28,10 +28,9 @@ passport.use('local-login', new LocalStrategy({
     if (!user) {
       return done(null, false, {message: 'Email not linked to account'})
     }
-    if(!user.comparePassword(req.body.password)){
+    if(!user.comparePassword(req.body.password)) {
       return done(null, false, {message: 'Wrong Password'});
     }
     return done(null, user);
   });
-  }
-));
+}));

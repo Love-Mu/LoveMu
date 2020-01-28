@@ -6,14 +6,16 @@
 </head>
 
 <body>
+  <h1>Register</h1>
   <form action='/auth/register' method="post">
-    <input type="text" name="email"><br>
-    <input type="text" name="password"><br>
+    <label>Email</label><input type="text" name="email"><br>
+    <label>Password</label><input type="password" name="password"><br>
     <input type="submit">
   </form>
-  <form action='/profile/' method='post'>
-    <input type="text" name="email"><br>
-    <input type="text" name="password"><br>
+  <h1>Login</h1>
+  <form action='/auth/login' method='post'>
+    <label>Email</label><input type="text" name="email"><br>
+    <label>Password</label><input type="password" name="password"><br>
     <input type="submit">
   </form>
 </body>
