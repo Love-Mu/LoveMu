@@ -4,8 +4,15 @@ const Profile = require('../controllers/profileController');
 
 const router = express.Router();
 
-router.get('/', Profile.getProfiles);
+router.get('/', ensureAuthenticated, Profile.getProfiles);
 
-router.get('/:id', Profile.getProfile);
+router.get('/:id', ensureAuthenticated, Profile.getProfile);
 
 module.exports = router;
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/');
+}

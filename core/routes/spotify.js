@@ -3,12 +3,19 @@ const router = express.Router();
 
 const Spotify = require('../controllers/spotifyController');
 
-router.get('/reqAccess', Spotify.requestAccess);
+router.get('/reqAccess', ensureAuthenticated, Spotify.requestAccess);
 
-router.get('/reqCallback', Spotify.callbackAccess);
+router.get('/reqCallback', ensureAuthenticated, Spotify.callbackAccess);
 
-router.get('/refToken', Spotify.refreshAccess);
+router.get('/refToken', ensureAuthenticated, Spotify.refreshAccess);
 
-router.get('/retrieveDetails', Spotify.retrieveDetails);
+router.get('/retrieveDetails', ensureAuthenticated, Spotify.retrieveDetails);
 
 module.exports = router;
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/');
+}

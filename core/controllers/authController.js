@@ -35,11 +35,6 @@ module.exports = {
   },
   login: (req, res, next) => {
     // Find User based on email and use comparePassword method
-    
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.json({errors: errors.array()});
-    }
   },
 
   logout: (req, res, next) => {

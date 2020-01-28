@@ -28,7 +28,7 @@ module.exports = {
       form: {
         code: code,
         redirect_uri: redirectUri,
-        grant_type: 'authorization_code'
+        grant_type: 'authorization_code',
       },
       headers: {
         'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
@@ -36,7 +36,7 @@ module.exports = {
       json: true,
     };
 
-    request.post(authOptions, function (err, response, body) {
+    request.post(authOptions, (err, response, body) => {
       if (!err && response.statusCode === 200) {
         const accessToken = body.access_token;
         const refreshToken = body.refresh_token;
@@ -52,7 +52,6 @@ module.exports = {
           user.refresh_token = refreshToken;
           user.save();
           res.redirect('/spotify/retrieveDetails');
-
         });
       } else {
         throw (err);
@@ -75,14 +74,13 @@ module.exports = {
     };
     request.post(authOptions, (error, response, body) => {
       if (!error && response.status === 200) {
-        const accessToken = body.access_token;
-        res.json(accessToken);
+        res.send(body.access_token);
       }
     });
   },
   retrieveDetails: (req, res, next) => {
     // Retrieve current user's refresh token, then use refresh route
-    request.get(`http://danu7.it.nuigalway.ie:8632/spotify/refAccess?refTok=${req.user.refresh_token}`, (error, response, body) => {
+    /*request.get(`http://danu7.it.nuigalway.ie:8632/spotify/refAccess`).then((error, response, body) => {
       if (!error) {
         User.findOne({_id: req.user._id}).exec((err, user) => {
           if (err) {
@@ -95,14 +93,20 @@ module.exports = {
           user.save();
         });
       }
-    });
+    });*/
 
-    const authOptions = {
+    const authOptionsArtists = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${req.user.access_token}`},
       json: true,
     };
-    mapGenres(authOptions).then((map) => {
+
+    const authOptionsGenres = {
+      url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
+      headers: {'Authorization': `Bearer ${req.user.access_token}`},
+      json: true,
+    };
+    Promise.all([arrayArtists(authOptionsArtists), mapGenres(authOptionsGenres)]).then((values) => {
       User.findOne({_id: req.user._id}).exec((err, user) => {
         if (err) {
           return res.json({error: err});
@@ -110,27 +114,13 @@ module.exports = {
         if (!user) {
           return res.json({message: 'User not found'});
         }
-        user.genres = map;
-        user.save();
+        user.artists = values[0];
+        user.genres = values[1];
+        user.save((err, usr) => {
+          res.redirect('/profile/' + usr._id);
+        });
       });
     }).catch((err) => console.log(err));
-
-    authOptions.url = `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term`;
-
-    arrayArtists(authOptions).then((array) => {
-      User.findOne({_id: req.user._id}).exec((err, user) => {
-        if (err) {
-          return res.json({error: err});
-        }
-        if (!user) {
-          return res.json({message: 'User not found'});
-        }
-        user.artists = array;
-        user.save();
-      });
-    }).catch((err) => console.log(err));
-    // Save map and array here to current user
-    res.redirect('/profile/' + req.user._id);
   },
 };
 
