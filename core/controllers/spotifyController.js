@@ -95,13 +95,18 @@ module.exports = {
       }
     });*/
 
-    const authOptions = {
+    const authOptionsArtists = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${req.user.access_token}`},
       json: true,
     };
 
-    mapGenres(authOptions).then((genres) => {
+    const authOptionsGenres = {
+      url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
+      headers: {'Authorization': `Bearer ${req.user.access_token}`},
+      json: true,
+    };
+    Promise.all([arrayArtists(authOptionsArtists), mapGenres(authOptionsGenres)]).then((values) => {
       User.findOne({_id: req.user._id}).exec((err, user) => {
         if (err) {
           return res.json({error: err});
@@ -109,24 +114,15 @@ module.exports = {
         if (!user) {
           return res.json({message: 'User not found'});
         }
-        user.genres = genres;
-        user.save();
+        console.log(values[0]);
+        console.log(values[1]);
+        user.artists = values[0];
+        user.genres = values[1];
+        user.save((err, usr) => {
+          res.redirect('/profile/' + usr._id);
+        });
       });
     }).catch((err) => console.log(err));
-    authOptions.url = `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term`;
-    arrayArtists(authOptions).then((array) => {
-      User.findOne({_id: req.user._id}).exec((err, user) => {
-        if (err) {
-          return res.json({error: err});
-        }
-        if (!user) {
-          return res.json({message: 'User not found'});
-        }
-        user.artists = array;
-        user.save();
-      });
-    }).catch((err) => console.log(err));
-    res.redirect('/profile/' + req.user._id);
   },
 };
 
@@ -140,8 +136,6 @@ function mapGenres(authOptions) {
       }
       const items = body.items;
       items.forEach((item, index) => {
-        console.log(items);
-        console.log(item);
         const genres = item.genres;
         genres.forEach((genre, index) => {
           if (!genreMap.has(genre)) {
