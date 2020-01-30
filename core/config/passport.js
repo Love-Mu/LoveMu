@@ -1,5 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const {validationResult} = require('express-validator');
 
 const User = require('../models/User');
 
@@ -20,15 +21,19 @@ passport.use('local-login', new LocalStrategy({
   passwordField: 'password',
   passReqToCallback: true,
 }, function(req, email, pass, done) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+  }
   // Search for a user here that matches email
-  User.findOne({'email' : req.body.email }).exec((err, user) => {
+  User.findOne({email: email}).exec((err, user) => {
     if (err) {
       return done(err);
     }
     if (!user) {
-      return done(null, false, {message: 'Email not linked to account'})
+      return done(null, false, {message: 'Email not linked to account'});
     }
-    if(!user.comparePassword(req.body.password)) {
+    if (!user.comparePassword(pass)) {
       return done(null, false, {message: 'Wrong Password'});
     }
     return done(null, user);

@@ -10,9 +10,9 @@ router.get('/register', (req, res, next) => {
   res.send('index.html');
 });
 
-router.post('/register', [check('email').isEmail(), check('password')], Authentication.register);
+router.post('/register', [check('email').isEmail().trim(), check('password').isLength({min: 5})], Authentication.register);
 
-router.post('/login', passport.authenticate('local-login', {
+router.post('/login', [check('email').isEmail().trim(), check('password').isLength({min: 5})], passport.authenticate('local-login', {
     successRedirect: '/profile/',
     failureRedirect: '/',
   }));
