@@ -1,5 +1,5 @@
-const socketIo = require('socket.io');
-const io = socketIo();
+const socket_io = require('socket.io');
+const io = socket_io();
 let socketApi = {};
 
 socketApi = io;
