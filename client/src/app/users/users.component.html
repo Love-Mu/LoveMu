@@ -1,0 +1,18 @@
+<h2>
+  Users
+</h2>
+
+<mat-grid-list cols="3">
+<mat-grid-tile *ngFor="let user of users">
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{user.fname}}  {{user.sname}}</mat-card-title>
+    <mat-card-subtitle>{{user.user_name}}</mat-card-subtitle>
+    <img src = {{user.image}} width="50" height="50">
+  </mat-card-header>
+  <mat-card-content>
+
+  </mat-card-content>
+</mat-card>
+</mat-grid-tile>
+</mat-grid-list>
