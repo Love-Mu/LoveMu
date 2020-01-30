@@ -74,27 +74,13 @@ module.exports = {
     };
     request.post(authOptions, (error, response, body) => {
       if (!error && response.status === 200) {
-        res.send(body.access_token);
+        User.find({_id: req.user._id}).exec((usr) => usr.access_token = body.access_token);
+        res.redirect('/spotify/retrieveDetails');
       }
     });
   },
-  retrieveDetails: (req, res, next) => {
-    // Retrieve current user's refresh token, then use refresh route
-    /*request.get(`http://danu7.it.nuigalway.ie:8632/spotify/refAccess`).then((error, response, body) => {
-      if (!error) {
-        User.findOne({_id: req.user._id}).exec((err, user) => {
-          if (err) {
-            return res.json({error: err});
-          }
-          if (!user) {
-            return res.json({message: 'User not found'});
-          }
-          user.access_token = body.accessToken;
-          user.save();
-        });
-      }
-    });*/
 
+  retrieveDetails: (req, res, next) => {
     const authOptionsArtists = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${req.user.access_token}`},
@@ -117,7 +103,7 @@ module.exports = {
         user.artists = values[0];
         user.genres = values[1];
         user.save((err, usr) => {
-          res.redirect('/profile/' + usr._id);
+          res.redirect('/profile/');
         });
       });
     }).catch((err) => console.log(err));

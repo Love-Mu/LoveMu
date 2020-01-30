@@ -1,5 +1,5 @@
 const {validationResult} = require('express-validator');
-const passport = require('passport');
+
 const User = require('../models/User');
 
 // Need to write validation functions to parse and validate user data
