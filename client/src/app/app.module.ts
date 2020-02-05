@@ -11,13 +11,18 @@ import {
   MatIconModule,
   MatInputModule, MatRadioModule,
   MatSelectModule,
-  MatSidenavModule
+  MatSidenavModule,
+  MatGridListModule
 } from '@angular/material';
-import { MatGridListModule } from '@angular/material';
 import { LoginComponent } from './auth/login/login.component';
 import { RegistrationComponent } from './auth/registration/registration.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { AppRoutingModule } from './app-routing/app-routing.module';
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,6 +30,9 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
     UsersComponent,
     LoginComponent,
     RegistrationComponent
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -41,6 +49,8 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
     MatRadioModule,
     ReactiveFormsModule,
     MatDatepickerModule,
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
