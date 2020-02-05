@@ -1,0 +1,13 @@
+.loginCard{
+  max-width: 250px;
+  margin: 30px;
+}
+
+button{
+  margin-bottom: 20px;
+  margin-left: 10px;
+}
+
+h2{
+  text-align: center;
+}
