@@ -103,7 +103,7 @@ module.exports = {
         user.artists = values[0];
         user.genres = values[1];
         user.save((err, usr) => {
-          res.redirect('/profile/');
+          res.redirect(`/profile/${user._id}`);
         });
       });
     }).catch((err) => console.log(err));
