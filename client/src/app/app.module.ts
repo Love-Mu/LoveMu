@@ -23,7 +23,6 @@ import {HomeComponent} from './home/home.component';
 import {LoginComponent} from './auth/login/login.component';
 import {HttpClientModule} from '@angular/common/http';
 import { AuthComponent } from './auth/auth.component';
-import { RegisterFormComponent } from './register-form/register-form.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +34,6 @@ import { RegisterFormComponent } from './register-form/register-form.component';
     LoginComponent,
     RegistrationComponent,
     AuthComponent,
-    RegisterFormComponent
   ],
   imports: [
     BrowserModule,

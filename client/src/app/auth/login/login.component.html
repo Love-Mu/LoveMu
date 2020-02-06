@@ -1,20 +1,20 @@
 <h2> Login Page</h2>
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
-<mat-card class = "loginCard">
-  <mat-card-content>
-    <mat-form-field>
-      <input matInput type="email" placeholder="Email Address">
-    </mat-form-field>
-    <br>
-    <mat-form-field>
-       <input matInput type="password" placeholder="Password">
-    </mat-form-field>
-  </mat-card-content>
-  <mat-card-footer>
-    <button tpye="submit" {formGroup}="registerForm" mat-raised-button>LOGIN BITCH (: LOVE U</button>
-    <button onClick = "alert('<3')" mat-icon-button color="primary" aria-label="Example icon-button with a heart icon">
-      <mat-icon>favorite</mat-icon>
-    </button>
-  </mat-card-footer>
-</mat-card>
+  <mat-card class = "loginCard">
+    <mat-card-content>
+      <mat-form-field>
+        <input matInput type="email" placeholder="Email Address" formControlName="email">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <input matInput type="password" placeholder="Password" formControlName="password">
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-footer>
+      <button type="submit" mat-raised-button>LOGIN BITCH (: LOVE U</button>
+      <button onClick = "alert('<3')" mat-icon-button color="primary" aria-label="Example icon-button with a heart icon">
+        <mat-icon>favorite</mat-icon>
+      </button>
+    </mat-card-footer>
+  </mat-card>
 </form>
