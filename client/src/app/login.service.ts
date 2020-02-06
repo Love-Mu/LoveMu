@@ -9,7 +9,7 @@ export class LoginService {
   userData;
   loginForm;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private authService : AuthService) {
     this.loginForm = this.formBuilder.group({
       email: '',
       password: ''
@@ -17,7 +17,7 @@ export class LoginService {
   }
 
   onSubmit(userData) {
-    AuthService.validate(userData.email, userData.password);    
+    this.authService.validate(userData.email, userData.password);
     this.loginForm.reset();
   }
 }
