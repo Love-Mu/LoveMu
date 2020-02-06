@@ -24,6 +24,7 @@ passport.use('local-login', new LocalStrategy({
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors);
+    return done(null, false, {message: 'Error in Email or Password'})
   }
   // Search for a user here that matches email
   User.findOne({email: email}).exec((err, user) => {

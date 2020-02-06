@@ -15,7 +15,7 @@ router.post('/register', [check('email').isEmail().trim(), check('password').isL
 router.post('/login', [check('email').isEmail().trim(), check('password').isLength({min: 5})], passport.authenticate('local-login', {
     successRedirect: '/profile/',
     failureRedirect: '/',
-  }));
+}));
 
 router.post('/logout', Authentication.logout);
 

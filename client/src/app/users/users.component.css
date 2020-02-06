@@ -2,3 +2,14 @@ mat-card {
   width: 75%;
   height: 75%;
 }
+
+h2 {
+  text-align: center;
+
+}
+
+.name {
+  height: 50px;
+  width: 180px;
+  text-align: left;
+}
