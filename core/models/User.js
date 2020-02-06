@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const passport = require('passport');
 
 const Schema = mongoose.Schema;
 
@@ -10,23 +9,23 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   email: {
     type: String, 
-    unique: true, 
-    match: [/.+@.+\..+/, "Please enter a valid e-mail address"],
-    select: false
+    // unique: true, 
+    //match: [/.+@.+\..+/, "Please enter a valid e-mail address"],
+    //select: false
   },
   password: {
     type: String,
     trim: true,
-    required: "Password is Required",
-    select: false
+    //required: "Password is Required",
+    //select: false
   },
   access_token: {
     type: String,
-    select: false
+    //select: false
   },
   refresh_token: {
     type: String,
-    select: false
+   // select: false
   },
   artists: {
     type: Array
@@ -45,7 +44,7 @@ const userSchema = new Schema({
   sname: {
     type: String, 
     default: "",
-    select: false
+    //select: false
   }, 
   date_of_birth: {
     type: Date
