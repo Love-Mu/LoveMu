@@ -1,10 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { FormBuilder } from '@angular/forms';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  constructor() { }
+  userData;
+  loginForm;
+
+  constructor(private formBuilder: FormBuilder) {
+    this.loginForm = this.formBuilder.group({
+      email: '',
+      password: ''
+    });
+  }
+
+  onSubmit(userData) {
+    AuthService.validate(userData.email, userData.password);    
+    this.loginForm.reset();
   }
 }
