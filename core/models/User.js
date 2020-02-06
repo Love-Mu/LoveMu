@@ -4,29 +4,23 @@ const passport = require('passport');
 
 const Schema = mongoose.Schema;
 
-
-
 // Define User model here
 const userSchema = new Schema({
   email: {
     type: String, 
     unique: true, 
-    match: [/.+@.+\..+/, "Please enter a valid e-mail address"],
-    select: false
+    match: [/.+@.+\..+/, "Please enter a valid e-mail address"]
   },
   password: {
     type: String,
     trim: true,
-    required: "Password is Required",
-    select: false
+    required: "Password is Required"
   },
   access_token: {
-    type: String,
-    select: false
+    type: String
   },
   refresh_token: {
-    type: String,
-    select: false
+    type: String
   },
   artists: {
     type: Array
