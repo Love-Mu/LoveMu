@@ -17,5 +17,5 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/');
+  return res.status(400).json({statusCode: 400, message: "Not Authenticated"});
 }
