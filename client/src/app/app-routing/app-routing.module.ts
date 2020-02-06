@@ -4,8 +4,8 @@ import { UsersComponent } from '../users/users.component';
 import { HomeComponent } from '../home/home.component';
 import { RegistrationComponent } from '../auth/registration/registration.component';
 import { LoginComponent } from '../auth/login/login.component';
-import { AuthService } from '../auth.service.ts';
-import { AuthGuardService } from '../auth-guard.service.ts';
+import { AuthService } from '../auth.service';
+import { AuthGuardService } from '../auth-guard.service';
 
 const routes: Routes = [
   { path: 'users', canActivate: [AuthGuardService], component: UsersComponent },
