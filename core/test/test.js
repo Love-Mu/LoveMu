@@ -33,7 +33,8 @@ describe('Users', () => {
           .post('/auth/register')
           .send(usr)
           .end((err, res) => {
-                res.should.have.status(200);
+            res.should.have.status(200);
+            res.should.redirectTo('/spotify/reqAccess');
             done();
           });
     });
@@ -41,7 +42,7 @@ describe('Users', () => {
 });
 
 describe('/POST registration', () => {
-    it('it should not POST a bad user', (done) => {
+    it('it should not POST a bad email', (done) => {
         let usr = {
             email: 'testuser.com',
             password: "TestPassPass"
@@ -51,14 +52,30 @@ describe('/POST registration', () => {
           .send(usr)
           .end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.have.property('errors');
-                res.body.errors.should.be.a('array');
-                chai.expect('errors').to.have.property('[0].param','email');
-                res.body.errors.should.have.property('[0].param','email');
+                res.body.should.have.property('errors').with.lengthOf(1).that.deep.includes({"value":"testuser.com","msg":"Invalid value","param":"email","location":"body"});
             done();
           });
     });
 
 });
+
+describe('/POST registration', () => {
+    it('it should not POST a bad password', (done) => {
+        let usr = {
+            email: 'test@user.com',
+            password: "Tes"
+        }
+      chai.request(server)
+          .post('/auth/register')
+          .send(usr)
+          .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.have.property('errors').with.lengthOf(1).that.deep.includes({"value":"Tes","msg":"Invalid value","param":"password","location":"body"});
+            done();
+          });
+    });
+
+});
+
 
 });
