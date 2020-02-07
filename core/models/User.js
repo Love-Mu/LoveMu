@@ -7,7 +7,6 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   email: {
     type: String, 
-<<<<<<< HEAD
     unique: true, 
     match: [/.+@.+\..+/, "Please enter a valid e-mail address"]
   },
@@ -21,25 +20,6 @@ const userSchema = new Schema({
   },
   refresh_token: {
     type: String
-=======
-    // unique: true, 
-    //match: [/.+@.+\..+/, "Please enter a valid e-mail address"],
-    //select: false
-  },
-  password: {
-    type: String,
-    //trim: true,
-    //required: "Password is Required",
-    //select: false
-  },
-  access_token: {
-    type: String,
-    //select: false
-  },
-  refresh_token: {
-    type: String,
-   // select: false
->>>>>>> e8b4f2e9bd6bd140496fbad4674520a663920681
   },
   artists: {
     type: Array
