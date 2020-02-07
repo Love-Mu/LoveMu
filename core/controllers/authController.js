@@ -6,10 +6,6 @@ const User = require('../models/User');
 module.exports = {
   register: (req, res, next) => {
     // Create a User object here, ensuring that a User with the same email/username doesn't currently exist
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.json({errors: errors.array()});
-    }
     User.findOne({'email' : req.body.email }).exec((err, user) => {
       if (err) {
         return res.json(err);
@@ -28,17 +24,9 @@ module.exports = {
           if (err) {
             return res.json(err);
           }
-          res.redirect('/spotify/reqAccess');
+          return res.send({message: "Successful Login!"});
         });
       });
     });
   },
-  login: (req, res, next) => {
-    // Find User based on email and use comparePassword method
-  },
-
-  logout: (req, res, next) => {
-    // Log user out
-
-  }
 };
