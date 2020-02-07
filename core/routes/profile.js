@@ -8,6 +8,8 @@ router.get('/', ensureAuthenticated, Profile.getProfiles);
 
 router.get('/:id', ensureAuthenticated, Profile.getProfile);
 
+router.put('/:id', ensureAuthenticated, Profile.updateProfile);
+
 module.exports = router;
 
 function ensureAuthenticated(req, res, next) {

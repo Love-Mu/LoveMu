@@ -18,7 +18,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(`mongodb://${process.env.dbUSER}:${process.env.dbPASS}@danu7.it.nuigalway.ie:8717/${process.env.db}`, {useNewUrlParser: true, useUnifiedTopology:true}); // Insert DB URL here, username and passwords are environment variables
 
 mongoose.connection.on('error', (err) => {
-  console.log("MONGOOSE CONNECTION ERROR", err);
+  console.log("Mongoose Connection Error!", err);
 });
 
 app.use(cors());
@@ -39,6 +39,6 @@ require('./config/passport');
 
 app.use('/auth', authRouter);
 app.use('/spotify', spotifyRouter);
-app.use('/profile/', profileRouter);
+app.use('/profiles/', profileRouter);
 
 module.exports = app;
