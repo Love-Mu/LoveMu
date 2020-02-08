@@ -34,7 +34,9 @@ describe('Users', () => {
           .send(usr)
           .end((err, res) => {
             res.should.have.status(200);
-            res.should.redirectTo('/spotify/reqAccess');
+            res.body.should.be.a('object');
+            res.body.should.have.property('message');
+            res.body.message.should.eql("Successful Login!");
             done();
           });
     });
@@ -51,8 +53,9 @@ describe('/POST registration', () => {
           .post('/auth/register')
           .send(usr)
           .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.have.property('errors').with.lengthOf(1).that.deep.includes({"value":"testuser.com","msg":"Invalid value","param":"email","location":"body"});
+                res.should.have.status(422);
+                res.body.should.have.property('errors');
+                res.body.errors.should.deep.equal([ { email: 'Invalid value' } ]);
             done();
           });
     });
@@ -69,8 +72,9 @@ describe('/POST registration', () => {
           .post('/auth/register')
           .send(usr)
           .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.have.property('errors').with.lengthOf(1).that.deep.includes({"value":"Tes","msg":"Invalid value","param":"password","location":"body"});
+            res.should.have.status(422);
+            res.body.should.have.property('errors');
+            res.body.errors.should.deep.equal([ { password: 'Invalid value' } ]);
             done();
           });
     });
