@@ -1,28 +1,28 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+
 import {AppComponent} from './app.component';
 import {UsersComponent} from './users/users.component';
+import {LoginComponent} from './login/login.component';
+import {RegistrationComponent} from './registration/registration.component';
+
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatDatepickerModule,
-  MatFormFieldModule,
-  MatGridListModule,
-  MatIconModule,
-  MatInputModule,
-  MatRadioModule,
-  MatSelectModule,
-  MatSidenavModule
-} from '@angular/material';
-import {RegistrationComponent} from './auth/registration/registration.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatSelectModule} from '@angular/material/select';
+import {MatSidenavModule} from '@angular/material/sidenav';
 import {ReactiveFormsModule} from '@angular/forms';
-import {AppRoutingModule} from './app-routing/app-routing.module';
-import {HomeComponent} from './home/home.component';
-import {LoginComponent} from './auth/login/login.component';
 import {HttpClientModule} from '@angular/common/http';
-import { AuthComponent } from './auth/auth.component';
+import {RouterTestingModule} from '@angular/router/testing';
+
+import {AppRoutingModule} from './app-routing/app-routing.module';
 
 @NgModule({
   declarations: [
@@ -30,12 +30,9 @@ import { AuthComponent } from './auth/auth.component';
     UsersComponent,
     LoginComponent,
     RegistrationComponent,
-    HomeComponent,
-    LoginComponent,
-    RegistrationComponent,
-    AuthComponent,
   ],
   imports: [
+    AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
     MatCardModule,
@@ -50,8 +47,8 @@ import { AuthComponent } from './auth/auth.component';
     MatRadioModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    RouterTestingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

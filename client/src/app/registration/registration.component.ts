@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../auth.service';
+import { AuthenticationService } from '../authentication.service';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -10,7 +10,7 @@ import { AuthService } from '../../auth.service';
 export class RegistrationComponent implements OnInit {
   registrationForm;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router : Router) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router) {
     this.registrationForm = this.formBuilder.group({
       email: '',
       password: '',

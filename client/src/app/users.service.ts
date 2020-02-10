@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UsersService {
   constructor(private http: HttpClient) {  }
   getUsers(): Observable<User[]> {
-  	return this.http.get<User[]>("https://danu7.it.nuigalway.ie:8632/profile")
+    return this.http.get<User[]>('https://danu7.it.nuigalway.ie:8632/profile');
   }
 }
