@@ -6,6 +6,10 @@ const User = require('../models/User');
 module.exports = {
   register: (req, res, next) => {
     // Create a User object here, ensuring that a User with the same email/username doesn't currently exist
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json(errors);
+    }
     User.findOne({'email' : req.body.email }).exec((err, user) => {
       if (err) {
         return res.json(err);
