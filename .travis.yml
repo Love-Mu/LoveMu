@@ -4,5 +4,6 @@ node_js:
 before_script:
   - cd core
 script:
+  - YARN_GPG=no 
   - npm install
   - npm test
