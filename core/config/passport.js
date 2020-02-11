@@ -1,5 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const {validationResult} = require('express-validator');
 
 const User = require('../models/User');
@@ -35,3 +36,11 @@ passport.use('local-login', new LocalStrategy({
     return done(null, user);
   });
 }));
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CID,
+  clientSecret: process.env.GOOGLE_SECRET,
+  callbackURL: "http://danu7.it.nuigalway.ie:8632/auth/googleCallback",
+  passReqToCallback: true,
+}), function (req, accessToken, refreshToken, profile, done) {
+    // Insert code to register google user (need to save access/refreshToken, need better way to store users, etc)
+});
