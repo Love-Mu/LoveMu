@@ -28,6 +28,6 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit(userData) {
-    
+    console.log(userData);
   }
 }
