@@ -1,8 +1,8 @@
-const { body, validationResult } = require('express-validator');
+const {body, validationResult} = require('express-validator');
 
 module.exports = {
   userValidationRules: () => {
-    return [body('email').isEmail(), body('password').isLength({ min: 5 })];
+    return [body('email').isEmail(), body('password').isLength({min: 5})];
   },
 
   validate: (req, res, next) => {
