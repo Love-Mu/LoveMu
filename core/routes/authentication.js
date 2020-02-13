@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/register', userValidationRules(), validate, Authentication.register);
 
 router.post('/login',  userValidationRules(), validate, passport.authenticate('local-login', {
-    successRedirect: '/profile/',
+    successRedirect: 'https://lovemu.compsoc.ie/users',
     failureRedirect: '/',
 }));
 
