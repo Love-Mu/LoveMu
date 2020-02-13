@@ -1,4 +1,4 @@
-<form [formGroup]="registrationForm">
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit(registrationForm.value)">
   <h2>Registration Page</h2>
   <mat-card class = "registrationCard">
     <mat-card-content>
@@ -6,7 +6,7 @@
         <input matInput placeholder="Email Address" formControlName="email">
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Password" formControlName="password">
+        <input type="password" matInput placeholder="Password" formControlName="password">
       </mat-form-field>
       <br>
       <mat-form-field>
@@ -70,5 +70,8 @@
     <mat-form-field>
       <input matInput placeholder="Image URL" formControlName="image">
     </mat-form-field>
+    <mat-card-footer>
+      <button type="submit" mat-raised-button>Register</button>
+    </mat-card-footer>
   </mat-card>
 </form>
