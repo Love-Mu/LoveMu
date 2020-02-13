@@ -26,7 +26,7 @@ mongoose.connection.on('error', (err) => {
   console.log('Mongoose Connection Error!', err);
 });
 
-app.use(cors());
+app.use(cors({origin: 'http://danu7.it.nuigalway.ie:8639'}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
