@@ -15,12 +15,13 @@ export class AuthenticationService {
     }
     return false;
   }
-
+  
   public setUserInfo(user) {
     localStorage.setItem('userInfo', JSON.stringify(user));
   }
 
   public validate(email, password) {
-    return this.http.post('http://danu7.it.nuigalway.ie:8632/auth/login', {email, password}).toPromise();
+    return this.http.post('http://danu7.it.nuigalway.ie:8632/auth/login', {email, password}, {withCredentials: true}).toPromise();
   }
 }
+
