@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from '../authentication.service';
 @Component({
   selector: 'app-registration',
@@ -10,7 +11,7 @@ import { AuthenticationService } from '../authentication.service';
 export class RegistrationComponent implements OnInit {
   registrationForm;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient) {
     this.registrationForm = this.formBuilder.group({
       email: '',
       password: '',
@@ -28,6 +29,6 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit(userData) {
-    console.log(userData);
+    return this.http.post('http://localhost:8632/auth/register', {userData});
   }
 }

@@ -28,7 +28,7 @@ module.exports = {
           if (err) {
             return res.status(404).json(err);
           }
-          return res.status(200).send({message: "Successful Login!"});
+          return res.status(200).json({message: "Successful Login!"});
         });
       });
     });

@@ -10,8 +10,16 @@ const router = express.Router();
 router.post('/register', userValidationRules(), validate, Authentication.register);
 
 router.post('/login',  userValidationRules(), validate, passport.authenticate('local-login', {
-    successRedirect: '/profile',
-    failureRedirect: '/',
+    successRedirect: '/auth/success',
+    failureRedirect: '/auth/failure',
 }));
+
+router.get('/success', (req, res, next) => {
+    res.status(200).json({message: 'Successful Login!'});
+});
+
+router.get('/failure', (req, res, next) => {
+    res.status(404).json({message: 'Unsuccessful Login!'});
+});
 
 module.exports = router;
