@@ -12,23 +12,23 @@ module.exports = {
     }
     User.findOne({'email' : req.body.email }).exec((err, user) => {
       if (err) {
-        return res.json(err);
+        return res.status(404).json(err);
       }
       if (user) {
-        return res.json({message: 'Email already part of account'});
+        return res.status(409).json({message: 'Email already part of account'});
       }
       let usr = new User();
       usr.email = req.body.email;
       usr.password = usr.hashPassword(req.body.password);
       usr.save((err) => {
         if (err) {
-          return res.json(err);
+          return res.status(404).json(err);
         }
         req.login(usr, (err) => {
           if (err) {
-            return res.json(err);
+            return res.status(404).json(err);
           }
-          return res.send({message: "Successful Login!"});
+          return res.status(200).send({message: "Successful Login!"});
         });
       });
     });
