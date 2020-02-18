@@ -20,9 +20,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(userData) {
-    this.authService.validate(userData.email, userData.password).then((res) => {
-      this.authService.setUserInfo({'user': res['user']});
-    });
-    this.router.navigate(['users'])
+    this.authService.validate(userData.email, userData.password);
   }
 }

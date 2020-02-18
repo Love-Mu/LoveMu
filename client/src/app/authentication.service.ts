@@ -11,8 +11,10 @@ export class AuthenticationService {
   public isAuthenticated(): boolean {
     const userData = localStorage.getItem('userInfo')
     if (userData && JSON.parse(userData)) {
+      console.log('Authenticated');
       return true;
     }
+    console.log('Not Authenticated');
     return false;
   }
   
@@ -21,7 +23,9 @@ export class AuthenticationService {
   }
 
   public validate(email, password) {
-    return this.http.post('http://danu7.it.nuigalway.ie:8632/auth/login', {email, password}, {withCredentials: true}).toPromise();
+    return this.http.post('http://localhost:8632/auth/login', {email, password}).subscribe((res) => {
+      this.setUserInfo({'user': res['user']});
+    });
   }
 }
 
