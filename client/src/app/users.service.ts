@@ -10,6 +10,6 @@ import { Observable } from 'rxjs';
 export class UsersService {
   constructor(private http: HttpClient) {  }
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>('http://localhost:8632/profiles');
+    return this.http.get<User[]>('https://lovemu.compsoc.ie/profiles');
   }
 }

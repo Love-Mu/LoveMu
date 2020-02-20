@@ -23,7 +23,7 @@ export class AuthenticationService {
   }
 
   public validate(email, password) {
-    return this.http.post('http://localhost:8632/auth/login', {email, password}).subscribe((res) => {
+    return this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
       this.setUserInfo({'user': res['user']});
     });
   }
