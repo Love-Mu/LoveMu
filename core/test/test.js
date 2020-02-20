@@ -40,10 +40,6 @@ describe('Users', () => {
             done();
           });
     });
-
-});
-
-describe('/POST registration', () => {
     it('it should not POST a bad email', (done) => {
         let usr = {
             email: 'testuser.com',
@@ -59,10 +55,6 @@ describe('/POST registration', () => {
             done();
           });
     });
-
-});
-
-describe('/POST registration', () => {
     it('it should not POST a bad password', (done) => {
         let usr = {
             email: 'test@user.com',
@@ -78,8 +70,29 @@ describe('/POST registration', () => {
             done();
           });
     });
-
+    it('it should not POST a used email', (done) => {
+        let usr1 = new User ({
+            email: 'test@user.com',
+            password: "TesitPass"
+        })
+        let usr2 = {
+            email: 'test@user.com',
+            password: "TestThePass"
+        }
+        usr1.save((err, usr1) => {
+            chai.request(server)
+            .post('/auth/register')
+            .send(usr2)
+            .end((err, res) => {
+                res.should.have.status(409);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.message.should.eql("Email already part of account");
+                done();
+            });
+            done();
+        });
+    });
 });
-
 
 });

@@ -20,8 +20,12 @@ app.io = io;
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(`mongodb://${process.env.dbUSER}:${process.env.dbPASS}@danu7.it.nuigalway.ie:8717/${process.env.db}`, {useNewUrlParser: true, useUnifiedTopology:true}); // Insert DB URL here, username and passwords are environment variables
-
+if(process.env.NODE_ENV == 'test'){
+  mongoose.connect(`mongodb://${process.env.dbTestUSER}:${process.env.dbTestPASS}@danu7.it.nuigalway.ie:8717/${process.env.dbTest}`, {useNewUrlParser: true, useUnifiedTopology:true}); 
+}
+else{
+  mongoose.connect(`mongodb://${process.env.dbUSER}:${process.env.dbPASS}@danu7.it.nuigalway.ie:8717/${process.env.db}`, {useNewUrlParser: true, useUnifiedTopology:true}); // Insert DB URL here, username and passwords are environment variables
+}
 mongoose.connection.on('error', (err) => {
   console.log('Mongoose Connection Error!', err);
 });
