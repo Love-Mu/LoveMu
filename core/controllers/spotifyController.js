@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
-const redirectUri = 'http://danu7.it.nuigalway.ie:8632/spotify/reqCallback';
+const redirectUri = 'http://lovemu.compsoc.ie/spotify/reqCallback';
 const scope = 'user-top-read';
 
 /* We need to save the access and refresh tokens to each user

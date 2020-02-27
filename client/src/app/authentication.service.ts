@@ -9,19 +9,23 @@ export class AuthenticationService {
   constructor(private http: HttpClient) { }
 
   public isAuthenticated(): boolean {
-    const userData = localStorage.getItem('userInfo')
+    const userData = localStorage.getItem('userInfo');
     if (userData && JSON.parse(userData)) {
+      console.log('Authenticated');
       return true;
     }
+    console.log('Not Authenticated');
     return false;
   }
-  
+
   public setUserInfo(user) {
     localStorage.setItem('userInfo', JSON.stringify(user));
   }
 
   public validate(email, password) {
-    return this.http.post('http://danu7.it.nuigalway.ie:8632/auth/login', {email, password}, {withCredentials: true}).toPromise();
+    return this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
+      this.setUserInfo({'user': res['user']});
+    });
   }
 }
 

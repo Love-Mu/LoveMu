@@ -10,3 +10,9 @@ client/node_modules
 node_modules/
 
 package-lock.json
+
+core/public
+
+client/dist
+
+core/dist

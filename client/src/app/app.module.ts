@@ -5,8 +5,10 @@ import {AppComponent} from './app.component';
 import {UsersComponent} from './users/users.component';
 import {LoginComponent} from './login/login.component';
 import {RegistrationComponent} from './registration/registration.component';
+import {AppRoutingModule} from './app-routing/app-routing.module';
 import {ProfileComponent} from './profile/profile.component';
 
+import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
@@ -23,7 +25,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
 
-import {AppRoutingModule} from './app-routing/app-routing.module';
+const config: SocketIoConfig = { url: 'http://lovemu.compsoc.ie/', options: {}}
 
 @NgModule({
   declarations: [
@@ -51,6 +53,7 @@ import {AppRoutingModule} from './app-routing/app-routing.module';
     MatDatepickerModule,
     HttpClientModule,
     RouterTestingModule,
+    SocketIoModule.forRoot(config),
   ],
   providers: [],
   bootstrap: [AppComponent]
