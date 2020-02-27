@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
+
 import { UsersService } from '../users.service';
 import { User } from './User';
 
@@ -8,13 +10,16 @@ import { User } from './User';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  users: User[];
-  getUsers(): void {
-    this.userService.getUsers().subscribe(users => (this.users = users));
+  users: User[];  
+
+  constructor(private userService: UsersService, private socket: Socket) { }
+
+  ngOnInit() {
+    this.socket.emit('message', { message: "I Have Successfully Emitted My Message!"});
+    this.getUsers();
   }
 
-  constructor(private userService: UsersService) { }
-  ngOnInit() {
-    this.getUsers();
+  getUsers(): void {
+    this.userService.getUsers().subscribe(users => (this.users = users));
   }
 }
