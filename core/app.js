@@ -20,7 +20,7 @@ app.io = io;
 
 mongoose.Promise = global.Promise;
 
-const mongoURL = `mongodb://${process.env.dbUSER}:${process.env.dbPASS}@127.0.0.1:8717/${process.env.db}`;
+const mongoURL = `mongodb://${process.env.dbUSER}:${process.env.dbPASS}@lovemu.compsoc.ie:8717/${process.env.db}`;
 console.log(mongoURL);
 
 if(process.env.NODE_ENV == 'test'){
