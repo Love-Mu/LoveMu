@@ -20,11 +20,15 @@ app.io = io;
 
 mongoose.Promise = global.Promise;
 
+const mongoURL = `mongodb://${process.env.dbUSER}:${process.env.dbPASS}@127.0.0.1:8717/${process.env.db}`;
+console.log(mongoURL);
+
 if(process.env.NODE_ENV == 'test'){
   mongoose.connect(`mongodb://${process.env.dbTestUSER}:${process.env.dbTestPASS}@danu7.it.nuigalway.ie:8717/${process.env.dbTest}`, {useNewUrlParser: true, useUnifiedTopology:true}); 
 }
 else{
-  mongoose.connect(`mongodb://${process.env.dbUSER}:${process.env.dbPASS}@127.0.0.1:27017/${process.env.db}`, {useNewUrlParser: true, useUnifiedTopology:true}); // Insert DB URL here, username and passwords are environment variables
+  mongoose.connect(mongoURL, {useNewUrlParser: true, useUnifiedTopology:true, socketTimeoutMS: 45000, keepAlive: true, reconnectTries: 10});
+//  mongoose.connect(`mongodb://${process.env.dbUSER}:${process.env.dbPASS}@127.0.0.1:27017/${process.env.db}`, {useNewUrlParser: true, useUnifiedTopology:true}); // Insert DB URL here, username and passwords are environment variables
 }
 
 mongoose.connection.on('error', (err) => {

@@ -29,6 +29,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit(userData) {
+    console.log('Making Registeration Request');
     return this.http.post('https://lovemu.compsoc.ie/auth/register', {userData});
   }
 }
