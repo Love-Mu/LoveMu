@@ -12,22 +12,31 @@ let should = chai.should();
 
 
 chai.use(chaiHttp);
-//Our parent block
-describe('Users', () => {
-    beforeEach((done) => { //Before each test we empty the database
-        User.remove({}, (err) => { 
+
+describe('Registration', () => {
+    beforeEach((done) => { //Before each test empty the database`
+        User.remove({}, (err) => {
            done();           
         });        
     });
 
     /*
-  * Test the /POST route
+  * Test the Registration
   */
-  describe('/POST registration', () => {
+  describe('5 Tests', () => {
     it('it should POST a new user with the provided details', (done) => {
         let usr = {
             email: 'test@user.com',
-            password: "TestPassPass"
+            password: "TestPassPass",
+            user_name: "TestUser",
+            fname: "Conor",
+            sname: "Smith",
+            dob: new Date("1999-11-12"),
+            location: "Spain",
+            image: "picture.jpg",
+            gender: "Test",
+            sexuality: "Robot",
+            bio: "I am a test"
         }
       chai.request(server)
           .post('/auth/register')
@@ -43,7 +52,16 @@ describe('Users', () => {
     it('it should not POST a bad email', (done) => {
         let usr = {
             email: 'testuser.com',
-            password: "TestPassPass"
+            password: "TestPassPass",
+            user_name: "TestUser",
+            fname: "Conor",
+            sname: "Smith",
+            dob: new Date("1999-11-12"), 
+            location: "Spain",
+            image: "picture.jpg",
+            gender: "Test",
+            sexuality: "Robot",
+            bio: "I am a test"
         }
       chai.request(server)
           .post('/auth/register')
@@ -58,7 +76,16 @@ describe('Users', () => {
     it('it should not POST a bad password', (done) => {
         let usr = {
             email: 'test@user.com',
-            password: "Tes"
+            password: "Tes",
+            user_name: "TestUser",
+            fname: "Conor",
+            sname: "Smith",
+            dob: new Date("1999-11-12"), 
+            location: "Spain",
+            image: "picture.jpg",
+            gender: "Test",
+            sexuality: "Robot",
+            bio: "I am a test"
         }
       chai.request(server)
           .post('/auth/register')
@@ -73,11 +100,29 @@ describe('Users', () => {
     it('it should not POST a used email', (done) => {
         let usr1 = new User ({
             email: 'test@user.com',
-            password: "TesitPass"
+            password: "TestPass",
+            user_name: "TestUser",
+            fname: "Conor",
+            sname: "Smith",
+            dob: new Date("1999-11-12"), 
+            location: "Spain",
+            image: "picture.jpg",
+            gender: "Test",
+            sexuality: "Robot",
+            bio: "I am a test"
         })
         let usr2 = {
             email: 'test@user.com',
-            password: "TestThePass"
+            password: "TestThePass",
+            user_name: "TestUser",
+            fname: "Conor",
+            sname: "Smith",
+            dob: new Date("1999-11-12"), 
+            location: "Spain",
+            image: "picture.jpg",
+            gender: "Test",
+            sexuality: "Robot",
+            bio: "I am a test"
         }
         usr1.save((err, usr1) => {
             chai.request(server)
@@ -90,9 +135,70 @@ describe('Users', () => {
                 res.body.message.should.eql("Email already part of account");
                 done();
             });
-            done();
+        });
+    });
+    it('it should not POST a used username', (done) => {
+        let usr1 = new User ({
+            email: 'test@user.com',
+            password: "TestPass",
+            user_name: "TestUser",
+            fname: "Conor",
+            sname: "Smith",
+            dob: new Date("1999-11-12"), 
+            location: "Spain",
+            image: "picture.jpg",
+            gender: "Test",
+            sexuality: "Robot",
+            bio: "I am a test"
+        })
+        let usr2 = {
+            email: 'test2@user.com',
+            password: "TestThePass",
+            user_name: "TestUser",
+            fname: "Conor",
+            sname: "Smith",
+            dob: new Date("1999-11-12"), 
+            location: "Spain",
+            image: "picture.jpg",
+            gender: "Test",
+            sexuality: "Robot",
+            bio: "I am a test"
+        }
+        usr1.save((err, usr1) => {
+            chai.request(server)
+            .post('/auth/register')
+            .send(usr2)
+            .end((err, res) => {
+                res.should.have.status(409);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.message.should.eql("Username already part of account");
+                done();
+            });
         });
     });
 });
+});
 
+describe('Login', () => {
+    beforeEach((done) => { //Before each test empty the database`
+        User.remove({}, (err) => {
+           done();           
+        });        
+    });
+
+    /*
+  * Test the Login
+  */
+  describe('Tests', () => {
+    it('it should login an existing user', (done) => {
+        done();
+    });  
+    it('it should not login an existing user with a bad password', (done) => {
+        done();
+    }); 
+    it('it should not login when the email is not recognised', (done) => {
+        done();
+    });             
+});
 });

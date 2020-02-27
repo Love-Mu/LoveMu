@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
-const redirectUri = 'http://lovemu.compsoc.ie/spotify/reqCallback';
+const redirectUri = 'https://lovemu.compsoc.ie/spotify/reqCallback';
 const scope = 'user-top-read';
 
 /* We need to save the access and refresh tokens to each user
@@ -17,7 +17,7 @@ const scope = 'user-top-read';
 
 module.exports = {
   requestAccess: (req, res, next) => {
-    res.redirect(`https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`);
+    res.status(200).send({redirect: `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`});
   },
 
   callbackAccess: (req, res, next) => {
@@ -103,7 +103,7 @@ module.exports = {
         user.artists = values[0];
         user.genres = values[1];
         user.save((err, usr) => {
-          res.redirect(`/profile/${user._id}`);
+          res.status(200).send({msg: 'Successfully Did Spotify Parsing!'});
         });
       });
     }).catch((err) => console.log(err));
