@@ -1,0 +1,16 @@
+.spotify{
+  background-color: #4CAF50;
+  border-radius: 20px;
+  margin: 5px;
+}
+
+.spotifyimg{
+  width: 20px;
+  height: 20px;
+}
+
+.registrationCard{
+  background-image: url("https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png");
+}
+
+input[type="email"] { text-transform: lowercase; }

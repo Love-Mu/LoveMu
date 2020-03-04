@@ -4,7 +4,7 @@
 
   <mat-grid-list cols="3">
   <mat-grid-tile *ngFor="let user of users">
-  <mat-card>
+  <mat-card [routerLink]="[user._id]">
     <mat-card-header>
       <div class = 'name'>
         <mat-card-title>{{user.fname}}  {{user.sname}}</mat-card-title>

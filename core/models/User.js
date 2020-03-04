@@ -37,10 +37,9 @@ const userSchema = new Schema({
   },
   sname: {
     type: String, 
-    default: "",
-    //select: false
+    default: ""
   }, 
-  date_of_birth: {
+  dob: {
     type: Date
   },
   location: {

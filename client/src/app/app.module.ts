@@ -5,6 +5,7 @@ import {AppComponent} from './app.component';
 import {UsersComponent} from './users/users.component';
 import {LoginComponent} from './login/login.component';
 import {RegistrationComponent} from './registration/registration.component';
+import {ProfileComponent} from './profile/profile.component'
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {ProfileComponent} from './profile/profile.component';
 
@@ -25,13 +26,14 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
 
-const config: SocketIoConfig = { url: 'http://lovemu.compsoc.ie/', options: {}}
+const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
 
 @NgModule({
   declarations: [
     AppComponent,
     UsersComponent,
     LoginComponent,
+    ProfileComponent,
     RegistrationComponent,
     ProfileComponent
   ],
