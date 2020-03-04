@@ -7,6 +7,7 @@ import {LoginComponent} from './login/login.component';
 import {RegistrationComponent} from './registration/registration.component';
 import {ProfileComponent} from './profile/profile.component'
 import {AppRoutingModule} from './app-routing/app-routing.module';
+import {ProfileComponent} from './profile/profile.component';
 
 import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -34,6 +35,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     LoginComponent,
     ProfileComponent,
     RegistrationComponent,
+    ProfileComponent
   ],
   imports: [
     AppRoutingModule,

@@ -20,7 +20,6 @@ app.io = io;
 
 mongoose.Promise = global.Promise;
 
-
 if(process.env.NODE_ENV == 'test'){
   mongoose.connect(`mongodb://${process.env.dbTestUSER}:${process.env.dbTestPASS}@127.0.0.1:8717/${process.env.dbTest}`, {useNewUrlParser: true, useUnifiedTopology:true});
   console.log(`mongodb://${process.env.dbTestUSER}:${process.env.dbTestPASS}@127.0.0.1:8717/${process.env.dbTest}`); 

@@ -9,7 +9,7 @@ export class AuthenticationService {
   constructor(private http: HttpClient) { }
 
   public isAuthenticated(): boolean {
-    const userData = localStorage.getItem('userInfo')
+    const userData = localStorage.getItem('userInfo');
     if (userData && JSON.parse(userData)) {
       console.log('Authenticated');
       return true;
