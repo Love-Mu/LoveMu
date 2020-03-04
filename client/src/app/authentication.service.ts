@@ -16,7 +16,7 @@ export class AuthenticationService {
     }
     console.log('Not Authenticated');
     return false;
-  }
+  } 
   
   public setUserInfo(user) {
     localStorage.setItem('userInfo', JSON.stringify(user));

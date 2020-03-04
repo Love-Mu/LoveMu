@@ -16,4 +16,13 @@ export class UsersService {
   getUser(id): Observable<User> {
     return this.http.get<User>('https://lovemu.compsoc.ie/profiles/' + id);
   }
+
+  public getCurrentUser(): string {
+    const userData = localStorage.getItem('userInfo')
+    if (userData) {
+      const usr = JSON.parse(userData);
+      const id = usr.user;
+      return id;
+    }
+  }
 }
