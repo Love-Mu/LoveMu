@@ -12,4 +12,8 @@ export class UsersService {
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>('https://lovemu.compsoc.ie/profiles');
   }
+
+  getUser(id): Observable<User> {
+    return this.http.get<User>('https://lovemu.compsoc.ie/profiles/' + id);
+  }
 }

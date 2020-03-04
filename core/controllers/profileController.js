@@ -3,8 +3,8 @@ const User = require('../models/User');
 
 module.exports = {
   getProfiles: (req, res, next) => {
-    User.find(/*{_id: {$ne: req.user.id}}*/{}).select('-password').exec((err, users) => {
-      /*const currUsrMap = req.user.genres;
+    User.find({_id: {$ne: req.user.id}}).select('-password').exec((err, users) => {
+      const currUsrMap = req.user.genres;
       const usrGenreArr = [];
       currUsrMap.forEach((val, key, map) => {
         usrGenreArr.push(key);
@@ -38,7 +38,7 @@ module.exports = {
         usr.score = similarity(tempScore, tempUsrScore);
         console.log(usr.email + ' : ' + usr.score);
       });
-      users.sort((a, b) => (a.score >= b.score) ? -1 : 1);*/
+      users.sort((a, b) => (a.score >= b.score) ? -1 : 1);
       res.json(users);
     })
   },

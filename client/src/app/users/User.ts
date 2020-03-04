@@ -1,7 +1,6 @@
 export class User {
-  id: number;
-  //artists: Array<Object>;
-  //genres: Map<string, number>;`
+  _id: number;
+  dob: Date;
   email: string;
   password: string;
   user_name: string;

@@ -17,6 +17,9 @@ export class LoginComponent implements OnInit {
     });
   }
   ngOnInit() {
+    this.loginForm.get('email').valueChanges.subscribe((event) => {
+      this.loginForm.get('email').setValue(event.toLowerCase(), {emitEvent: false});
+    });
   }
 
   onSubmit(userData) {

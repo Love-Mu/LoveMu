@@ -17,7 +17,7 @@ const scope = 'user-top-read';
 
 module.exports = {
   requestAccess: (req, res, next) => {
-    res.status(200).send({redirect: `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`});
+    res.redirect(`https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`);
   },
 
   callbackAccess: (req, res, next) => {
