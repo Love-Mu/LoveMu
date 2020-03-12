@@ -1,0 +1,31 @@
+<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark primary-color primary-color1" [containerInside]="false">
+
+    <!-- Navbar brand -->
+    <mdb-navbar-brand><a routerLink="/" class="navbar-brand">LoveMu</a></mdb-navbar-brand>
+
+    <!-- Collapsible content -->
+    <links>
+
+      <!-- Links -->
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a routerLink="/users" class="nav-link waves-light" mdbWavesEffect><mdb-icon fas icon="envelope"></mdb-icon> Dashboard<span class="sr-only">(current)</span></a>
+        </li>
+
+        <!-- Dropdown -->
+        <li class="nav-item dropdown" dropdown>
+          <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
+            <mdb-icon fas icon="user"></mdb-icon> Profile<span class="caret"></span></a>
+          <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary" role="menu">
+            <a routerLink="/profile" class="dropdown-item waves-light" mdbWavesEffect>Edit Account</a>
+            <a routerLink="/logout" class="dropdown-item waves-light" mdbWavesEffect href="#">Logout</a>
+          </div>
+        </li>
+
+      </ul>
+      <!-- Links -->
+    </links>
+    <!-- Collapsible content -->
+
+  </mdb-navbar>
+  <!--/.Navbar-->

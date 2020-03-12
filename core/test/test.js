@@ -183,7 +183,6 @@ describe('Login', () => {
     before((done) => { //Before tests empty the database then add one user
         let usr1 = new User ({
             email: 'test@user.com',
-            password: usr.hashPassword("TestPass"),
             user_name: "TestUser",
             fname: "Conor",
             sname: "Smith",
@@ -194,6 +193,7 @@ describe('Login', () => {
             sexuality: "Robot",
             bio: "I am a test"
         }) 
+        usr1.password = usr1.hashPassword("TestPass");
         User.remove({}, (err) => {
             usr1.save((err, usr1) => {
                 done();
@@ -214,6 +214,7 @@ describe('Login', () => {
             .post('/auth/login')
             .send(usr)
             .end((err, res) => {
+                res.should.redirect;
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');
@@ -222,10 +223,38 @@ describe('Login', () => {
             });
         });  
         it('it should not login an existing user with a bad password', (done) => {
-            done();
+            let usr = {
+                email:"test@user.com",
+                password:"WrongPass"
+            }
+            chai.request(server)
+            .post('/auth/login')
+            .send(usr)
+            .end((err, res) => {
+                res.should.redirect;
+                res.should.have.status(404);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.message.should.eql("Unsuccessful Login!");
+                done();
+            });
         }); 
         it('it should not login when the email is not recognised', (done) => {
-            done();
+            let usr = {
+                email:"wrong@user.com",
+                password:"TestPass"
+            }
+            chai.request(server)
+            .post('/auth/login')
+            .send(usr)
+            .end((err, res) => {
+                res.should.redirect;
+                res.should.have.status(404);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.message.should.eql("Unsuccessful Login!");
+                done();
+            });
         });             
     });
 });

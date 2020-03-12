@@ -3,8 +3,39 @@ const User = require('../models/User');
 
 module.exports = {
   getProfiles: (req, res, next) => {
-    User.find({_id: {$ne: req.user.id}}).select('-password').exec((err, users) => {
-      const currUsrMap = req.user.genres;
+    sexuality = req.user.sexuality;
+    if (sexuality == "A") {
+      sexuality = ["M", "F", "R", "O"]
+    }
+
+    User.find({_id: {$ne: req.user.id}, gender: {$in: sexuality}}).select('-password -refresh_token -access_token').exec((err, users) => {
+      
+      res.json(similarityGenerator(req.user, users));
+    })
+  },
+    getProfile: (req, res, next) => {
+      const uId = req.params.id;
+      // Find user based on this id and serve it
+      User.findOne({_id: uId}).select('-password').exec((err, user) => {
+        if (err) {
+          return res.json({error: err});
+        }
+        if (!user) {
+          return res.status(404).json({message: 'User does not exist'});
+        }
+        res.json(user);
+      });
+    },
+    updateProfile: (req, res, next) => {
+      const uId = req.params.id;
+      // Find user and update by id
+  
+      res.redirect(`/profiles/${uId}`);
+    }
+  };
+
+  function similarityGenerator(currUsr, users) {
+      const currUsrMap = currUsr.genres;
       const usrGenreArr = [];
       currUsrMap.forEach((val, key, map) => {
         usrGenreArr.push(key);
@@ -38,27 +69,5 @@ module.exports = {
         usr.score = similarity(tempScore, tempUsrScore);
         console.log(usr.email + ' : ' + usr.score);
       });
-      users.sort((a, b) => (a.score >= b.score) ? -1 : 1);
-      res.json(users);
-    })
-  },
-    getProfile: (req, res, next) => {
-      const uId = req.params.id;
-      // Find user based on this id and serve it
-      User.findOne({_id: uId}).select('-password').exec((err, user) => {
-        if (err) {
-          return res.json({error: err});
-        }
-        if (!user) {
-          return res.status(404).json({message: 'User does not exist'});
-        }
-        res.json(user);
-      });
-    },
-    updateProfile: (req, res, next) => {
-      const uId = req.params.id;
-      // Find user and update by id
-  
-      res.redirect(`/profiles/${uId}`);
-    }
-  };
+      return users.sort((a, b) => (a.score >= b.score) ? -1 : 1);
+  }

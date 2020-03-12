@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 
+
+
 // Define User model here
 const userSchema = new Schema({
   email: {
@@ -38,7 +40,7 @@ const userSchema = new Schema({
   sname: {
     type: String, 
     default: ""
-  }, 
+  },
   dob: {
     type: Date
   },
@@ -49,13 +51,17 @@ const userSchema = new Schema({
   image: {
     type: String, 
     default : ""
-  }, // temporary, need to replace with actual image storage
+  }, // Let's try imgur here
   gender: {
-    type: String, 
+    type: Number, 
+    default: ""
+  },
+  pronouns: {
+    type: String,
     default: ""
   },
   sexuality: {
-    type: String, 
+    type: Number,
     default: ""
   },
   bio: {

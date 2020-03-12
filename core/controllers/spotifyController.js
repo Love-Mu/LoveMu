@@ -103,7 +103,7 @@ module.exports = {
         user.artists = values[0];
         user.genres = values[1];
         user.save((err, usr) => {
-          res.status(200).send({msg: 'Successfully Did Spotify Parsing!'});
+          res.redirect('https://lovemu.compsoc.ie');
         });
       });
     }).catch((err) => console.log(err));

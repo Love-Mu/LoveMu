@@ -1,6 +1,8 @@
 const express = require('express');
 const {check} = require('express-validator');
 const passport = require('passport');
+const request = require('request');
+
 const { userValidationRules, validate } = require('../config/validator');
 
 const Authentication = require('../controllers/authController');
@@ -15,7 +17,10 @@ router.post('/login',  userValidationRules(), validate, passport.authenticate('l
 }));
 
 router.get('/success', (req, res, next) => {
-    res.status(200).json({message: 'Successful Login!', user: req.user.id});
+    let url = ""
+    request.get('https://lovemu.compsoc.ie/spotify/reqAccess', (err, response, body) => {
+        res.status(200).json({message: 'Successful Login!', user: req.user.id});
+    });
 });
 
 router.get('/failure', (req, res, next) => {

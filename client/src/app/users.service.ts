@@ -2,23 +2,23 @@ import { Injectable } from '@angular/core';
 import { User } from './users/User';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-  constructor(private http: HttpClient) {  }
+  constructor(private cookieService:CookieService, private http: HttpClient) {  }
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>('https://lovemu.compsoc.ie/profiles');
   }
 
-  getUser(id): Observable<User> {
+  getUser(id): Observable<User> { 
     return this.http.get<User>('https://lovemu.compsoc.ie/profiles/' + id);
   }
 
   public getCurrentUser(): string {
-    const userData = localStorage.getItem('userInfo')
+    const userData = this.cookieService.get('id')
     if (userData) {
       const usr = JSON.parse(userData);
       const id = usr.user;

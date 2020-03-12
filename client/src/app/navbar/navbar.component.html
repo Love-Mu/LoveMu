@@ -1,0 +1,17 @@
+<mat-toolbar class = "toolbar" color="primary">
+  <span>
+    <a routerLink="/">LoveMu</a>
+  </span>
+  <span class = "spacer"> </span>
+  <a routerLink="/users">Dashboard</a>
+  <a routerLink="/register" >Register</a>
+  <a routerLink="/login">Login</a>
+  <mat-select *ngIf="usrAuthed"> Profile
+    <mat-option>
+      <a routerLink="/">Edit Account</a>
+    </mat-option>
+    <mat-option>
+      <a routerLink="/logout">Logout</a>
+    </mat-option>
+  </mat-select>
+</mat-toolbar>

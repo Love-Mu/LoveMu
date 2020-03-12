@@ -1,0 +1,15 @@
+.toolbar{
+  height: 10%;
+  background-color: #542361;
+}
+
+a{
+  margin-left: 2%;
+  margin-right: 2%;
+  font-size: 50%;
+  color: white;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
