@@ -1,1 +1,17 @@
 input[type="email"] { text-transform: lowercase; }
+
+.loginForm{
+  height: 100%;
+  text-align: center;
+  display: block;
+}
+
+.loginCard{
+  width: 25%;
+  height: 40%;
+  display: inline-block;
+}
+
+.button{
+  margin: 2%;
+}

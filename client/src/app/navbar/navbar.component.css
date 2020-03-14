@@ -3,7 +3,7 @@
   background-color: #542361;
 }
 
-a{
+a, mat-label{
   margin-left: 2%;
   margin-right: 2%;
   font-size: 50%;
@@ -13,3 +13,18 @@ a{
 .spacer {
   flex: 1 1 auto;
 }
+
+.profileDropdown{
+  max-width: 1%;
+}
+
+mat-label{
+  margin-right: 1%;
+}
+
+.profile{
+  color: #542361;
+  font-size: 60%;
+  text-align: center;
+}
+

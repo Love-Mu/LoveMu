@@ -12,9 +12,7 @@ export class AuthenticationService {
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) { }
 
   public isAuthenticated(): boolean {
-
     const userData = this.cookieService.get('id');
-
     if (userData && JSON.parse(userData)) {
       return true;
     }

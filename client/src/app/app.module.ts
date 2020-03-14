@@ -21,6 +21,7 @@ import {NavbarComponent} from "./navbar/navbar.component";
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {CookieService} from 'ngx-cookie-service';
 import {MatNativeDateModule} from '@angular/material/core';
+import { FormsModule} from '@angular/forms';
 
 import {AppComponent} from './app.component';
 import {UsersComponent} from './users/users.component';
@@ -28,6 +29,7 @@ import {LoginComponent} from './login/login.component';
 import {RegistrationComponent} from './registration/registration.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {ProfileComponent} from './profile/profile.component';
+import { MessageTestComponent } from './message-test/message-test.component';
 
 const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}};
 
@@ -38,12 +40,14 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     LoginComponent,
     RegistrationComponent,
     ProfileComponent,
-    NavbarComponent
+    NavbarComponent,
+    MessageTestComponent
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
     MatCardModule,
     MatDatepickerModule,
     MatToolbarModule,

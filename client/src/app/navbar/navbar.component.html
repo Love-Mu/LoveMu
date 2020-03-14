@@ -4,14 +4,16 @@
   </span>
   <span class = "spacer"> </span>
   <a routerLink="/users">Dashboard</a>
+  <a routerLink="/messageTest">Message Test</a>
   <a routerLink="/register" >Register</a>
   <a routerLink="/login">Login</a>
-  <mat-select *ngIf="usrAuthed"> Profile
+  <mat-label>Profile</mat-label>
+  <mat-select class = "profileDropdown" *ngIf="usrAuthed">
     <mat-option>
-      <a routerLink="/">Edit Account</a>
+      <a class = "profile" routerLink="/">Edit Account</a>
     </mat-option>
     <mat-option>
-      <a routerLink="/logout">Logout</a>
+      <a class = "profile" routerLink="/logout">Logout</a>
     </mat-option>
   </mat-select>
 </mat-toolbar>
