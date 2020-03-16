@@ -21,7 +21,7 @@ app.io = io;
 mongoose.Promise = global.Promise;
 
 if(process.env.NODE_ENV == 'test'){
-  const mongoTest = `mongodb://${process.env.dbTestUSER}:${process.env.dbTestPASS}@127.0.0.1:8717/${process.env.dbTest}` ;
+  const mongoTest = `mongodb://${process.env.dbTestUSER}:${process.env.dbTestPASS}@lovemu.compsoc.ie:8717/${process.env.dbTest}` ;
   mongoose.connect(mongoTest, {useNewUrlParser: true, useUnifiedTopology:true});
   console.log(`mongodb://${process.env.dbTestUSER}:${process.env.dbTestPASS}@127.0.0.1:8717/${process.env.dbTest}`); 
 }
