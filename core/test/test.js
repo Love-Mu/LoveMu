@@ -249,7 +249,7 @@ describe('Login', () => {
             .send(usr)
             .end((err, res) => {
                 res.should.redirect;
-                res.should.have.status(404);
+                res.should.have.status(403);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');
                 res.body.message.should.eql("Unsuccessful Login!");

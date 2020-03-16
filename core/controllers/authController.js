@@ -11,7 +11,7 @@ module.exports = {
     // Create a User object here, ensuring that a User with the same email/username doesn't currently exist
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.json(errors);
+      return res.status(404).json(errors);
     }
     User.findOne({'$or':[{'email' : req.body.email },{'user_name' : req.body.user_name}]}).exec((err, user) => {
       if (err) {

@@ -17,7 +17,7 @@ router.post('/login',  userValidationRules(), validate, passport.authenticate('l
 }));
 
 router.get('/success', (req, res, next) => {
-    res.status(200).json({msg: 'Successful Login!', user: req.user.id});
+    res.status(200).json({message: 'Successful Login!', user: req.user.id});
 });
 
 router.get('/failure', (req, res, next) => {
