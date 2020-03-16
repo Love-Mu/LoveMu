@@ -54,7 +54,6 @@ require('./config/passport');
 app.use('/auth', authRouter);
 app.use('/spotify', spotifyRouter);
 app.use('/profiles/', profileRouter);
-
 io.on('connection', sockets.connection);
 
 module.exports = app;

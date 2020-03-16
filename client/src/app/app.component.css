@@ -5,4 +5,15 @@
   overflow: auto;
   flex-direction: column;
   background-color: #e8e9ff;
+  position: relative;
+}
+
+footer{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height:6%;
+  background-color: #473f53;
+  text-align: center;
+  color: white;
 }

@@ -15,9 +15,9 @@ module.exports = router;
 function ensureAuthenticated(req, res, next)
  {
   if (req.isAuthenticated()) {
+    console.log('Authenticated');
     return next();
   }
   console.log('Unauthenticated');
-  res.send('Unauthenticated');
-  
+  res.status(403).json({msg: 'Unauthenticated'});
 }

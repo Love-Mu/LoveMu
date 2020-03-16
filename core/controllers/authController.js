@@ -35,8 +35,6 @@ module.exports = {
       usr.gender = req.body.gender;
       usr.sexuality = req.body.sexuality;
       usr.bio = req.body.bio;
-      usr.artists = [];
-      usr.genres = new Map();
       usr.save((err) => {
         if (err) {
           return res.status(404).json(err);

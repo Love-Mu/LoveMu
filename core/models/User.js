@@ -24,10 +24,12 @@ const userSchema = new Schema({
     type: String
   },
   artists: {
-    type: Array
+    type: Array,
+    default: []
   },
   genres: {
-    type: Map
+    type: Map,
+    default: new Map()
   },
   user_name: {
     type: String, 

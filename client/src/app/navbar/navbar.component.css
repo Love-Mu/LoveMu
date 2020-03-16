@@ -16,10 +16,11 @@ a, mat-label{
 
 .profileDropdown{
   max-width: 1%;
+  color: white;
 }
 
 mat-label{
-  margin-right: 1%;
+  margin-right: 1.5%;
 }
 
 .profile{
@@ -27,3 +28,6 @@ mat-label{
   font-size: 70%;
 }
 
+mat-option{
+
+}

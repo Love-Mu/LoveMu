@@ -35,9 +35,8 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit(userData) {
     this.http.post('https://lovemu.compsoc.ie/auth/register', userData).subscribe((res) => {
-      this.msg = JSON.stringify(res['message']);
-      if (res['user'] != null) {
-        this.authService.setUserInfo({'user': res['user']});
+      this.msg = JSON.stringify(res['msg']);
+      if (this.msg == 'Successful Login!') {
         window.location.href= 'https://lovemu.compsoc.ie/spotify/reqAccess';
       }
     });

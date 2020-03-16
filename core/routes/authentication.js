@@ -17,14 +17,23 @@ router.post('/login',  userValidationRules(), validate, passport.authenticate('l
 }));
 
 router.get('/success', (req, res, next) => {
-    let url = ""
-    request.get('https://lovemu.compsoc.ie/spotify/reqAccess', (err, response, body) => {
-        res.status(200).json({message: 'Successful Login!', user: req.user.id});
-    });
+    res.status(200).json({msg: 'Successful Login!', user: req.user.id});
 });
 
 router.get('/failure', (req, res, next) => {
-    res.status(404).json({message: 'Unsuccessful Login!'});
+    res.status(403).json({message: 'Unsuccessful Login!'});
 });
+
+router.get('/query', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return res.send(true);
+    }
+    return res.send(false);
+})
+
+router.post('/logout', (req, res) => {
+    req.logout();
+    res.status(200).json({message: 'Logged Out'});
+})
 
 module.exports = router;

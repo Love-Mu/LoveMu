@@ -29,4 +29,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       transform: rotate(360deg);
     }
   }
-  
+
+
+h2, h3{
+  color: #018989;
+  text-align: center;
+  font-family: 'Baloo Chettan 2', cursive !important;
+  font-size: 30px !important;
+}
+
+h3{
+  font-size: 15px !important;
+}

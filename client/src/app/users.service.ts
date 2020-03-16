@@ -10,11 +10,11 @@ import { CookieService } from 'ngx-cookie-service';
 export class UsersService {
   constructor(private cookieService:CookieService, private http: HttpClient) {  }
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>('https://lovemu.compsoc.ie/profiles');
+    return this.http.get<User[]>('https://lovemu.compsoc.ie/profiles', { withCredentials: true });
   }
 
   getUser(id): Observable<User> { 
-    return this.http.get<User>('https://lovemu.compsoc.ie/profiles/' + id);
+    return this.http.get<User>('https://lovemu.compsoc.ie/profiles/' + id, { withCredentials: true });
   }
 
   public getCurrentUser(): string {

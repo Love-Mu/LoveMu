@@ -8,7 +8,7 @@ module.exports = {
       sexuality = ["M", "F", "R", "O"]
     }
 
-    User.find({_id: {$ne: req.user.id}, gender: {$in: sexuality}}).select('-password -refresh_token -access_token').exec((err, users) => {
+    User.find({_id: {$ne: req.user.id}}).select('-password -refresh_token -access_token').exec((err, users) => {
       
       res.json(similarityGenerator(req.user, users));
     })

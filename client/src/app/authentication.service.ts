@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-
+import { Subject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
@@ -13,18 +13,21 @@ export class AuthenticationService {
 
   public isAuthenticated(): boolean {
     const userData = this.cookieService.get('id');
-    if (userData && JSON.parse(userData)) {
+    if (userData && JSON.parse(userData) && this.http.get('https://lovemu.compsoc.ie/auth/query')) {
       return true;
     }
-    return false;
-  } 
-  
-  public logout(): void {
-    this.cookieService.delete('id');
   }
+  
+  public logout() {
+    return this.http.post('https://lovemu.compsoc.ie/auth/logout', {}).subscribe((res) => {
+      this.cookieService.deleteAll('/', '.lovemu.compsoc.ie');
+      this.router.navigate(['/']);
+      console.log("Logged Out Succesfully!");
+    });
+  };
 
   public setUserInfo(id) {
-    this.cookieService.set('id', JSON.stringify(id), 7, '/', 'lovemu.compsoc.ie', true);
+    this.cookieService.set('id', JSON.stringify(id), 0, '/', 'lovemu.compsoc.ie', true);
   }
 
   public validate(email, password) {
