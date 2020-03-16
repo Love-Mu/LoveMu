@@ -23,7 +23,10 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-const httpServer = http.createServer(app);
+const httpServer = http.createServer(function (req, res) {
+  res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+  res.end();
+});
 const httpsServer = https.createServer(credentials, app);
 
 /**
@@ -34,7 +37,7 @@ const io = app.io;
 //io.attach(httpServer);
 io.attach(httpsServer);
 
-//httpServer.listen(80);
+httpServer.listen(80);
 httpsServer.listen(443);
 /*httpServer.on('error', onError);
 httpServer.on('listening', onListening);

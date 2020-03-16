@@ -1,16 +1,38 @@
 .spotify{
-  background-color: #4CAF50;
-  border-radius: 20px;
-  margin: 5px;
+  background-color: #1DB954;
+  color: white;
+  border-radius: 5%;
+}
+
+button{
+  border-radius: 5%;
+  margin: 2%;
+  color: black;
 }
 
 .spotifyimg{
-  width: 20px;
-  height: 20px;
+  width: 2%;
+  height: 2%;
 }
 
 .registrationCard{
-  background-image: url("https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png");
+  background-color: white;
+  border-radius: 5%;
+  margin: 2%;
 }
 
-input[type="email"] { text-transform: lowercase; }
+.registration{
+  width: 70%;
+  height: 55%;
+  display: inline-block;
+}
+
+.regDiv{
+  text-align: center;
+  display: block;
+}
+
+
+input[type="email"] {
+  text-transform: lowercase;
+}

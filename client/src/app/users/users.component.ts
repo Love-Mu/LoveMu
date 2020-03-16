@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-
 import { UsersService } from '../users.service';
 import { User } from './User';
 

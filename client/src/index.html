@@ -2,14 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Client</title>
+  <title>LoveMu</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">
+  <style>
+      .lds-dual-ring {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid cyan;
+    border-color: cyan transparent cyan transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+  }
+  @keyframes lds-dual-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .loading-div {
+    text-align: center;
+    margin-top: 30vh;
+  }
+
+  </style>
 </head>
 <body class="mat-typography">
+  <!-- BEGIN: Pre-Bootstrap Loading Screen. -->
+<div style="[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}" ng-cloak class="ng-cloak loading-div">
+
+<div class="lds-dual-ring"></div>
+
+</div>
+<!-- END: Pre-Bootstrap Loading Screen. -->
   <app-root></app-root>
 </body>
 </html>

@@ -5,6 +5,7 @@ module.exports = {
       console.log('A User Disconnected');
     });
     socket.on('message', (msg) => {
+      socket.emit('message', msg);
       console.log(msg);
     });
   },

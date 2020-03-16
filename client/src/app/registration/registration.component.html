@@ -1,78 +1,100 @@
-<form [formGroup]="registrationForm" (ngSubmit)="onSubmit(registrationForm.value)">
-  <h2>Registration Page</h2>
-  <mat-card class = "registrationCard">
-    <mat-card-content>
-      <mat-form-field>
-        <input matInput placeholder="Email Address" formControlName="email">
-      </mat-form-field>
-      <mat-form-field>
-        <input type="password" matInput placeholder="Password" formControlName="password">
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input matInput placeholder="Username" formControlName="user_name">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="First Name" formControlName="fname">
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input matInput placeholder="Surname" formControlName="sname">
-      </mat-form-field>
-      <mat-form-field>
-        <mat-select placeholder="County" formControlName="location">
-          <mat-option value="option">Antrim</mat-option>
-          <mat-option value="option">Armagh</mat-option>
-          <mat-option value="option">Carlow</mat-option>
-          <mat-option value="option">Cavan</mat-option>
-          <mat-option value="option">Clare</mat-option>
-          <mat-option value="option">Cork</mat-option>
-          <mat-option value="option">Derry</mat-option>
-          <mat-option value="option">Donegal</mat-option>
-          <mat-option value="option">Down</mat-option>
-          <mat-option value="option">Dublin</mat-option>
-          <mat-option value="option">Fermanagh</mat-option>
-          <mat-option value="option">Galway</mat-option>
-          <mat-option value="option">Kerry</mat-option>
-          <mat-option value="option">Kildare</mat-option>
-          <mat-option value="option">Kilkenny</mat-option>
-          <mat-option value="option">Laois</mat-option>
-          <mat-option value="option">Leitrim</mat-option>
-          <mat-option value="option">Limerick</mat-option>
-          <mat-option value="option">Longford</mat-option>
-          <mat-option value="option">Louth</mat-option>
-          <mat-option value="option">Mayo</mat-option>
-          <mat-option value="option">Meath</mat-option>
-          <mat-option value="option">Monaghan</mat-option>
-          <mat-option value="option">Offaly</mat-option>
-          <mat-option value="option">Roscommon</mat-option>
-          <mat-option value="option">Sligo</mat-option>
-          <mat-option value="option">Tipperary</mat-option>
-          <mat-option value="option">Tyrone</mat-option>
-          <mat-option value="option">Waterford</mat-option>
-          <mat-option value="option">Westmeath</mat-option>
-          <mat-option value="option">Wexford</mat-option>
-          <mat-option value="option">Wicklow</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input matInput placeholder = "Gender" formControlName="gender">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder = "Sexuality" formControlName="sexuality">
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <textarea matInput placeholder = "Bio" formControlName="bio"></textarea>
-      </mat-form-field>
-    </mat-card-content>
-    <mat-form-field>
-      <input matInput placeholder="Image URL" formControlName="image">
-    </mat-form-field>
-    <mat-card-footer>
-      <button type="submit" mat-raised-button>Register</button>
-      <a class = "spotify" mat-raised-button href="https://lovemu.compsoc.ie/spotify/reqAccess"> <img class = "spotifyimg" src = "https://pluspng.com/img-png/spotify-logo-png-open-2000.png"/> Connect to Spotify </a>
-    </mat-card-footer>
-  </mat-card>
-</form>
+<h2>Registration</h2>
+<div>
+  <div class = "regDiv">
+    <p>{{msg}}</p>
+    <form class = "registration" [formGroup]="registrationForm" (ngSubmit)="onSubmit(registrationForm.value)">
+      <mat-card class = "registrationCard">
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput placeholder="Email Address" formControlName="email">
+          </mat-form-field> &nbsp;
+          <mat-form-field>
+            <input type="password" matInput placeholder="Password" formControlName="password">
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="Username" formControlName="user_name">
+          </mat-form-field>&nbsp;
+          <mat-form-field>
+            <input matInput placeholder="First Name" formControlName="fname">
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="Surname" formControlName="sname">
+          </mat-form-field>&nbsp;
+          <mat-form-field>
+            <mat-select placeholder="County" formControlName="location">
+              <mat-option value="Antrim">Antrim</mat-option>
+              <mat-option value="Armagh">Armagh</mat-option>
+              <mat-option value="Carlow">Carlow</mat-option>
+              <mat-option value="Cavan">Cavan</mat-option>
+              <mat-option value="Clare">Clare</mat-option>
+              <mat-option value="Cork">Cork</mat-option>
+              <mat-option value="Derry">Derry</mat-option>
+              <mat-option value="Donegal">Donegal</mat-option>
+              <mat-option value="Down">Down</mat-option>
+              <mat-option value="Dublin">Dublin</mat-option>
+              <mat-option value="Fermanagh">Fermanagh</mat-option>
+              <mat-option value="Galway">Galway</mat-option>
+              <mat-option value="Kerry">Kerry</mat-option>
+              <mat-option value="Kildare">Kildare</mat-option>
+              <mat-option value="Kilkenny">Kilkenny</mat-option>
+              <mat-option value="Laois">Laois</mat-option>
+              <mat-option value="Leitrim">Leitrim</mat-option>
+              <mat-option value="Limerick">Limerick</mat-option>
+              <mat-option value="Longford">Longford</mat-option>
+              <mat-option value="Louth">Louth</mat-option>
+              <mat-option value="Mayo">Mayo</mat-option>
+              <mat-option value="Meath">Meath</mat-option>
+              <mat-option value="Monaghan">Monaghan</mat-option>
+              <mat-option value="Offaly">Offaly</mat-option>
+              <mat-option value="Roscommon">Roscommon</mat-option>
+              <mat-option value="Sligo">Sligo</mat-option>
+              <mat-option value="Tipperary">Tipperary</mat-option>
+              <mat-option value="Tyrone">Tyrone</mat-option>
+              <mat-option value="Waterford">Waterford</mat-option>
+              <mat-option value="Westmeath">Westmeath</mat-option>
+              <mat-option value="Wexford">Wexford</mat-option>
+              <mat-option value="Wicklow">Wicklow</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <mat-select formControlName="gender" placeholder="Gender">
+                <mat-option value="F">Female</mat-option>
+                <mat-option value="M">Male</mat-option>
+                <mat-option value="O">Rather Not Say</mat-option>
+                <mat-option value="O">Other</mat-option>
+            </mat-select>
+          </mat-form-field>&nbsp;
+
+          <mat-form-field>
+            <mat-select formControlName="sexuality" placeholder="I want to see">
+              <mat-option value = "M"> Men </mat-option>
+              <mat-option value = "F"> Women </mat-option>
+              <mat-option value = "E"> Everyone </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="Image URL" formControlName="image">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Date of birth</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dob">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <br>
+          <mat-form-field class = "bio">
+            <textarea matInput placeholder="Bio" formControlName="bio"></textarea>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-footer>
+          <button type="submit" mat-raised-button>Register</button>
+          <!--<a class = "spotify" mat-raised-button href="https://lovemu.compsoc.ie/spotify/reqAccess"> <img class = "spotifyimg" src = "https://cdn0.iconfinder.com/data/icons/social-media-2091/100/social-12-512.png"/> Connect to Spotify </a> -->
+        </mat-card-footer>
+      </mat-card>
+    </form>
+  </div>
+</div>

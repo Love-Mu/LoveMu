@@ -12,6 +12,7 @@ import { AuthenticationService } from '../authentication.service';
 
 export class RegistrationComponent implements OnInit {
   registrationForm;
+  msg: string;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient) {
     this.registrationForm = this.formBuilder.group({
@@ -29,16 +30,16 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.registrationForm.get('email').valueChanges.subscribe((event) => {
-      this.registrationForm.get('email').setValue(event.toLowerCase(), {emitEvent: false});
-    });
-    this.registrationForm.get('user_name').valueChanges.subscribe((event) => {
-      this.registrationForm.get('user_name').setValue(event.toLowerCase(), {emitEvent: false});
-    })
+  ngOnInit() {  
   }
 
   onSubmit(userData) {
-    this.http.post('https://lovemu.compsoc.ie/auth/register', userData).subscribe();
+    this.http.post('https://lovemu.compsoc.ie/auth/register', userData, {withCredentials: true}).subscribe((res) => {
+      this.msg = JSON.stringify(res['message']);
+      this.authService.setUserInfo(res['user']);
+      if (this.authService.isAuthenticated()) {
+        window.location.href= 'https://lovemu.compsoc.ie/spotify/reqAccess';
+      }
+    });
   }
 }

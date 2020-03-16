@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { AuthenticationService } from './authentication.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,4 +9,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'LoveMu';
+
+  constructor (private authService: AuthenticationService) { }
+
+  ngOnInit() {
+    this.authService.verify();
+  }
 }

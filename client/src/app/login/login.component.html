@@ -1,5 +1,7 @@
-<h2> Login Page</h2>
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+<h2> Welcome back to LoveMu! </h2>
+<h3> Login </h3>
+<div class = "loginDiv">
+<form [formGroup]="loginForm" class = "loginForm" (ngSubmit)="onSubmit(loginForm.value)">
   <mat-card class = "loginCard">
     <mat-card-content>
       <mat-form-field>
@@ -11,10 +13,8 @@
       </mat-form-field>
     </mat-card-content>
     <mat-card-footer>
-      <button type="submit" mat-raised-button>LOGIN CUNT</button>
-      <button onClick = "alert('<3')" mat-icon-button color="primary" aria-label="Example icon-button with a heart icon">
-        <mat-icon>favorite</mat-icon>
-      </button>
+      <button type="submit" mat-raised-button>Login</button>
     </mat-card-footer>
   </mat-card>
 </form>
+</div>

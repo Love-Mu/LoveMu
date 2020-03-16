@@ -1,14 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
-import {AppComponent} from './app.component';
-import {UsersComponent} from './users/users.component';
-import {LoginComponent} from './login/login.component';
-import {RegistrationComponent} from './registration/registration.component';
-import {ProfileComponent} from './profile/profile.component'
-import {AppRoutingModule} from './app-routing/app-routing.module';
-import {ProfileComponent} from './profile/profile.component';
-
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
@@ -25,23 +17,40 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
+import {NavbarComponent} from "./navbar/navbar.component";
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {CookieService} from 'ngx-cookie-service';
+import {MatNativeDateModule} from '@angular/material/core';
+import { FormsModule} from '@angular/forms';
 
-const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
+import {AppComponent} from './app.component';
+import {UsersComponent} from './users/users.component';
+import {LoginComponent} from './login/login.component';
+import {RegistrationComponent} from './registration/registration.component';
+import {AppRoutingModule} from './app-routing/app-routing.module';
+import {ProfileComponent} from './profile/profile.component';
+import { MessageTestComponent } from './message-test/message-test.component';
+
+const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}};
 
 @NgModule({
   declarations: [
     AppComponent,
     UsersComponent,
     LoginComponent,
-    ProfileComponent,
     RegistrationComponent,
-    ProfileComponent
+    ProfileComponent,
+    NavbarComponent,
+    MessageTestComponent
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
     MatCardModule,
+    MatDatepickerModule,
+    MatToolbarModule,
     MatGridListModule,
     MatSidenavModule,
     MatFormFieldModule,
@@ -49,15 +58,20 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatNativeDateModule,
     MatCheckboxModule,
     MatRadioModule,
     ReactiveFormsModule,
-    MatDatepickerModule,
     HttpClientModule,
     RouterTestingModule,
     SocketIoModule.forRoot(config),
+    MDBBootstrapModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    CookieService,
+    MatNativeDateModule,
+    MatDatepickerModule
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
