@@ -1,6 +1,8 @@
 const {validationResult} = require('express-validator');
 const request = require('request');
 
+const spotifyController = require('./spotifyController');
+
 const User = require('../models/User');
 
 // Need to write validation functions to parse and validate user data
@@ -33,8 +35,13 @@ module.exports = {
       usr.location = req.body.location;
       usr.image = req.body.image;
       usr.gender = req.body.gender;
-      usr.sexuality = req.body.sexuality;
+      if (req.body.sexuality == 'E') {
+        usr.sexuality = ['M', 'F', 'O']
+      } else {
+        usr.sexuality = [req.body.sexuality];
+      }
       usr.bio = req.body.bio;
+      console.log(req.body.sexuality);
       usr.save((err) => {
         if (err) {
           return res.status(404).json(err);
@@ -43,7 +50,7 @@ module.exports = {
           if (err) {
             return res.status(404).json(err);
           }
-          return res.status(200).json({message: "Successfully Registered!", user: req.user.id});
+          return res.status(200).json({message: "Successfully Registered!", user: usr.id});
           })
         });
       });

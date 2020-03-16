@@ -3,15 +3,18 @@ const User = require('../models/User');
 
 module.exports = {
   getProfiles: (req, res, next) => {
-    sexuality = req.user.sexuality;
-    if (sexuality == "A") {
-      sexuality = ["M", "F", "R", "O"]
+    let curr = req.user;
+    let sexuality = curr.sexuality;
+    let gender = curr.gender;
+    if (sexuality != 'E') {
+      User.find({_id: {$ne: curr.id}, gender: {$in: sexuality}, sexuality: {$in: gender}}).select('-password -refresh_token -access_token').exec((err, users) => {
+        res.json(similarityGenerator(req.user, users));
+      });
+    } else {
+      User.find({_id: {$ne: curr.id}}).select('-password -refresh_token -access_token').exec((err, users) => {
+        res.json(similarityGenerator(req.user, users));
+      });
     }
-
-    User.find({_id: {$ne: req.user.id}}).select('-password -refresh_token -access_token').exec((err, users) => {
-      
-      res.json(similarityGenerator(req.user, users));
-    })
   },
     getProfile: (req, res, next) => {
       const uId = req.params.id;

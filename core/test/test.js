@@ -44,7 +44,7 @@ describe('Registration', () => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');
-                res.body.message.should.eql("Successful Register!");
+                res.body.message.should.eql("Successfully Registered!");
                 done();
             });
         });

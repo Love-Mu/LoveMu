@@ -17,6 +17,15 @@ export class AuthenticationService {
       return true;
     }
   }
+
+  public verify() {
+    this.http.get('https://lovemu.compsoc.ie/auth/query').subscribe((res) => {
+      if (!res) {
+        this.cookieService.deleteAll('/', 'lovemu.compsoc.ie');
+        this.router.navigate(['/login']);
+      }
+    });
+  }
   
   public logout() {
     return this.http.post('https://lovemu.compsoc.ie/auth/logout', {}).subscribe((res) => {

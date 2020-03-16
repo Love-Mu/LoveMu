@@ -55,7 +55,7 @@ const userSchema = new Schema({
     default : ""
   }, // Let's try imgur here
   gender: {
-    type: Number, 
+    type: String, 
     default: ""
   },
   pronouns: {
@@ -63,7 +63,7 @@ const userSchema = new Schema({
     default: ""
   },
   sexuality: {
-    type: Number,
+    type: Array,
     default: ""
   },
   bio: {
