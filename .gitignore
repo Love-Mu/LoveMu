@@ -16,3 +16,5 @@ core/public
 client/dist
 
 core/dist
+
+core/bin/www
