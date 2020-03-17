@@ -35,8 +35,8 @@ module.exports = {
       usr.location = req.body.location;
       usr.image = req.body.image;
       usr.gender = req.body.gender;
-      if (req.body.sexuality == 'E') {
-        usr.sexuality = ['M', 'F', 'O']
+      if (req.body.sexuality == 'Everyone') {
+        usr.sexuality = ['Male', 'Female', 'Rather Not Say', 'Other']
       } else {
         usr.sexuality = [req.body.sexuality];
       }

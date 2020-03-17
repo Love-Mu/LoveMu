@@ -4,12 +4,15 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+//import { NavbarComponent } from './navbar/navbar.component'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) { }
+  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
+    
+  }
 
   public isAuthenticated(): boolean {
     const userData = this.cookieService.get('id');
@@ -41,6 +44,7 @@ export class AuthenticationService {
 
   public validate(email, password) {
     return this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
+      //this.navbar.changeAuth(true);
       this.setUserInfo({'id': res['user']});
       this.router.navigate(['/']);
     });
