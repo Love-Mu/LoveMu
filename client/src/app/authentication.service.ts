@@ -13,12 +13,18 @@ export class AuthenticationService {
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
     
   }
+  public usrAuthed: boolean;
 
   public isAuthenticated(): boolean {
     const userData = this.cookieService.get('id');
     if (userData && JSON.parse(userData) && this.http.get('https://lovemu.compsoc.ie/auth/query')) {
+      this.usrAuthed = true;
       return true;
     }
+  }
+
+  public setAuth(bool): void {
+    this.usrAuthed = bool;
   }
 
   public verify() {
@@ -34,6 +40,7 @@ export class AuthenticationService {
     return this.http.post('https://lovemu.compsoc.ie/auth/logout', {}).subscribe((res) => {
       this.cookieService.deleteAll('/', '.lovemu.compsoc.ie');
       this.router.navigate(['/']);
+      this.usrAuthed = false;
       console.log("Logged Out Succesfully!");
     });
   };
@@ -46,6 +53,7 @@ export class AuthenticationService {
     return this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
       //this.navbar.changeAuth(true);
       this.setUserInfo({'id': res['user']});
+      this.usrAuthed = true;
       this.router.navigate(['/']);
     });
   }

@@ -7,6 +7,7 @@ const passport = require('passport');
 const session = require('express-session');
 const cors = require('cors');
 const socket_io = require('socket.io');
+const compression = require('compression');
 
 const profileRouter = require('./routes/profile');
 const spotifyRouter = require('./routes/spotify');
@@ -38,6 +39,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(compression());
 app.use(express.static(path.join(__dirname, '/dist/client')));
 app.use(session({
   secret: process.env.SECRET,

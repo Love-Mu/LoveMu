@@ -11,6 +11,7 @@
     "bcrypt": "^3.0.7",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "compression": "^1.7.4",
     "compute-cosine-similarity": "^1.0.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
