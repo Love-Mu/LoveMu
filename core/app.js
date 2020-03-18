@@ -12,6 +12,7 @@ const compression = require('compression');
 const profileRouter = require('./routes/profile');
 const spotifyRouter = require('./routes/spotify');
 const authRouter = require('./routes/authentication');
+const messageRouter = require('./routes/message');
 const sockets = require('./config/sockets');
 
 const app = express();
@@ -23,11 +24,11 @@ mongoose.Promise = global.Promise;
 
 if(process.env.NODE_ENV == 'test'){
   const mongoTest = `mongodb://${process.env.dbTestUSER}:${process.env.dbTestPASS}@127.0.0.1:8717/${process.env.dbTest}` ;
-  mongoose.connect(mongoTest, {useNewUrlParser: true, useUnifiedTopology:true});
+  mongoose.connect(mongoTest, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 }
 else{
   const mongoURL = `mongodb://${process.env.dbUSER}:${process.env.dbPASS}@127.0.0.1:8717/${process.env.db}`;
-  mongoose.connect(mongoURL, {useNewUrlParser: true, useUnifiedTopology:true});
+  mongoose.connect(mongoURL, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true});
 }
 
 mongoose.connection.on('error', (err) => {
@@ -54,6 +55,7 @@ require('./config/passport');
 app.use('/auth', authRouter);
 app.use('/spotify', spotifyRouter);
 app.use('/profiles', profileRouter);
+app.use('/messages', messageRouter);
 io.on('connection', sockets.connection);
 
 module.exports = app;

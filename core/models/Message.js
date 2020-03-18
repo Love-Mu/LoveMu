@@ -8,10 +8,12 @@ const Schema = mongoose.Schema;
 
 const messageSchema = new Schema ({
     sender:{
-        type: String
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User'
     },
     recipient:{
-        type: String
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User'
     },
     created_at:{
         type: Date,

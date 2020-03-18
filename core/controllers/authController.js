@@ -41,7 +41,6 @@ module.exports = {
         usr.sexuality = [req.body.sexuality];
       }
       usr.bio = req.body.bio;
-      console.log(req.body.sexuality);
       usr.save((err) => {
         if (err) {
           return res.status(404).json(err);

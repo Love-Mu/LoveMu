@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Spotify = require('../controllers/spotifyController');
+const { ensureAuthenticated } = require('../config/validator');
 
 router.get('/reqAccess', ensureAuthenticated, Spotify.requestAccess);
 
@@ -12,10 +13,3 @@ router.get('/refToken', ensureAuthenticated, Spotify.refreshAccess);
 router.get('/retrieveDetails', ensureAuthenticated, Spotify.retrieveDetails);
 
 module.exports = router;
-
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  return res.status(403).json({ message: "Not Authenticated"});
-}

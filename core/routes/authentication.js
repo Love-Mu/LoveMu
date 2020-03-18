@@ -17,7 +17,12 @@ router.post('/login',  userValidationRules(), validate, passport.authenticate('l
 }));
 
 router.get('/success', (req, res, next) => {
-    res.status(200).json({message: 'Successful Login!', user: req.user.id});
+    if (req.isAuthenticated()) {
+        let id = req.user.id;
+        res.status(200).json({message: 'Successful Login!', user: id});
+    } else {
+        res.redirect('/auth/failure');
+    }
 });
 
 router.get('/failure', (req, res, next) => {

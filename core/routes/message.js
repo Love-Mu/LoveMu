@@ -1,15 +1,22 @@
-/*const express = require('express');
+const express = require('express');
 const socket_io = require('socket.io')
 
-const ChatRoom = require('../models/ChatRoom.js');
-const Message = require('../models/Message.js');
+const Message = require('../models/Message');
+const { userValidationRules, validate, ensureAuthenticated } = require('../config/validator');
 
 const io = socket_io();
 const router = express.Router();
 
 router.get('/retrieve', ensureAuthenticated, (req, res) => {
-    
-})
+    Message.findAll({'$or':[{'$and':[{'sender':req.user._id},{'recipient' : req.body._id},{'sender':req.body._id},{'recipient' : req.user._id}]}]}).populate('sender').populate('recipient').exec((err, msg) => {
+      if (err) {
+        return res.status(404).json(err);
+      }
+      else{
+        return res.status(200).json({message: "Got this far!!!"});
+      }
+    })
+});
 
 router.post('/send', ensureAuthenticated, (req, res) => {
     let msg = new Message({
@@ -19,14 +26,4 @@ router.post('/send', ensureAuthenticated, (req, res) => {
     });
 });
 
-
-function ensureAuthenticated(req, res, next)
- {
-  if (req.isAuthenticated()) {
-    console.log('Authenticated');
-    return next();
-  }
-  console.log('Unauthenticated');
-  res.status(403).json({msg: 'Unauthenticated'});
-}
-*/
+module.exports = router;
