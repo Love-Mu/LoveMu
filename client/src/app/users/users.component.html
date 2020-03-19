@@ -1,64 +1,21 @@
 <h2> Dashboard </h2>
-<!--
-  <mat-grid-list cols="4">
-  <mat-grid-tile *ngFor="let user of users">
-  <mat-card [routerLink]="[user._id]">
-    <mat-card-header>
-     <div class = 'name'>
-        <mat-card-title>{{user.fname}}  {{user.sname}}</mat-card-title>
-        <mat-card-subtitle>{{user.user_name}}</mat-card-subtitle>
-      </div>
-      <img src = {{user.image}} width="100" height="100">
-    </mat-card-header>
+
+<div class = "container">
+  <mat-card class = "userCard" [routerLink]="[user._id]" *ngFor="let user of users">
     <mat-card-content>
-      <div class = "bio">
-        {{user.bio}}
+      <div class = "userInfo">
+        <h3>{{user.fname}} {{user.sname}} </h3>
+      </div>
+      <br>
+      <img src = {{user.image}} class = "userImage" width="100" height="100">
+      <br>
+      {{user.location}}
+      <br><br>
+      <div class = "userInfo">
+        <h3> {{user.bio}}</h3>
       </div>
     </mat-card-content>
+
   </mat-card>
-  </mat-grid-tile>
-  </mat-grid-list>
 
-
-<mat-grid-list cols = "1" class = "profileGrid">
-  <mat-grid-tile *ngFor="let user of users" class = "profileTile">
-    <mat-card class = "profileCard" [routerLink]="[user._id]">
-      <mat-card-header> header has the users full name and username
-        <mat-card-title>{{user.fname}}  {{user.sname}}</mat-card-title>
-        <mat-card-subtitle>{{user.user_name}}</mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-card-content>
-        <img class = "profilePic" src = {{user.image}}>
-        <br>
-        Location: {{user.location}}
-      </mat-card-content>
-
-      <mat-card-footer>
-        {{user.bio}}
-      </mat-card-footer>
-
-    </mat-card>
-  </mat-grid-tile>
-</mat-grid-list>
-
--->
-
-<mat-grid-list cols = "3">
-  <mat-grid-tile class = "profileTile"*ngFor="let user of users">
-    <mat-card [routerLink]="[user._id]">
-      <mat-card-header>
-        <div class = 'name'>
-          <mat-card-title>{{user.fname}}  {{user.sname}}</mat-card-title>
-          <mat-card-subtitle>{{user.user_name}}</mat-card-subtitle>
-        </div>
-        <img src = {{user.image}} width="100" height="100">
-      </mat-card-header>
-      <mat-card-content>
-        <div>
-
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </mat-grid-tile>
-</mat-grid-list>
+</div>

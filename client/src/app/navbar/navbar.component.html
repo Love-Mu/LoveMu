@@ -4,16 +4,17 @@
     <a routerLink = "/">LoveMu</a>
   </span>
   <span class = "spacer"> </span>
-  <a *ngIf = "usrAuthed" routerLink = "/users">Dashboard</a>
+  <a *ngIf = "authService.usrAuthed" routerLink = "/users">Dashboard</a>
   <a routerLink = "/messageTest">Message Test</a>
   <a routerLink = "/register" >Register</a>
   <a routerLink = "/login">Login</a>
+  <a [routerLink] = "['/users/', userID]">Edit Account</a>
   <a (click) = "authService.logout()">Logout</a>
-    <div *ngIf = "usrAuthed">
+    <div *ngIf = "authService.usrAuthed">
       <mat-label>Profile</mat-label>
       <mat-select class = "profileDropdown">
         <mat-option>
-          <a class = "profile" routerLink = "/">Edit Account</a>
+          <a class = "profile" routerLink = "/profile">Edit Account</a>
         </mat-option>
         <mat-option>
           <a class = "profile" (click) = "authService.logout()">Logout</a>

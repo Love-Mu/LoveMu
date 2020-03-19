@@ -1,5 +1,5 @@
 <h2>Registration</h2>
-<div>
+
   <div class = "regDiv">
     <p>{{msg}}</p>
     <form class = "registration" [formGroup]="registrationForm" (ngSubmit)="onSubmit(registrationForm.value)">
@@ -61,18 +61,18 @@
           <br>
           <mat-form-field>
             <mat-select formControlName="gender" placeholder="Gender">
-                <mat-option value="F">Female</mat-option>
-                <mat-option value="M">Male</mat-option>
-                <mat-option value="O">Rather Not Say</mat-option>
-                <mat-option value="O">Other</mat-option>
+                <mat-option value="Female">Female</mat-option>
+                <mat-option value="Male">Male</mat-option>
+                <mat-option value="Rather Not Say">Rather Not Say</mat-option>
+                <mat-option value="Other">Other</mat-option>
             </mat-select>
           </mat-form-field>&nbsp;
 
           <mat-form-field>
             <mat-select formControlName="sexuality" placeholder="I want to see">
-              <mat-option value = "M"> Men </mat-option>
-              <mat-option value = "F"> Women </mat-option>
-              <mat-option value = "E"> Everyone </mat-option>
+              <mat-option value="Male"> Men </mat-option>
+              <mat-option value="Female"> Women </mat-option>
+              <mat-option value="Everyone"> Everyone </mat-option>
             </mat-select>
           </mat-form-field>
           <br>
@@ -97,4 +97,4 @@
       </mat-card>
     </form>
   </div>
-</div>
+

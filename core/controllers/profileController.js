@@ -6,15 +6,9 @@ module.exports = {
     let curr = req.user;
     let sexuality = curr.sexuality;
     let gender = curr.gender;
-    if (sexuality != 'E') {
-      User.find({_id: {$ne: curr.id}, gender: {$in: sexuality}, sexuality: {$in: gender}}).select('-password -refresh_token -access_token').exec((err, users) => {
-        res.json(similarityGenerator(req.user, users));
-      });
-    } else {
-      User.find({_id: {$ne: curr.id}}).select('-password -refresh_token -access_token').exec((err, users) => {
-        res.json(similarityGenerator(req.user, users));
-      });
-    }
+    User.find({_id: {$ne: curr.id}, gender: {$in: sexuality}, sexuality: {$in: gender}}).select('-password -refresh_token -access_token').exec((err, users) => {
+      res.json(similarityGenerator(req.user, users));
+    });
   },
     getProfile: (req, res, next) => {
       const uId = req.params.id;
@@ -30,10 +24,23 @@ module.exports = {
       });
     },
     updateProfile: (req, res, next) => {
-      const uId = req.params.id;
       // Find user and update by id
-  
-      res.redirect(`/profiles/${uId}`);
+      const id = req.user._id;
+      if (id != null) {
+        User.findOneAndUpdate({_id: id}, {$set: req.body}).exec((err, user) => {
+          if (err) {
+            return res.json({error: err});
+          }
+          if (!user) {
+            return res.status(404).json({message: 'User does not exist'});
+          }
+          if (req.body.password != null) {
+            user.password = user.hashPassword(req.body.password);
+            user.save();
+          }
+          res.redirect(`/profiles/${id}`);
+        });
+      }
     }
   };
 

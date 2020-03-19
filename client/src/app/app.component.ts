@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MessageService } from './message.service';
 
 import { AuthenticationService } from './authentication.service';
 
@@ -10,7 +11,7 @@ import { AuthenticationService } from './authentication.service';
 export class AppComponent {
   title = 'LoveMu';
 
-  constructor (private authService: AuthenticationService) { }
+  constructor (private messageService: MessageService, private authService: AuthenticationService) { }
 
   ngOnInit() {
     this.authService.verify();

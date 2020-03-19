@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from "../authentication.service";
 import { Observable } from "rxjs";
+import { UsersService } from '../users.service'
+import { User } from '../users/User';
 
 @Component({
   selector: 'app-navbar',
@@ -8,13 +10,14 @@ import { Observable } from "rxjs";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  usrAuthed: boolean;
+  userID: String;
 
-  constructor(public authService: AuthenticationService) {
+  constructor(private userService: UsersService, public authService: AuthenticationService) {
   }
 
   ngOnInit(): void {
-      this.usrAuthed = this.authService.isAuthenticated();
+    this.userID = this.userService.getCurrentUser();
+    console.log(this.userID);
   }
 
 }

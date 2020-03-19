@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 import { User } from '../users/User';
 import { UsersService } from '../users.service';
-import {ActivatedRoute} from '@angular/router';
+import { AuthenticationService } from '../authentication.service';
 
 @Component({
   selector: 'app-profile',
@@ -11,17 +13,21 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
   user: User;
+  public isCurrentUser: boolean;
 
-  constructor(private route: ActivatedRoute, private userService: UsersService) { }
+  constructor(private cookieService: CookieService, private route: ActivatedRoute, private userService: UsersService, private authService: AuthenticationService) { }
+
 
   ngOnInit(): void {
-    this.getUser()
+    this.getUser();
   }
 
   getUser(): void {
     let id = this.route.snapshot.paramMap.get('id');
-    if (id == null) {
-      id = this.userService.getCurrentUser();
+    let currentId = this.userService.getCurrentUser();
+
+    if (currentId == id) {
+      this.isCurrentUser = true;
     }
     this.userService.getUser(id.toString()).subscribe(user => this.user = user);
   }

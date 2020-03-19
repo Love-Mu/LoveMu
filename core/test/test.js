@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'test';
 
 let mongoose = require("mongoose");
 let User = require('../models/User');
+const Message = require('../models/Message');
 
 //Require the dev-dependencies
 let chai = require('chai');
@@ -23,20 +24,13 @@ describe('Registration', () => {
     * Test the Registration
     */
     describe('5 Tests', () => {
+        let usr = {
+            email: 'test@user.com',
+            password: "TestPassPass",
+            user_name: "TestUser",
+        }
         it('it should POST a new user with the provided details', (done) => {
-            let usr = {
-                email: 'test@user.com',
-                password: "TestPassPass",
-                user_name: "TestUser",
-                fname: "Conor",
-                sname: "Smith",
-                dob: new Date("1999-11-12"),
-                location: "Spain",
-                image: "picture.jpg",
-                gender: "Test",
-                sexuality: "Robot",
-                bio: "I am a test"
-            }
+            
             chai.request(server)
             .post('/auth/register')
             .send(usr)
@@ -49,19 +43,7 @@ describe('Registration', () => {
             });
         });
         it('it should not POST a bad email', (done) => {
-            let usr = {
-                email: 'testuser.com',
-                password: "TestPassPass",
-                user_name: "TestUser",
-                fname: "Conor",
-                sname: "Smith",
-                dob: new Date("1999-11-12"), 
-                location: "Spain",
-                image: "picture.jpg",
-                gender: "Test",
-                sexuality: "Robot",
-                bio: "I am a test"
-            }
+            usr.email = "testuser.com";
             chai.request(server)
             .post('/auth/register')
             .send(usr)
@@ -73,19 +55,8 @@ describe('Registration', () => {
             });
         });
         it('it should not POST a bad password', (done) => {
-            let usr = {
-                email: 'test@user.com',
-                password: "Tes",
-                user_name: "TestUser",
-                fname: "Conor",
-                sname: "Smith",
-                dob: new Date("1999-11-12"), 
-                location: "Spain",
-                image: "picture.jpg",
-                gender: "Test",
-                sexuality: "Robot",
-                bio: "I am a test"
-            }
+            usr.email = "test@user.com";
+            usr.password = "Tes";
             chai.request(server)
             .post('/auth/register')
             .send(usr)
@@ -101,27 +72,11 @@ describe('Registration', () => {
                 email: 'test@user.com',
                 password: "TestPass",
                 user_name: "TestUser",
-                fname: "Conor",
-                sname: "Smith",
-                dob: new Date("1999-11-12"), 
-                location: "Spain",
-                image: "picture.jpg",
-                gender: "Test",
-                sexuality: "Robot",
-                bio: "I am a test"
             })
             let usr2 = {
                 email: 'test@user.com',
                 password: "TestThePass",
                 user_name: "TestUser",
-                fname: "Conor",
-                sname: "Smith",
-                dob: new Date("1999-11-12"), 
-                location: "Spain",
-                image: "picture.jpg",
-                gender: "Test",
-                sexuality: "Robot",
-                bio: "I am a test"
             }
             usr1.save((err, usr1) => {
                 chai.request(server)
@@ -141,27 +96,11 @@ describe('Registration', () => {
                 email: 'test@user.com',
                 password: "TestPass",
                 user_name: "TestUser",
-                fname: "Conor",
-                sname: "Smith",
-                dob: new Date("1999-11-12"), 
-                location: "Spain",
-                image: "picture.jpg",
-                gender: "Test",
-                sexuality: "Robot",
-                bio: "I am a test"
             })
             let usr2 = {
                 email: 'test2@user.com',
                 password: "TestThePass",
                 user_name: "TestUser",
-                fname: "Conor",
-                sname: "Smith",
-                dob: new Date("1999-11-12"), 
-                location: "Spain",
-                image: "picture.jpg",
-                gender: "Test",
-                sexuality: "Robot",
-                bio: "I am a test"
             }
             usr1.save((err, usr1) => {
                 chai.request(server)
@@ -182,16 +121,8 @@ describe('Registration', () => {
 describe('Login', () => {
     before((done) => { //Before tests empty the database then add one user
         let usr1 = new User ({
-            email: 'test@user.com',
-            user_name: "TestUser",
-            fname: "Conor",
-            sname: "Smith",
-            dob: new Date("1999-11-12"), 
-            location: "Spain",
-            image: "picture.jpg",
-            gender: "Test",
-            sexuality: "Robot",
-            bio: "I am a test"
+            email: "test@user.com",
+            user_name: "TestUser"
         }) 
         usr1.password = usr1.hashPassword("TestPass");
         User.remove({}, (err) => {
@@ -204,16 +135,17 @@ describe('Login', () => {
     /*
     * Test the Login
     */
-    describe('Tests', () => {
+    describe('3 Tests', () => {
         it('it should login an existing user', (done) => {
             let usr = {
                 email:"test@user.com",
-                password:"TestPass"
+                password:"TestPass"  
             }
             chai.request(server)
             .post('/auth/login')
             .send(usr)
             .end((err, res) => {
+                console.log(usr);
                 res.should.redirect;
                 res.should.have.status(200);
                 res.body.should.be.a('object');
@@ -232,7 +164,7 @@ describe('Login', () => {
             .send(usr)
             .end((err, res) => {
                 res.should.redirect;
-                res.should.have.status(404);
+                res.should.have.status(403);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');
                 res.body.message.should.eql("Unsuccessful Login!");
@@ -256,5 +188,67 @@ describe('Login', () => {
                 done();
             });
         });             
+    });
+});
+
+describe('Messaging', () => {
+    before((done) => { //Before tests empty the database then add two users and two messages, then log in one user
+        let usr1 = new User ({
+            email: "test1@user.com",
+        }) 
+        let usr2 = new User ({
+            email: "test2@user.com",
+        }) 
+        let msg1 = new Message ({
+            sender: usr1._id,
+            recipient: usr2._id,
+            body: "How are you?"
+        })
+        let msg2 = new Message ({
+            sender: usr2._id,
+            recipient: usr1._id,
+            body: "Good and yourself?"
+        })
+        usr1.password = usr1.hashPassword("TestPass1");
+        usr2.password = usr2.hashPassword("TestPass2");
+        User.remove({}, (err) => {
+            usr1.save();
+            usr2.save();  
+        });
+        Message.remove({}, (err) =>{
+            msg1.save();
+            msg2.save();
+            usr = {
+                email: "test1@user.com", 
+                password: "TestPass1"
+            }
+            chai.request(server)
+            .post('/auth/login')
+            .send(usr)
+            .end((err, res) => {
+                res.should.redirect;
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.message.should.eql("Successful Login!");
+                done();
+            }); 
+        }); 
+    });
+    /*
+    * Test the Messages
+    */
+    describe('/retrieve', () => {
+         it('it should return all the messages between two users', (done) => {
+            chai.request(server)
+            .get('/messages/retrieve')
+            .send(usr2)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('array');
+                res.body.length.should.be.eql(2);
+                done();
+            });
+         });
     });
 });
