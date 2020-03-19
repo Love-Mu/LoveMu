@@ -8,7 +8,8 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root'
 })
 export class UsersService {
-  constructor(private cookieService:CookieService, private http: HttpClient) {  }
+  constructor(private cookieService:CookieService, private http: HttpClient) { }
+
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>('https://lovemu.compsoc.ie/profiles', { withCredentials: true });
   }
@@ -18,10 +19,10 @@ export class UsersService {
   }
 
   public getCurrentUser(): string {
-    const userData = this.cookieService.get('id')
+    const userData = this.cookieService.get('id');
     if (userData) {
       const usr = JSON.parse(userData);
-      const id = usr.user;
+      const id = usr.id;
       return id;
     }
   }

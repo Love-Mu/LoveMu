@@ -121,8 +121,8 @@ describe('Registration', () => {
 describe('Login', () => {
     before((done) => { //Before tests empty the database then add one user
         let usr1 = new User ({
-            email: 'test@user.com',
-            user_name: "TestUser",
+            email: "test@user.com",
+            user_name: "TestUser"
         }) 
         usr1.password = usr1.hashPassword("TestPass");
         User.remove({}, (err) => {
@@ -139,12 +139,13 @@ describe('Login', () => {
         it('it should login an existing user', (done) => {
             let usr = {
                 email:"test@user.com",
-                password:"TestPass"
+                password:"TestPass"  
             }
             chai.request(server)
             .post('/auth/login')
             .send(usr)
             .end((err, res) => {
+                console.log(usr);
                 res.should.redirect;
                 res.should.have.status(200);
                 res.body.should.be.a('object');
@@ -213,6 +214,8 @@ describe('Messaging', () => {
         User.remove({}, (err) => {
             usr1.save();
             usr2.save();  
+        });
+        Message.remove({}, (err) =>{
             msg1.save();
             msg2.save();
             usr = {
@@ -232,7 +235,6 @@ describe('Messaging', () => {
             }); 
         }); 
     });
-
     /*
     * Test the Messages
     */

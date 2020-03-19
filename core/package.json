@@ -30,6 +30,7 @@
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
-    "mocha": "^7.0.1"
+    "mocha": "^7.0.1",
+    "passport-mock-strategy": "^2.0.0"
   }
 }

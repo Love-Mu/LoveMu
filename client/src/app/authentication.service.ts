@@ -10,10 +10,9 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
-    
-  }
   public usrAuthed: boolean;
+
+  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) { }
 
   public isAuthenticated(): boolean {
     const userData = this.cookieService.get('id');
@@ -44,6 +43,11 @@ export class AuthenticationService {
       console.log("Logged Out Succesfully!");
     });
   };
+
+  public getCurrentUserID() {
+    const id = this.cookieService.get('id');
+    return JSON.parse(id);
+  }
 
   public setUserInfo(id) {
     this.cookieService.set('id', JSON.stringify(id), 0, '/', 'lovemu.compsoc.ie', true);

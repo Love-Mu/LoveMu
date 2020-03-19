@@ -31,13 +31,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 
 
-h2, h3{
-  color: #018989;
+h2{
+  color: cadetblue;
   text-align: center;
-  font-family: 'Baloo Chettan 2', cursive !important;
-  font-size: 30px !important;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 25px !important;
 }
 
 h3{
+  color: cadetblue;
+  text-align: center;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 15px !important;
+}
+
+span{
+  text-align: center;
 }

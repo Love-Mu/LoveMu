@@ -6,7 +6,7 @@ module.exports = {
     });
     socket.on('message', (msg) => {
       socket.emit('message', msg);
-      console.log(msg);
+      socket.emit(msg);
     });
   },
 };

@@ -22,6 +22,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {CookieService} from 'ngx-cookie-service';
 import {MatNativeDateModule} from '@angular/material/core';
 import { FormsModule} from '@angular/forms';
+import {ProgressBarMode} from '@angular/material/progress-bar';
 
 import {AppComponent} from './app.component';
 import {UsersComponent} from './users/users.component';

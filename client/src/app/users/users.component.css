@@ -1,5 +1,33 @@
-.profileTile{
-  width: 20%;
-  max-width: 20%;
-  text-align: left;
+.container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  height: 100%;
+  width: 100%;
+}
+
+.userCard{
+  height: 30%;
+  width: 25%;
+  margin: 2.5%;
+}
+
+.userImage{
+  border-radius: 50%;
+}
+
+mat-card{
+  text-align: center;
+}
+
+.userInfo{
+  width: 100%;
+  background-color: cadetblue;
+}
+
+h3{
+  color: white;
 }

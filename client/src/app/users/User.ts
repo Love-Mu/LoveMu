@@ -1,3 +1,5 @@
+import { Artist } from './Artist';
+
 export class User {
   _id: number;
   dob: Date;
@@ -11,4 +13,5 @@ export class User {
   gender: string;
   sexuality: string;
   bio: string;
+  top: Array<Artist>;
 }
