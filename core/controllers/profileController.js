@@ -20,6 +20,7 @@ module.exports = {
         if (!user) {
           return res.status(404).json({message: 'User does not exist'});
         }
+        user.age = user.Age;
         res.json(user);
       });
     },

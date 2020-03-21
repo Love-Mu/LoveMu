@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-
+const moment = require('moment');
 const Schema = mongoose.Schema;
 
 // Define User model here
@@ -69,6 +69,11 @@ const userSchema = new Schema({
     default: ""
   }
 });
+
+userSchema.virtual('Age').get(function () {
+  bDay = this.dob;
+  return moment().diff(bDay, 'years').toString();
+})
 
 userSchema.methods.hashPassword = function(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);

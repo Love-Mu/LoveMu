@@ -31,6 +31,7 @@ import {RegistrationComponent} from './registration/registration.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {ProfileComponent} from './profile/profile.component';
 import { MessageTestComponent } from './message-test/message-test.component';
+import { MessageComponent } from './message/message.component';
 
 const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}};
 
@@ -42,7 +43,8 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     RegistrationComponent,
     ProfileComponent,
     NavbarComponent,
-    MessageTestComponent
+    MessageTestComponent,
+    MessageComponent
   ],
   imports: [
     AppRoutingModule,

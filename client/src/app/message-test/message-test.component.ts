@@ -25,11 +25,11 @@ export class MessageTestComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.messageService
+    /*this.messageService
       .getMessages()
       .subscribe((message: string) => {
         this.messages.push(message);
-      });
+      });*/
   }
 
   sendMessage() {
