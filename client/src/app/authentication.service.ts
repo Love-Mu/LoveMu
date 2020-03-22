@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserService } from './users.service';
+import { UsersService } from './users.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
-import { NavbarComponent } from './navbar/navbar.component'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  constructor(private navbar: NavbarComponent, private userService: UserService, private http: HttpClient, private router: Router) { }
+  constructor(private userService: UsersService, private http: HttpClient, private router: Router) { }
 
   public isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
@@ -42,7 +41,6 @@ export class AuthenticationService {
       let token = res['token'];
       let id = res['id'];
       this.setUserInfo(token, id);
-      this.navbar.ngOnInit();
       this.router.navigate(['/']);
     });
   }

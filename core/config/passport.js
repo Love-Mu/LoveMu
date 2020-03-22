@@ -1,6 +1,7 @@
 const passport = require('passport');
 const passportJWT = require("passport-jwt");
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const JWTStrategy   = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 
@@ -26,10 +27,35 @@ passport.use(new LocalStrategy({
   });
 }));
 
+passport.use(new GoogleStrategy({
+  clientID: process.env.googleCLIENT,
+  clientSecret: process.env.googleSECRET,
+  callbackURL: 'https://lovemu.compsoc.ie/auth/google/callback',
+  passReqToCallback: true
+}, function async (req, accessToken, refreshToken, profile, done) {
+  User.findOne({'email' : profile.emails[0].value }).exec((err, user) => {
+    if (err) {
+      return done(err);
+    }
+    if (user) {
+      return done(null, user);
+    } else {
+      const usr = new User({});
+      usr.email = profile.emails[0].value;
+      usr.fname = profile.name.givenName;
+      usr.sname = profile.name.familyName;
+      usr.image = profile.photos[0].value;
+      usr.save(); 
+      return done(null, usr);
+    }
+  });
+}));
+
 passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.SECRET,
-}, function async (jwtPayload, done) {
+  passReqToCallback: true
+}, function async (req, jwtPayload, done) {
   User.findById({_id: jwtPayload.id}).exec((err, user) => {
     if (err) {
       return done(err);

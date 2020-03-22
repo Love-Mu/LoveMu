@@ -13,7 +13,7 @@ export class NavbarComponent implements OnInit {
   userID: String;
   usrAuthed: boolean;
 
-  constructor(private userService: UsersService, public authService: AuthenticationService) {
+  constructor(public userService: UsersService, public authService: AuthenticationService) {
   }
 
   ngOnInit(): void {

@@ -8,12 +8,10 @@ const userSchema = new Schema({
   email: {
     type: String, 
     unique: true, 
-    match: [/.+@.+\..+/, "Please enter a valid e-mail address"]
   },
   password: {
     type: String,
     trim: true,
-    required: "Password is Required"
   },
   access_token: {
     type: String
@@ -31,7 +29,8 @@ const userSchema = new Schema({
   },
   user_name: {
     type: String, 
-    default: ""
+    default: "",
+    unique: true
   },
   fname: {
     type: String, 

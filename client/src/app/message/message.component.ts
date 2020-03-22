@@ -22,20 +22,23 @@ export class MessageComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private cookieService: CookieService, private route: ActivatedRoute, private messageService: MessageService, private userService: UsersService, private authService: AuthenticationService) {
     this.messageForm = this.formBuilder.group({
       recipient: this.route.snapshot.paramMap.get('id'),
+      sender: '',
       body: ''
     });
   }
 
   ngOnInit(): void {
-
-    //this.getUser();
+    this.messageService.onNewMessage().subscribe(msg => {
+      //console.log('got msg: ' + msg);
+    });
+    this.getUser();
     //this.getMessages();
   }
 
   /*getMessages(): void {
     let id = this.route.snapshot.paramMap.get('id');
     this.messageService.getMessages(id.toString()).subscribe(messages => this.messages = messages);
-  }
+  }*/
 
   getUser(): void {
     let id = this.route.snapshot.paramMap.get('id');
@@ -44,7 +47,7 @@ export class MessageComponent implements OnInit {
     this.userService.getUser(id.toString()).subscribe(user => this.user = user);
     this.userService.getUser(currentId.toString()).subscribe(user => this.currentUser = user);
   }
-  */
+  
   onSubmit(userData) {
     /*this.messageService.sendMessage(userData);
     this.messageService.getMessages(this.route.snapshot.paramMap.get('id').toString()).subscribe(messages => this.messages = messages);
@@ -53,6 +56,8 @@ export class MessageComponent implements OnInit {
       
       this.messages.push(msg);
     });*/
+    userData.sender = this.currentUser._id;
+    this.messageService.sendMessage(userData);
   }
 
 }

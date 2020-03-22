@@ -57,14 +57,20 @@ exports.register = (req, res, next) => {
     }
     usr.bio = req.body.bio;
     usr.save((err) => {
-      req.login(user, {session: false}, (err) => {
+      req.login(usr, {session: false}, (err) => {
         if (err) {
           return res.status(403).json({message: 'Unsuccessful Login!'});
         }
-        const token = jwt.sign({id: user.id}, process.env.SECRET);
-        let id = user.id;
+        const token = jwt.sign({id: usr.id}, process.env.SECRET);
+        let id = usr.id;
         return res.status(200).json({message: 'Successful Login!', token, id});
       });
     });
   })
 };
+
+exports.google = (req, res, next) => {
+  const token = jwt.sign({id: req.user.id}, process.env.SECRET);
+  const id = req.user.id;
+  return res.redirect(`https://lovemu.compsoc.ie?token=${token}&id=${id}`); 
+}

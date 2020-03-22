@@ -8,7 +8,8 @@ const io = socket_io();
 const router = express.Router();
 
 router.get('/retrieve/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Message.find({ sender: req.user._id, recipient: req.params.id}).exec((err, messages) => {
+//need to retrieve messages from both users to each other
+  Message.find({ sender: req.user._id, recipient: req.params.id}).sort({'created_at':-1}).limit(10).exec((err, messages) => {
     if (err) {
       throw err;
       return res.status(404).json(err);
@@ -28,13 +29,8 @@ router.post('/send', passport.authenticate('jwt', {session: false}), (req, res) 
       if (err) {
         return res.status(404).json(err);
       }
-      req.login(message, (err) => {
-        if (err) {
-          return res.status(404).json(err);
-        }
-        return res.status(200).json({message: "Message Successfully Saved to DB", sender: message.sender, recipient: message.recipient});
-        })
+      return res.status(200).json({message: "Message Successfully Saved to DB", sender: message.sender, recipient: message.recipient});
+      });
     });
-});
 
 module.exports = router;

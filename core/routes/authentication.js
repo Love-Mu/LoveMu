@@ -13,9 +13,8 @@ router.post('/register', userValidationRules(), validate, Authentication.registe
 
 router.post('/login',  userValidationRules(), validate, Authentication.login);
 
-router.get('/query', passport.authenticate('jwt', {session: false}), (req, res, next) => {
-    let id = req.user._id;
-    res.status(200).json({message: 'Successful Login!', id});
-});
+router.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+
+router.get('/google/callback', passport.authenticate('google', {session: false}), Authentication.google);
 
 module.exports = router;
