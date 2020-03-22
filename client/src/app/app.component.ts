@@ -14,6 +14,6 @@ export class AppComponent {
   constructor (private messageService: MessageService, private authService: AuthenticationService) { }
 
   ngOnInit() {
-    this.authService.verify();
+    this.authService.isAuthenticated();
   }
 }

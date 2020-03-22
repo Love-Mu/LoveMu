@@ -20,6 +20,7 @@ export class UsersService {
 
   public getCurrentUser(): string {
     const id = localStorage.getItem('id');
-    return id;
+    if (id != null) return id;
+    else return '';
   }
 }

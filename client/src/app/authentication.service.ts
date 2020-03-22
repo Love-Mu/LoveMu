@@ -1,47 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from './users.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
-//import { NavbarComponent } from './navbar/navbar.component'
+import { NavbarComponent } from './navbar/navbar.component'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  public usrAuthed: boolean;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private navbar: NavbarComponent, private userService: UserService, private http: HttpClient, private router: Router) { }
 
   public isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
-    if (token && this.http.get('https://lovemu.compsoc.ie/auth/query')) {
-      this.usrAuthed = true;
+    if (token) {
       return true;
     } else {
-      this.usrAuthed = false;
       return false;
     }
   }
 
-  public setAuth(bool): void {
-    this.usrAuthed = bool;
-  }
-
-  public verify() {
-    this.http.get('https://lovemu.compsoc.ie/auth/query').subscribe((res) => {
-      if (!res) {
-        localStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      }
-    });
-  }
-  
   public logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     this.router.navigate(['/']);
-    this.usrAuthed = false;
   };
 
   public getCurrentUserID() {
@@ -55,11 +39,10 @@ export class AuthenticationService {
 
   public validate(email, password) {
     return this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
-      //this.navbar.changeAuth(true);
       let token = res['token'];
       let id = res['id'];
       this.setUserInfo(token, id);
-      this.usrAuthed = true;
+      this.navbar.ngOnInit();
       this.router.navigate(['/']);
     });
   }
