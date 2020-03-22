@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 
 const Spotify = require('../controllers/spotifyController');
-const { ensureAuthenticated } = require('../config/validator');
+const { isAuthed } = require('../config/validator');
 
-router.get('/reqAccess', ensureAuthenticated, Spotify.requestAccess);
+router.get('/reqAccess', passport.authenticate('jwt', {session: false}), Spotify.requestAccess);
 
-router.get('/reqCallback', ensureAuthenticated, Spotify.callbackAccess);
+router.get('/reqCallback', passport.authenticate('jwt', {session: false}), Spotify.callbackAccess);
 
-router.get('/refToken', ensureAuthenticated, Spotify.refreshAccess);
+router.get('/refToken', passport.authenticate('jwt', {session: false}), Spotify.refreshAccess);
 
-router.get('/retrieveDetails', ensureAuthenticated, Spotify.retrieveDetails);
+router.get('/retrieveDetails', passport.authenticate('jwt', {session: false}), Spotify.retrieveDetails);
 
 module.exports = router;

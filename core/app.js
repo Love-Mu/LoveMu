@@ -42,13 +42,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(compression());
 app.use(express.static(path.join(__dirname, '/dist/client')));
-app.use(session({
-  secret: process.env.SECRET,
-  resave: true,
-  saveUninitialized: true,
-}));
 app.use(passport.initialize());
-app.use(passport.session());
 
 require('./config/passport');
 

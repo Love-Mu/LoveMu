@@ -1,13 +1,13 @@
 const express = require('express');
 const socket_io = require('socket.io')
-
+const passport = require('passport');
 const Message = require('../models/Message');
-const { userValidationRules, validate, ensureAuthenticated } = require('../config/validator');
+const { userValidationRules, validate, isAuthed } = require('../config/validator');
 
 const io = socket_io();
 const router = express.Router();
 
-router.get('/retrieve/:id', ensureAuthenticated, (req, res) => {
+router.get('/retrieve/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   Message.find({ sender: req.user._id, recipient: req.params.id}).exec((err, messages) => {
     if (err) {
       throw err;
@@ -18,7 +18,7 @@ router.get('/retrieve/:id', ensureAuthenticated, (req, res) => {
   });
 });
 
-router.post('/send', ensureAuthenticated, (req, res) => {
+router.post('/send', passport.authenticate('jwt', {session: false}), (req, res) => {
     let message = new Message({
         sender: req.user._id,
         recipient: req.body.recipient,

@@ -13,13 +13,15 @@
     </mat-card>
   </form>
 
+  <!--*ngFor="let message of messages"
+<h3>{{message.sender}}</h3><br>
+        <h3>{{message.recipient}}</h3><br>
+        <h3>{{message.body}}</h3><br>-->
 <div class = "container">
-  <mat-card class = "messageCard" *ngFor="let message of messages">
+  <mat-card class = "messageCard">
     <mat-card-content>
       <div class = "userInfo">
-        <h3>{{message.sender}}</h3><br>
-        <h3>{{message.recipient}}</h3><br>
-        <h3>{{message.body}}</h3><br>
+        
       </div>
     </mat-card-content>
   </mat-card>

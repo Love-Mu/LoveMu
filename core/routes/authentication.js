@@ -11,29 +11,11 @@ const router = express.Router();
 
 router.post('/register', userValidationRules(), validate, Authentication.register);
 
-router.post('/login',  userValidationRules(), validate, passport.authenticate('local-login', {
-    successRedirect: '/auth/success',
-    failureRedirect: '/auth/failure',
-}));
+router.post('/login',  userValidationRules(), validate, Authentication.login);
 
-router.get('/success', (req, res, next) => {
-    res.status(200).json({message: 'Successful Login!', user: req.user.id});
+router.get('/query', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+    let id = req.user._id;
+    res.status(200).json({message: 'Successful Login!', id});
 });
-
-router.get('/failure', (req, res, next) => {
-    res.status(403).json({message: 'Unsuccessful Login!'});
-});
-
-router.get('/query', (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return res.send(true);
-    }
-    return res.send(false);
-})
-
-router.post('/logout', (req, res) => {
-    req.logout();
-    res.status(200).json({message: 'Logged Out'});
-})
 
 module.exports = router;

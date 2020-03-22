@@ -17,12 +17,12 @@ export class MessageService {
   }
 
   getMessages(id): Observable<Message[]> {
-    return this.http.get<Message[]>('https://lovemu.compsoc.ie/messages/retrieve/' + id, { withCredentials: true });
+    return this.http.get<Message[]>('https://lovemu.compsoc.ie/messages/retrieve/' + id);
   }
 
   sendMessage(userData) {
     //this.socket.emit('message', message);
-    this.http.post('https://lovemu.compsoc.ie/messages/send', userData, {withCredentials: true}).subscribe((res => {
+    this.http.post('https://lovemu.compsoc.ie/messages/send', userData).subscribe((res => {
       console.log('Req Made');
     }));
   }

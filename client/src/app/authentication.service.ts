@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
 //import { NavbarComponent } from './navbar/navbar.component'
 
 @Injectable({
@@ -12,13 +11,16 @@ import { CookieService } from 'ngx-cookie-service';
 export class AuthenticationService {
   public usrAuthed: boolean;
 
-  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   public isAuthenticated(): boolean {
-    const userData = this.cookieService.get('id');
-    if (userData && JSON.parse(userData) && this.http.get('https://lovemu.compsoc.ie/auth/query')) {
+    const token = localStorage.getItem('token');
+    if (token && this.http.get('https://lovemu.compsoc.ie/auth/query')) {
       this.usrAuthed = true;
       return true;
+    } else {
+      this.usrAuthed = false;
+      return false;
     }
   }
 
@@ -29,34 +31,34 @@ export class AuthenticationService {
   public verify() {
     this.http.get('https://lovemu.compsoc.ie/auth/query').subscribe((res) => {
       if (!res) {
-        this.cookieService.deleteAll('/', 'lovemu.compsoc.ie');
+        localStorage.removeItem('token');
         this.router.navigate(['/login']);
       }
     });
   }
   
   public logout() {
-    return this.http.post('https://lovemu.compsoc.ie/auth/logout', {}).subscribe((res) => {
-      this.cookieService.deleteAll('/', '.lovemu.compsoc.ie');
-      this.router.navigate(['/']);
-      this.usrAuthed = false;
-      console.log("Logged Out Succesfully!");
-    });
+    localStorage.removeItem('token');
+    localStorage.removeItem('id');
+    this.router.navigate(['/']);
+    this.usrAuthed = false;
   };
 
   public getCurrentUserID() {
-    const id = this.cookieService.get('id');
-    return JSON.parse(id);
+    return localStorage.getItem('id');
   }
 
-  public setUserInfo(id) {
-    this.cookieService.set('id', JSON.stringify(id), 0, '/', 'lovemu.compsoc.ie', true);
+  public setUserInfo(token, id) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('id', id)
   }
 
   public validate(email, password) {
     return this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
       //this.navbar.changeAuth(true);
-      this.setUserInfo({'id': res['user']});
+      let token = res['token'];
+      let id = res['id'];
+      this.setUserInfo(token, id);
       this.usrAuthed = true;
       this.router.navigate(['/']);
     });

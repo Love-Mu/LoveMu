@@ -19,11 +19,7 @@ export class UsersService {
   }
 
   public getCurrentUser(): string {
-    const userData = this.cookieService.get('id');
-    if (userData) {
-      const usr = JSON.parse(userData);
-      const id = usr.id;
-      return id;
-    }
+    const id = localStorage.getItem('id');
+    return id;
   }
 }
