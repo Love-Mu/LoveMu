@@ -1,8 +1,11 @@
 const {body, validationResult} = require('express-validator');
-
+const passport = require('passport');
 module.exports = {
   userValidationRules: () => {
     return [body('email').isEmail(), body('password').isLength({min: 5})];
+  },
+  messageValidationRules: () => {
+    return [body('message').trim().escape().isLength({min: 1})]
   },
   validate: (req, res, next) => {
     const errors = validationResult(req);
@@ -13,10 +16,4 @@ module.exports = {
     errors.array().map(err => sanitizedErrors.push({ [err.param]: err.msg}));
     return res.status(422).json({errors: sanitizedErrors})
   },
-  ensureAuthenticated: (req, res, next) => {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    return res.status(403).json({ message: "Not Authenticated"});
-  }
 }

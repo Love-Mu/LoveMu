@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
@@ -21,8 +21,9 @@ import {NavbarComponent} from "./navbar/navbar.component";
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {CookieService} from 'ngx-cookie-service';
 import {MatNativeDateModule} from '@angular/material/core';
-import { FormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {ProgressBarMode} from '@angular/material/progress-bar';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 import {UsersComponent} from './users/users.component';
@@ -31,6 +32,8 @@ import {RegistrationComponent} from './registration/registration.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {ProfileComponent} from './profile/profile.component';
 import { MessageTestComponent } from './message-test/message-test.component';
+import { MessageComponent } from './message/message.component';
+import {AuthInterceptor} from './authInterceptor';
 
 const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}};
 
@@ -42,7 +45,8 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     RegistrationComponent,
     ProfileComponent,
     NavbarComponent,
-    MessageTestComponent
+    MessageTestComponent,
+    MessageComponent
   ],
   imports: [
     AppRoutingModule,
@@ -71,7 +75,8 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
   providers: [
     CookieService,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

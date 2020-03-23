@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { MessageService } from './message.service';
+import {Location} from '@angular/common';
 
 import { AuthenticationService } from './authentication.service';
+import { SpotifyService } from './spotify.service';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +13,19 @@ import { AuthenticationService } from './authentication.service';
 export class AppComponent {
   title = 'LoveMu';
 
-  constructor (private messageService: MessageService, private authService: AuthenticationService) { }
+  constructor (private location: Location, private messageService: MessageService, private authService: AuthenticationService, private spotifyService: SpotifyService) { }
 
   ngOnInit() {
-    this.authService.verify();
+    this.authService.isAuthenticated();
+    this.spotifyService.handleSpotify();
+    this.authService.googleValidate();
+  }
+
+  cancel() {
+    this.location.back();
+  }
+
+  backClicked() {
+    this.location.back();
   }
 }

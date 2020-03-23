@@ -1,5 +1,6 @@
 const Buffer = require('safer-buffer').Buffer;
 const request = require('request');
+const querystring = require('querystring');
 
 const User = require('../models/User');
 
@@ -38,61 +39,29 @@ module.exports = {
 
     request.post(authOptions, (err, response, body) => {
       if (!err && response.statusCode === 200) {
-        const accessToken = body.access_token;
-        const refreshToken = body.refresh_token;
-        // Save tokens here
-        User.findOne({_id: req.user._id}).exec((err, user) => {
-          if (err) {
-            return res.json({error: err});
-          }
-          if (!user) {
-            return res.json({message: 'User not found'});
-          }
-          user.access_token = accessToken;
-          user.refresh_token = refreshToken;
-          user.save();
-          res.redirect('/spotify/retrieveDetails');
-        });
+        const access_token = body.access_token;
+        res.redirect('https://lovemu.compsoc.ie/?' + querystring.stringify({spotify_token: access_token}));
       } else {
         throw (err);
       }
     });
   },
 
-  refreshAccess: (req, res, next) => {
-    const refreshToken = req.user.refresh_token; // use this to find User's refresh token
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      headers: {
-        'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
-      },
-      form: {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-      },
-      json: true,
-    };
-    request.post(authOptions, (error, response, body) => {
-      if (!error && response.status === 200) {
-        User.find({_id: req.user._id}).exec((usr) => usr.access_token = body.access_token);
-        res.redirect('/spotify/retrieveDetails');
-      }
-    });
-  },
-
   retrieveDetails: (req, res, next) => {
+    console.log('Retrieving Details...');
     const authOptionsArtists = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
-      headers: {'Authorization': `Bearer ${req.user.access_token}`},
+      headers: {'Authorization': `Bearer ${req.body.access_token}`},
       json: true,
     };
 
     const authOptionsGenres = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
-      headers: {'Authorization': `Bearer ${req.user.access_token}`},
+      headers: {'Authorization': `Bearer ${req.body.access_token}`},
       json: true,
     };
     Promise.all([arrayArtists(authOptionsArtists), mapGenres(authOptionsGenres)]).then((values) => {
+      console.log('Finding Users');
       User.findOne({_id: req.user._id}).exec((err, user) => {
         if (err) {
           return res.json({error: err});
@@ -102,9 +71,8 @@ module.exports = {
         }
         user.artists = values[0];
         user.genres = values[1];
-        user.save((err, usr) => {
-          res.redirect('https://lovemu.compsoc.ie');
-        });
+        user.save();
+        return res.json({message: 'Successfully Retrieved Details!'});
       });
     }).catch((err) => console.log(err));
   },
@@ -112,11 +80,15 @@ module.exports = {
 
 // Promise to return hash map of Genres
 function mapGenres(authOptions) {
+  console.log('Constructing Map');
   return new Promise((resolve, reject) => {
     const genreMap = new Map();
     request.get(authOptions, (err, response, body) => {
       if (err) {
         reject(err);
+      }
+      if (response.statusCode !== 200) {
+        reject({message: 'Unauthorized Request'});
       }
       const items = body.items;
       items.forEach((item, index) => {
@@ -134,12 +106,16 @@ function mapGenres(authOptions) {
 }
 
 function arrayArtists(authOptions) {
+  console.log('Constructing Array');
   return new Promise((resolve, reject) =>
     request.get(authOptions, (err, response, body) => {
-      const artistArray = [];
       if (err) {
         reject(err);
       }
+      if (response.statusCode !== 200) {
+        reject({message: 'Unauthorized Request'});
+      }
+      const artistArray = [];
       const items = body.items;
       items.forEach((item, index) => {
         artistArray.push(item);

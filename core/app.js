@@ -42,13 +42,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(compression());
 app.use(express.static(path.join(__dirname, '/dist/client')));
-app.use(session({
-  secret: process.env.SECRET,
-  resave: true,
-  saveUninitialized: true,
-}));
 app.use(passport.initialize());
-app.use(passport.session());
 
 require('./config/passport');
 
@@ -56,6 +50,25 @@ app.use('/auth', authRouter);
 app.use('/spotify', spotifyRouter);
 app.use('/profiles', profileRouter);
 app.use('/messages', messageRouter);
-io.on('connection', sockets.connection);
+/*io.engine.generateId = (req) => {
+  return "custom:id:" + req.user._id;
+}*/
+/*io.engine.generateId = function (req) {
+  return req.user._id;
+}*/
+var people={};
+app.io.on('connection', (socket) => {
+  people[socket.handshake.query.id]=socket.id;
+  
+  console.log('A User Connected with ID: ' + socket.handshake.query.id);
+
+  socket.on('disconnect', () => {
+      console.log('A User Disconnected');
+  });
+
+  socket.on('dm', function(data) {
+    io.to(people[data.recipient]).emit('message', data);
+  });
+});
 
 module.exports = app;

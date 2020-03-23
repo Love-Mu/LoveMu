@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-
+const moment = require('moment');
 const Schema = mongoose.Schema;
 
 // Define User model here
@@ -8,18 +8,10 @@ const userSchema = new Schema({
   email: {
     type: String, 
     unique: true, 
-    match: [/.+@.+\..+/, "Please enter a valid e-mail address"]
   },
   password: {
     type: String,
     trim: true,
-    required: "Password is Required"
-  },
-  access_token: {
-    type: String
-  },
-  refresh_token: {
-    type: String
   },
   artists: {
     type: Array,
@@ -31,7 +23,8 @@ const userSchema = new Schema({
   },
   user_name: {
     type: String, 
-    default: ""
+    default: "",
+    unique: true
   },
   fname: {
     type: String, 
@@ -67,8 +60,17 @@ const userSchema = new Schema({
   bio: {
     type: String, 
     default: ""
+  },
+  complete: {
+    type: boolean,
+    default: false
   }
 });
+
+userSchema.virtual('Age').get(function () {
+  bDay = this.dob;
+  return moment().diff(bDay, 'years').toString();
+})
 
 userSchema.methods.hashPassword = function(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);

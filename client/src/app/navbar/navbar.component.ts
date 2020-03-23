@@ -11,13 +11,14 @@ import { User } from '../users/User';
 })
 export class NavbarComponent implements OnInit {
   userID: String;
+  usrAuthed: boolean;
 
-  constructor(private userService: UsersService, public authService: AuthenticationService) {
+  constructor(public userService: UsersService, public authService: AuthenticationService) {
   }
 
   ngOnInit(): void {
     this.userID = this.userService.getCurrentUser();
-    console.log(this.userID);
+    this.usrAuthed = this.authService.isAuthenticated();
   }
 
 }

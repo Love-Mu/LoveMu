@@ -1,64 +1,63 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { UsersService } from './users.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
-//import { NavbarComponent } from './navbar/navbar.component'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  public usrAuthed: boolean;
 
-  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) { }
+  constructor(private userService: UsersService, private http: HttpClient, private router: Router) { }
 
   public isAuthenticated(): boolean {
-    const userData = this.cookieService.get('id');
-    if (userData && JSON.parse(userData) && this.http.get('https://lovemu.compsoc.ie/auth/query')) {
-      this.usrAuthed = true;
+    const token = localStorage.getItem('token');
+    if (token) {
       return true;
+    } else {
+      return false;
     }
   }
 
-  public setAuth(bool): void {
-    this.usrAuthed = bool;
-  }
-
-  public verify() {
-    this.http.get('https://lovemu.compsoc.ie/auth/query').subscribe((res) => {
-      if (!res) {
-        this.cookieService.deleteAll('/', 'lovemu.compsoc.ie');
-        this.router.navigate(['/login']);
-      }
-    });
-  }
-  
   public logout() {
-    return this.http.post('https://lovemu.compsoc.ie/auth/logout', {}).subscribe((res) => {
-      this.cookieService.deleteAll('/', '.lovemu.compsoc.ie');
-      this.router.navigate(['/']);
-      this.usrAuthed = false;
-      console.log("Logged Out Succesfully!");
-    });
+    localStorage.removeItem('token');
+    localStorage.removeItem('id');
+    this.router.navigate(['/']);
   };
 
   public getCurrentUserID() {
-    const id = this.cookieService.get('id');
-    return JSON.parse(id);
+    return localStorage.getItem('id');
   }
 
-  public setUserInfo(id) {
-    this.cookieService.set('id', JSON.stringify(id), 0, '/', 'lovemu.compsoc.ie', true);
+  public setUserInfo(token, id) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('id', id)
   }
 
   public validate(email, password) {
     return this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
-      //this.navbar.changeAuth(true);
-      this.setUserInfo({'id': res['user']});
-      this.usrAuthed = true;
+      let token = res['token'];
+      let id = res['id'];
+      this.setUserInfo(token, id);
       this.router.navigate(['/']);
     });
+  }
+
+  public googleValidate() {
+    const url = window.location.href;
+    const queryParams = url.substring(26);
+    if (queryParams.length > 0) {
+      let tempArr = queryParams.split('=');
+      console.log(tempArr);
+      if (tempArr[0] === '?google_token' && tempArr.length == 3) {
+        const token = tempArr[1].substring(0, tempArr[1].indexOf("&"));
+        console.log(token);
+        const id = tempArr[2];
+        console.log(id);
+        this.setUserInfo(token, id);
+      }
+    }
   }
 }

@@ -8,32 +8,27 @@ const { userValidationRules, validate } = require('../config/validator');
 const Authentication = require('../controllers/authController');
 
 const router = express.Router();
+var multer  = require('multer')
 
-router.post('/register', userValidationRules(), validate, Authentication.register);
-
-router.post('/login',  userValidationRules(), validate, passport.authenticate('local-login', {
-    successRedirect: '/auth/success',
-    failureRedirect: '/auth/failure',
-}));
-
-router.get('/success', (req, res, next) => {
-    res.status(200).json({message: 'Successful Login!', user: req.user.id});
-});
-
-router.get('/failure', (req, res, next) => {
-    res.status(403).json({message: 'Unsuccessful Login!'});
-});
-
-router.get('/query', (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return res.send(true);
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, '/tmp/my-uploads')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
     }
-    return res.send(false);
-})
+});
 
-router.post('/logout', (req, res) => {
-    req.logout();
-    res.status(200).json({message: 'Logged Out'});
-})
+var upload = multer({ storage: storage })
+
+//router.post('/register', userValidationRules(), validate, Authentication.register);
+
+router.post('/register', userValidationRules(), validate, upload.single('profile'), Authentication.register);
+
+router.post('/login',  userValidationRules(), validate, Authentication.login);
+
+router.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+
+router.get('/google/callback', passport.authenticate('google', {session: false}), Authentication.google);
 
 module.exports = router;
