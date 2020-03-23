@@ -50,6 +50,7 @@ exports.register = (req, res, next) => {
     usr.location = req.body.location;
     usr.image = req.body.image;
     usr.gender = req.body.gender;
+    usr.complete = true;
     if (req.body.sexuality == 'Everyone') {
       usr.sexuality = ['Male', 'Female', 'Rather Not Say', 'Other']
     } else {

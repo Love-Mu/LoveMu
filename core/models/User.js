@@ -13,12 +13,6 @@ const userSchema = new Schema({
     type: String,
     trim: true,
   },
-  access_token: {
-    type: String
-  },
-  refresh_token: {
-    type: String
-  },
   artists: {
     type: Array,
     default: []
@@ -66,6 +60,10 @@ const userSchema = new Schema({
   bio: {
     type: String, 
     default: ""
+  },
+  complete: {
+    type: boolean,
+    default: false
   }
 });
 

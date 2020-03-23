@@ -65,6 +65,9 @@ passport.use(new JWTStrategy({
     if (!user) {
       return done(null, false, {message: 'User Not Associated With Account'});
     }
+    if (!user.complete) {
+      return done(null, false, {message: 'User Is Not Verified'});
+    }
     return done(null, user);
   });
 }));
