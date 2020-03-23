@@ -44,4 +44,20 @@ export class AuthenticationService {
       this.router.navigate(['/']);
     });
   }
+
+  public googleValidate() {
+    const url = window.location.href;
+    const queryParams = url.substring(26);
+    if (queryParams.length > 0) {
+      let tempArr = queryParams.split('=');
+      console.log(tempArr);
+      if (tempArr[0] === '?google_token' && tempArr.length == 3) {
+        const token = tempArr[1].substring(0, tempArr[1].indexOf("&"));
+        console.log(token);
+        const id = tempArr[2];
+        console.log(id);
+        this.setUserInfo(token, id);
+      }
+    }
+  }
 }

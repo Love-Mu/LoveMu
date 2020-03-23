@@ -28,17 +28,17 @@ export class MessageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.messageService.onNewMessage().subscribe(msg => {
-      //console.log('got msg: ' + msg);
-    });
     this.getUser();
-    //this.getMessages();
+    this.getMessages();
   }
 
-  /*getMessages(): void {
+  getMessages(): void {
     let id = this.route.snapshot.paramMap.get('id');
     this.messageService.getMessages(id.toString()).subscribe(messages => this.messages = messages);
-  }*/
+    this.messageService.onNewMessage().subscribe(data => {
+      this.messages.unshift(data);
+    });
+  }
 
   getUser(): void {
     let id = this.route.snapshot.paramMap.get('id');
@@ -49,15 +49,12 @@ export class MessageComponent implements OnInit {
   }
   
   onSubmit(userData) {
-    /*this.messageService.sendMessage(userData);
-    this.messageService.getMessages(this.route.snapshot.paramMap.get('id').toString()).subscribe(messages => this.messages = messages);
-    console.log(this.messages);
-    /*this.messageService.getNewMessages().subscribe((message: String) => {
-      
-      this.messages.push(msg);
-    });*/
     userData.sender = this.currentUser._id;
-    this.messageService.sendMessage(userData);
+    if (userData.body) {
+      this.messages.unshift(userData);
+      this.messageService.sendMessage(userData);
+      this.messageForm.reset();
+    }
   }
 
 }

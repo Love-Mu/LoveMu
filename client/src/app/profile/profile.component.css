@@ -1,10 +1,21 @@
-profileDiv{
-  text-align: center;
-  display: block;
+profileDiv {
+    text-align: center;
+    display: block;
+}
+ 
+profile{
+    width: 40%;
+    height: 40%;
+    display: inline-block;
 }
 
-profile{
-  width: 40%;
-  height: 40%;
-  display: inline-block;
+.spotify{
+    background-color: #1DB954;
+    color: white;
+    border-radius: 5%;
 }
+.spotifyimg{
+width: 2%;
+height: 2%;
+}
+  

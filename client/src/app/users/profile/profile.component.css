@@ -1,0 +1,10 @@
+profileDiv{
+  text-align: center;
+  display: block;
+}
+
+profile{
+  width: 40%;
+  height: 40%;
+  display: inline-block;
+}

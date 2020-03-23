@@ -19,12 +19,14 @@ export class MessageService {
   }
 
   sendMessage(userData) {
-    this.socket.emit('dm', userData);
+    this.http.post('https://lovemu.compsoc.ie/messages/send', userData).subscribe((res => {
+      this.socket.emit('dm', userData);
+    }));
   }
 
   onNewMessage() {
     return Observable.create((observer) => {
-      this.socket.on('message', (data: string) => {
+      this.socket.on('message', (data) => {
           observer.next(data);
       });
     });

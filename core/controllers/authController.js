@@ -70,7 +70,7 @@ exports.register = (req, res, next) => {
 };
 
 exports.google = (req, res, next) => {
-  const token = jwt.sign({id: req.user.id}, process.env.SECRET);
-  const id = req.user.id;
-  return res.redirect(`https://lovemu.compsoc.ie?token=${token}&id=${id}`); 
+    const token = jwt.sign({id: req.user.id}, process.env.SECRET);
+    const id = req.user.id;
+    return res.redirect(`https://lovemu.compsoc.ie?google_token=${token}&id=${id}`);  
 }

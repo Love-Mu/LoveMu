@@ -35,7 +35,10 @@ describe('Authentication', () => {
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');
                 res.body.message.should.eql("Successful Login!");
-                done();
+                User.findOne({email:'test@user.com'}).exec((err,user) => {
+                    user.user_name.should.not.be.empty;
+                    done();
+                });
             });
         });
         it('it should not POST a bad email', (done) => {
@@ -47,7 +50,10 @@ describe('Authentication', () => {
                 res.should.have.status(422);
                 res.body.should.have.property('errors');
                 res.body.errors.should.deep.equal([ { email: 'Invalid value' } ]);
-                done();
+                User.find({}).exec((err,user) => {
+                    user.should.be.empty;
+                    done();
+                });                
             });
         });
         it('it should not POST a bad password', (done) => {
@@ -60,7 +66,10 @@ describe('Authentication', () => {
                 res.should.have.status(422);
                 res.body.should.have.property('errors');
                 res.body.errors.should.deep.equal([ { password: 'Invalid value' } ]);
-                done();
+                User.find({}).exec((err,user) => {
+                    user.should.be.empty;
+                    done();
+                });    
             });
         });
         it('it should not POST a used email', (done) => {
@@ -107,7 +116,11 @@ describe('Authentication', () => {
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     res.body.message.should.eql("Username already part of account");
-                    done();
+                    User.find({}).exec((err,user) => {
+                        user.should.be.a('array');
+                        user.length.should.eql(1);
+                        done();
+                    });    
                 });
             });
         });
@@ -179,6 +192,7 @@ describe('Authentication', () => {
 
 describe('Messaging', () => {
     var authorisedUser = chai.request.agent(server);
+    let token;
     describe('/retrieve/:id', () => {
         before((done) => { //Before tests empty the database then add two users and two messages, then log in one user
             let usr1 = new User ({
@@ -220,6 +234,8 @@ describe('Messaging', () => {
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     res.body.message.should.eql("Successful Login!");
+                    res.body.token.should.not.be.empty;
+                    token = res.body.token;
                     done();
                 }); 
             }); 
@@ -227,7 +243,9 @@ describe('Messaging', () => {
         it('it should return all the messages between two users', (done) => {
             User.findOne({email:"test2@user.com"}).exec((err, rec) => {
                 authorisedUser
-                .get('/messages/retrieve/:'+rec._id)
+                .get('/messages/retrieve/'+rec._id)
+                .set("Authorization",
+                    "Bearer " + token)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('array');
@@ -265,21 +283,59 @@ describe('Messaging', () => {
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     res.body.message.should.eql("Successful Login!");
+                    res.body.token.should.not.be.empty;
+                    token = res.body.token;
                     done();
                 }); 
             }); 
         });
         it('it should send a message to the database', (done) => {
-            let rec = User.findOne({email:"test2@user.com"});
-            let message = {body:"This is a message", recipient:rec._id};
-
-            chai.request(server)
-            .post('/messages/retrieve/:id')
-            .send(message)
-            .end((err, res) => {
-                res.should.have.status(200);
-                done();
-            });
+            User.findOne({email:"test2@user.com"}).exec((err, rec) => {
+                console.log(rec._id);
+                User.findOne({email:"test1@user.com"}).exec((err, usr) => {
+                    let message = {body:'This is a message', recipient:rec._id};
+                    authorisedUser
+                    .post('/messages/send')
+                    .set("Authorization",
+                            "Bearer " + token)
+                    .send(message)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        res.body.message.should.eql("Message Successfully Saved to DB");
+                        res.body.should.have.property('sender');
+                        res.body.sender.should.deep.eql(usr.id);
+                        res.body.should.have.property('recipient');
+                        res.body.recipient.should.eql(rec.id);
+                        done();
+                    });
+                });
+            });            
+        });
+        it('it should not send a blank message', (done) => {
+            User.findOne({email:"test2@user.com"}).exec((err, rec) => {
+                console.log(rec._id);
+                User.findOne({email:"test1@user.com"}).exec((err, usr) => {
+                    let message = {body:'', recipient:rec._id};
+                    authorisedUser
+                    .post('/messages/send')
+                    .set("Authorization",
+                            "Bearer " + token)
+                    .send(message)
+                    .end((err, res) => {
+                        res.should.have.status(403);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        res.body.message.should.eql('Blank message');
+                        res.body.should.have.property('sender');
+                        res.body.sender.should.deep.eql(usr.id);
+                        res.body.should.have.property('recipient');
+                        res.body.recipient.should.eql(rec.id);
+                        done();
+                    });
+                });
+            });            
         });
     });
 });

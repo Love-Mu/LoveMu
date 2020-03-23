@@ -4,6 +4,9 @@ module.exports = {
   userValidationRules: () => {
     return [body('email').isEmail(), body('password').isLength({min: 5})];
   },
+  messageValidationRules: () => {
+    return [body('message').trim().escape().isLength({min: 1})]
+  },
   validate: (req, res, next) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {

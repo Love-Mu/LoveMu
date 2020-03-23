@@ -60,7 +60,7 @@ var people={};
 app.io.on('connection', (socket) => {
   people[socket.handshake.query.id]=socket.id;
   
-  console.log('A User Connected with ID: ' + socket.id);
+  console.log('A User Connected with ID: ' + socket.handshake.query.id);
 
   socket.on('disconnect', () => {
       console.log('A User Disconnected');
@@ -68,7 +68,6 @@ app.io.on('connection', (socket) => {
 
   socket.on('dm', function(data) {
     io.to(people[data.recipient]).emit('message', data);
-    console.log(people[data.recipient]);
   });
 });
 
