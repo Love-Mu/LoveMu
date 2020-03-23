@@ -53,7 +53,7 @@ export class ProfileComponent implements OnInit {
     if (!userData.sexuality) userData.sexuality = this.user.sexuality;
     if (!userData.fname) userData.fname = this.user.fname;
     if (!userData.bio) userData.bio = this.user.bio;
-    this.http.put('https://lovemu.compsoc.ie/profile/' + this.userService.getCurrentUser(), userData, {withCredentials: true}).subscribe((res) => {
+    this.http.put('https://lovemu.compsoc.ie/profiles/' + this.userService.getCurrentUser(), userData, {withCredentials: true}).subscribe((res) => {
       console.log("Amendments Made")
     });
     console.log(userData);

@@ -62,7 +62,7 @@ const userSchema = new Schema({
     default: ""
   },
   complete: {
-    type: boolean,
+    type: Boolean,
     default: false
   }
 });

@@ -39,7 +39,7 @@ module.exports = {
             user.password = user.hashPassword(req.body.password);
             user.save();
           }
-          res.redirect(`/profiles/${id}`);
+          res.status(200).json({message: 'Successfully Updated!'});
         });
       }
     }
