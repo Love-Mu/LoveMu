@@ -10,7 +10,7 @@ var storage = multer.diskStorage({
       cb(null, path);
     },
     filename: function (req, file, cb) {
-      cb(null, file.fieldname)
+      cb(null, file.fieldname +"-" + Date.now())
     }
   })
    
@@ -18,7 +18,7 @@ var storage = multer.diskStorage({
 
 router.post('/upload', upload.single('file'), function (req, res, next) {
     console.log("There you go");
-    return res.status(200);
+    return res.status(200).json({filepath: req.file.path});
 })
 
 module.exports = router;

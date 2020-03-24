@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UsersComponent } from '../users/users.component';
-import { RegistrationComponent } from '../temp-registration/registration.component';
+import { RegistrationComponent } from '../registration/registration.component';
 import { LoginComponent } from '../login/login.component';
 import { ProfileComponent} from '../profile/profile.component';
 import { LogoutComponent} from '../logout/logout.component';

@@ -27,7 +27,7 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AppComponent} from './app.component';
 import {UsersComponent} from './users/users.component';
 import {LoginComponent} from './login/login.component';
-import {RegistrationComponent} from './temp-registration/registration.component';
+import {RegistrationComponent} from './registration/registration.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {ProfileComponent} from './profile/profile.component';
 import { MessageTestComponent } from './message-test/message-test.component';
