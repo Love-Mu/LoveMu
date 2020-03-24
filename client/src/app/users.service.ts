@@ -11,11 +11,11 @@ export class UsersService {
   constructor(private cookieService:CookieService, private http: HttpClient) { }
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>('https://lovemu.compsoc.ie/profiles', { withCredentials: true });
+    return this.http.get<User[]>('https://lovemu.compsoc.ie/profiles');
   }
 
   getUser(id): Observable<User> { 
-    return this.http.get<User>('https://lovemu.compsoc.ie/profiles/' + id, { withCredentials: true });
+    return this.http.get<User>('https://lovemu.compsoc.ie/profiles/' + id);
   }
 
   public getCurrentUser(): string {

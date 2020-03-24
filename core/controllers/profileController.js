@@ -27,23 +27,29 @@ module.exports = {
     updateProfile: (req, res, next) => {
       // Find user and update by id
       const id = req.user._id;
-      if (id != null) {
-        User.findOneAndUpdate({_id: id}, {$set: req.body}).exec((err, user) => {
+      const params = {
+        user_name: req.body.user_name,
+        fname: req.body.fname,
+        sname: req.body.sname,
+        dob: req.body.dob,
+        location: req.body.location,
+        image: req.body.image,
+        gender: req.body.gender
+      }
+        User.findOneAndUpdate({_id: id}, {$set: {params}}).exec((err, user) => {
           if (err) {
             return res.json({error: err});
           }
           if (!user) {
             return res.status(404).json({message: 'User does not exist'});
           }
-          if (req.body.password != null) {
-            user.password = user.hashPassword(req.body.password);
-            user.save();
+          if (user.user_name !== req.body.user_name) {
+            return res.status(403).json({message: 'user_name already in use'});
           }
-          res.redirect(`/profiles/${id}`);
+          res.status(200).json({message: 'Successfully Updated!'});
         });
       }
-    }
-  };
+    };
 
   function similarityGenerator(currUsr, users) {
       const currUsrMap = currUsr.genres;

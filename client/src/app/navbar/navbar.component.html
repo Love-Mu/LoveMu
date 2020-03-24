@@ -1,25 +1,14 @@
 <ng-container>
   <mat-toolbar class = "toolbar">
-  <span>
-    <a routerLink = "/">LoveMu</a>
-  </span>
-  <span class = "spacer"> </span>
-  <a *ngIf = "authService.isAuthenticated()" routerLink = "/users">Dashboard</a>
-  <a routerLink = "/messageTest">Message Test</a>
-  <a routerLink = "/register" >Register</a>
-  <a routerLink = "/login">Login</a>
-  <a *ngIf = "authService.isAuthenticated()" [routerLink] = "['/users/', userService.getCurrentUser()]">Edit Account</a>
-  <a (click) = "authService.logout()">Logout</a>
-    <div *ngIf = "authService.isAuthenticated()">
-      <mat-label>Profile</mat-label>
-      <mat-select class = "profileDropdown">
-        <mat-option>
-          <a class = "profile" routerLink = "/profile">Edit Account</a>
-        </mat-option>
-        <mat-option>
-          <a class = "profile" (click) = "authService.logout()">Logout</a>
-        </mat-option>
-      </mat-select>
-    </div>
+    <span>
+      <a routerLink = "/">LoveMu</a>
+    </span>
+    <span class = "spacer"> </span>
+    <a *ngIf = "authService.isAuthenticated()" routerLink = "/users">Dashboard</a>
+    <a routerLink = "/messageTest" *ngIf = "authService.isAuthenticated()">Messaging</a>
+    <a *ngIf = "!authService.isAuthenticated()" routerLink = "/register" >Register</a>
+    <a *ngIf = "!authService.isAuthenticated()" routerLink = "/login">Login</a>
+    <a *ngIf = "authService.isAuthenticated()" [routerLink] = "['/users/', userService.getCurrentUser()]">Edit Profile</a>
+    <a routerLink = "/" (click) = "authService.logout()" *ngIf = "authService.isAuthenticated()">Logout</a>
   </mat-toolbar>
 </ng-container>

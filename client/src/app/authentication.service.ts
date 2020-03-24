@@ -50,13 +50,14 @@ export class AuthenticationService {
     const queryParams = url.substring(26);
     if (queryParams.length > 0) {
       let tempArr = queryParams.split('=');
-      console.log(tempArr);
-      if (tempArr[0] === '?google_token' && tempArr.length == 3) {
+      if (tempArr[0] === '?google_token' && tempArr.length == 4) {
         const token = tempArr[1].substring(0, tempArr[1].indexOf("&"));
-        console.log(token);
-        const id = tempArr[2];
-        console.log(id);
+        const id = tempArr[2].substring(0, tempArr[2].indexOf("&"));
         this.setUserInfo(token, id);
+        const verified = tempArr[3];
+        if (verified == 'false') {
+          this.router.navigate(['/google']);
+        }
       }
     }
   }
