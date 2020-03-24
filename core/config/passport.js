@@ -37,9 +37,10 @@ passport.use(new GoogleStrategy({
     if (err) {
       return done(err);
     }
-    if (user) {
+    if (user && user.complete) {
       return done(null, user);
-    } else {
+    }
+    else {
       const usr = new User({});
       usr.email = profile.emails[0].value;
       usr.fname = profile.name.givenName;
@@ -58,7 +59,7 @@ passport.use(new JWTStrategy({
   secretOrKey: process.env.SECRET,
   passReqToCallback: true
 }, function async (req, jwtPayload, done) {
-  User.findById({_id: jwtPayload.id}).exec((err, user) => {
+  User.findOne({_id: jwtPayload.id}).exec((err, user) => {
     if (err) {
       return done(err);
     }

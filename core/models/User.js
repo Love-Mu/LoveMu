@@ -49,10 +49,6 @@ const userSchema = new Schema({
     type: String, 
     default: ""
   },
-  pronouns: {
-    type: String,
-    default: ""
-  },
   sexuality: {
     type: Array,
     default: ""
@@ -62,7 +58,7 @@ const userSchema = new Schema({
     default: ""
   },
   complete: {
-    type: boolean,
+    type: Boolean,
     default: false
   }
 });

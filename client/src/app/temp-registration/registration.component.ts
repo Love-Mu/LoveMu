@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef  } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { AuthenticationService } from '../authentication.service';
+import { of } from 'rxjs';  
+import { catchError, map } from 'rxjs/operators';  
+import { UploadService } from  '../upload.service';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-registration',
@@ -13,8 +17,8 @@ import { AuthenticationService } from '../authentication.service';
 export class RegistrationComponent implements OnInit {
   registrationForm;
   msg: string;
-
-  constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient) {
+  @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;files  = [];  
+  constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient, private uploadService: UploadService) {
     this.registrationForm = this.formBuilder.group({
       email: '',
       password: '',
@@ -41,5 +45,48 @@ export class RegistrationComponent implements OnInit {
         window.location.href= 'https://lovemu.compsoc.ie/spotify/reqAccess';
       }
     });
+  }
+  
+  uploadFile(file) {  
+    const formData = new FormData();  
+    formData.append('file', file.data);  
+    file.inProgress = true;  
+    this.uploadService.upload(formData).pipe(  
+      map(event => {  
+        switch (event.type) {  
+          case HttpEventType.UploadProgress:  
+            file.progress = Math.round(event.loaded * 100 / event.total);  
+            break;  
+          case HttpEventType.Response:  
+            return event;  
+        }  
+      }),  
+      catchError((error: HttpErrorResponse) => {  
+        file.inProgress = false;  
+        return of(`${file.data.name} upload failed.`);  
+      })).subscribe((event: any) => {  
+        if (typeof (event) === 'object') {  
+          console.log(event.body);  
+        }  
+      });  
+  }
+
+  private uploadFiles() {  
+    this.fileUpload.nativeElement.value = '';  
+    this.files.forEach(file => {  
+      this.uploadFile(file);  
+    });  
+  }
+
+  onClick() {  
+    const fileUpload = this.fileUpload.nativeElement;fileUpload.onchange = () => {  
+    for (let index = 0; index < fileUpload.files.length; index++)  
+    {  
+    const file = fileUpload.files[index];  
+    this.files.push({ data: file, inProgress: false, progress: 0});  
+    }  
+      this.uploadFiles();  
+    };  
+    fileUpload.click();  
   }
 }

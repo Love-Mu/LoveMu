@@ -32,7 +32,7 @@ exports.register = (req, res, next) => {
     if (err) {
       return res.status(404).json(err);
     }
-    if (user) {
+    if (user && user.complete === true) {
       if (user.email.toLowerCase() === req.body.email.toLowerCase()) {
         return res.status(409).json({message: 'Email already part of account'});  
       }
@@ -73,5 +73,6 @@ exports.register = (req, res, next) => {
 exports.google = (req, res, next) => {
     const token = jwt.sign({id: req.user.id}, process.env.SECRET);
     const id = req.user.id;
-    return res.redirect(`https://lovemu.compsoc.ie?google_token=${token}&id=${id}`);  
+    const verified = req.user.complete;
+    return res.redirect(`https://lovemu.compsoc.ie?google_token=${token}&id=${id}&verified=${verified}`);  
 }

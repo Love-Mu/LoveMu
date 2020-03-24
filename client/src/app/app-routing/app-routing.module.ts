@@ -9,6 +9,7 @@ import { HomeComponent} from '../home/home.component';
 import { MessageComponent } from '../message/message.component';
 import { MessageTestComponent } from '../message-test/message-test.component';
 import { AuthGuardService } from '../auth-guard.service';
+import { GoogleRegistrationComponent} from '../google-registration/google-registration.component';
 
 const routes: Routes = [
   { path: 'users', component: UsersComponent, canActivate: [AuthGuardService]},
@@ -20,8 +21,8 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent, canActivate: [AuthGuardService]},
   { path: 'messageTest', component: MessageTestComponent, canActivate: [AuthGuardService] },
   { path: 'message/:id', component: MessageComponent, canActivate: [AuthGuardService] },
-  // otherwise redirect to home
-  { path: '**', redirectTo: '' }
+  { path: 'google', component: GoogleRegistrationComponent},
+  { path: '**', redirectTo: '' } // otherwise redirect to home
 ];
 
 @NgModule({
