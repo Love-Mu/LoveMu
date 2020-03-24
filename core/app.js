@@ -13,6 +13,7 @@ const profileRouter = require('./routes/profile');
 const spotifyRouter = require('./routes/spotify');
 const authRouter = require('./routes/authentication');
 const messageRouter = require('./routes/message');
+const uploadRouter = require('./routes/upload')
 const sockets = require('./config/sockets');
 
 const app = express();
@@ -50,6 +51,7 @@ app.use('/auth', authRouter);
 app.use('/spotify', spotifyRouter);
 app.use('/profiles', profileRouter);
 app.use('/messages', messageRouter);
+app.use('/upload', uploadRouter);
 /*io.engine.generateId = (req) => {
   return "custom:id:" + req.user._id;
 }*/

@@ -1,6 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
@@ -22,18 +21,19 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {CookieService} from 'ngx-cookie-service';
 import {MatNativeDateModule} from '@angular/material/core';
 import {FormsModule} from '@angular/forms';
-import {ProgressBarMode} from '@angular/material/progress-bar';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 import {UsersComponent} from './users/users.component';
 import {LoginComponent} from './login/login.component';
-import {RegistrationComponent} from './registration/registration.component';
+import {RegistrationComponent} from './temp-registration/registration.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {ProfileComponent} from './profile/profile.component';
 import { MessageTestComponent } from './message-test/message-test.component';
 import { MessageComponent } from './message/message.component';
 import {AuthInterceptor} from './authInterceptor';
+import { GoogleRegistrationComponent } from './google-registration/google-registration.component';
 
 const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}};
 
@@ -46,7 +46,8 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     ProfileComponent,
     NavbarComponent,
     MessageTestComponent,
-    MessageComponent
+    MessageComponent,
+    GoogleRegistrationComponent
   ],
   imports: [
     AppRoutingModule,
@@ -70,7 +71,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     HttpClientModule,
     RouterTestingModule,
     SocketIoModule.forRoot(config),
-    MDBBootstrapModule.forRoot()
+    MatProgressBarModule
   ],
   providers: [
     CookieService,

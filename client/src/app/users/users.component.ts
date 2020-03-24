@@ -9,16 +9,24 @@ import { User } from './User';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  users: User[];  
+  users: User[];
+  breakpoint;
 
   constructor(private userService: UsersService, private socket: Socket) { }
 
   ngOnInit() {
-    this.socket.emit('message', { message: "I Have Successfully Emitted My Message!"});
     this.getUsers();
+    this.breakpoint = (window.innerWidth <= 480) ? 1 : 6;
+  }
+
+  onResize(event) {
+    this.breakpoint = (event.target.innerWidth <= 480) ? 1 : 6;
   }
 
   getUsers(): void {
-    this.userService.getUsers().subscribe(users => (this.users = users));
+    this.userService.getUsers().subscribe(
+      users => this.users = users,
+      error => console.log(error)
+    );
   }
 }

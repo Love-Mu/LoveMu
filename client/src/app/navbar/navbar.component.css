@@ -3,7 +3,7 @@
   background-color: #542361;
 }
 
-a, mat-label{
+a{
   margin-left: 2%;
   margin-right: 2%;
   font-size: 50%;
@@ -14,20 +14,3 @@ a, mat-label{
   flex: 1 1 auto;
 }
 
-.profileDropdown{
-  max-width: 1%;
-  color: white;
-}
-
-mat-label{
-  margin-right: 1.5%;
-}
-
-.profile{
-  color: #542361;
-  font-size: 70%;
-}
-
-mat-option{
-
-}

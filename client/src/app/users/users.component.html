@@ -7,11 +7,14 @@
         <h3>{{user.fname}} {{user.sname}} </h3>
       </div>
       <br>
-      <img src = {{user.image}} class = "userImage" width="100" height="100">
+      <div class = "userDiv">
+        <img src = {{user.image}} class = "userImage">
+      </div>
+
       <br>
       {{user.location}}
       <br><br>
-      <div class = "userInfo">
+      <div class = "userBio">
         <h3> {{user.bio}}</h3>
       </div>
     </mat-card-content>

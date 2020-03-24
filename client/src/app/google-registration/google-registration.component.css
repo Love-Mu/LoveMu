@@ -1,0 +1,35 @@
+.spotify{
+    background-color: #1DB954;
+    color: white;
+    border-radius: 5%;
+  }
+  
+  button{
+    border-radius: 5%;
+    margin: 2%;
+    color: black;
+  }
+  
+  .spotifyimg{
+    width: 2%;
+    height: 2%;
+  }
+  
+  .registrationCard{
+    background-color: white;
+    border-radius: 5%;
+    margin-top: 0%;
+    margin-bottom: 2%;
+  
+  }
+  
+  .registration{
+    width: 70%;
+    display: inline-block;
+  }
+  
+  .regDiv{
+    text-align: center;
+    display: block;
+  }
+  
