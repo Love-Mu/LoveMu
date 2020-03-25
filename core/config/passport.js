@@ -46,6 +46,8 @@ passport.use(new GoogleStrategy({
       usr.fname = profile.name.givenName;
       usr.sname = profile.name.familyName;
       usr.image = profile.photos[0].value;
+      usr.artists = [];
+      usr.genres = new Map();
       usr.sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
       usr.gender = 'Rather Not Say';
       usr.save(); 
@@ -58,16 +60,13 @@ passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.SECRET,
   passReqToCallback: true
-}, function async (req, jwtPayload, done) {
+}, function (req, jwtPayload, done) {
   User.findOne({_id: jwtPayload.id}).exec((err, user) => {
     if (err) {
       return done(err);
     }
     if (!user) {
       return done(null, false, {message: 'User Not Associated With Account'});
-    }
-    if (!user.complete) {
-      return done(null, false, {message: 'User Is Not Verified'});
     }
     return done(null, user);
   });

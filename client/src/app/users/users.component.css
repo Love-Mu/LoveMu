@@ -7,28 +7,30 @@
   flex-wrap: wrap;
   height: 100%;
   width: 100%;
-  overflow: hidden;
 }
 
 .userCard{
+  max-width: 300px;
   margin: 2.5%;
   text-align: center;
 }
-
+/* Makes web page responsive so that cards will go to next line*/
 .container .userCard{
-  flex: 1 0 300px;
+  flex: 1 0 250px;
 }
 
+/*Contains image*/
 .userDiv{
   display: inline-block;
-  height: auto;
   width: 30%;
+  height: 30%;
 }
 
 .userImage{
-  width:100%;
-  height:100%;
-  border-radius: 100%;
+  width:100px;
+  height:100px;
+  object-fit:cover;
+  border-radius: 50%;
 }
 
 

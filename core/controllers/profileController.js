@@ -1,8 +1,10 @@
 const similarity = require('compute-cosine-similarity');
+const moment = require('moment');
+
 const User = require('../models/User');
 
 module.exports = {
-  getProfiles: (req, res, next) => {
+  getProfiles:  (req, res, next) => {
     let curr = req.user;
     let sexuality = curr.sexuality;
     let gender = curr.gender;
@@ -13,43 +15,58 @@ module.exports = {
     getProfile: (req, res, next) => {
       const uId = req.params.id;
       // Find user based on this id and serve it
-      User.findOne({_id: uId}).select('-password').exec((err, user) => {
+
+      User.findOne({_id: uId}).select('-password').exec(async (err, user) => {
         if (err) {
           return res.json({error: err});
         }
         if (!user) {
           return res.status(404).json({message: 'User does not exist'});
         }
-        user.age = user.Age;
+        user.sexuality = await generateSexuality(user.sexuality)
         res.json(user);
-      });
+      })
     },
-    updateProfile: (req, res, next) => {
+    updateProfile: async (req, res, next) => {
       // Find user and update by id
       const id = req.user._id;
-      const params = {
+      if (req.user_name !== req.body.user_name) {
+        User.findOne({user_name: req.body.user_name}).exec((err, user) => {
+          if (err) {
+            return res.json({error: err});
+          }
+          if (user) {
+            return res.status(403).json({message: 'Username already in use'});
+          }
+        });
+      }
+      let sexuality = [];
+      if (req.body.sexuality == 'Everyone') {
+        sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
+      } else {
+        sexuality = [req.body.sexuality];
+      }
+      User.findOneAndUpdate({_id: id}, {$set: {
         user_name: req.body.user_name,
         fname: req.body.fname,
         sname: req.body.sname,
         dob: req.body.dob,
         location: req.body.location,
         image: req.body.image,
-        gender: req.body.gender
-      }
-        User.findOneAndUpdate({_id: id}, {$set: {params}}).exec((err, user) => {
-          if (err) {
-            return res.json({error: err});
-          }
-          if (!user) {
-            return res.status(404).json({message: 'User does not exist'});
-          }
-          if (user.user_name !== req.body.user_name) {
-            return res.status(403).json({message: 'user_name already in use'});
-          }
-          res.status(200).json({message: 'Successfully Updated!'});
-        });
-      }
-    };
+        gender: req.body.gender,
+        sexuality: sexuality,
+        bio: req.body.bio,
+        complete: true}}).exec((err, user) => {
+        if (err) {
+          return res.json({error: err});
+        }
+        if (!user) {
+          return res.status(404).json({message: 'User does not exist'});
+        }
+        return res.status(200).json({message: 'Successfully Updated!'});
+      });
+    }
+  };
 
   function similarityGenerator(currUsr, users) {
       const currUsrMap = currUsr.genres;
@@ -87,4 +104,17 @@ module.exports = {
         console.log(usr.email + ' : ' + usr.score);
       });
       return users.sort((a, b) => (a.score >= b.score) ? -1 : 1);
+  }
+
+  function generateSexuality(sexuality) {
+    return new Promise((resolve, reject) => {
+        if (sexuality === ['Male']) {
+          resolve('Men');
+        }
+        else if (sexuality === ['Female']) {
+          resolve('Women');
+        } else {
+          resolve('Everyone');
+        }
+      });
   }

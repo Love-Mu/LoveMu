@@ -71,8 +71,12 @@ module.exports = {
         }
         user.artists = values[0];
         user.genres = values[1];
-        user.save();
-        return res.json({message: 'Successfully Retrieved Details!'});
+        user.save((err) => {
+          if (err) {
+            return res.json({error: err});
+          }
+          return res.json({message: 'Successfully Retrieved Details!'});
+        });
       });
     }).catch((err) => console.log(err));
   },
@@ -83,23 +87,25 @@ function mapGenres(authOptions) {
   console.log('Constructing Map');
   return new Promise((resolve, reject) => {
     const genreMap = new Map();
-    request.get(authOptions, (err, response, body) => {
+    request.get(authOptions, async (err, response, body) => {
       if (err) {
         reject(err);
       }
       if (response.statusCode !== 200) {
         reject({message: 'Unauthorized Request'});
       }
-      const items = body.items;
-      items.forEach((item, index) => {
-        const genres = item.genres;
-        genres.forEach((genre, index) => {
-          if (!genreMap.has(genre)) {
-            genreMap.set(genre, 0);
-          }
-          genreMap.set(genre, genreMap.get(genre) + 1);
+      const items = await body.items;
+      if (items !== null) {
+        items.forEach((item, index) => {
+          const genres = item.genres;
+          genres.forEach((genre, index) => {
+            if (!genreMap.has(genre)) {
+              genreMap.set(genre, 0);
+            }
+            genreMap.set(genre, genreMap.get(genre) + 1);
+          });
         });
-      });
+      }
       resolve(genreMap);
     });
   });
@@ -108,7 +114,7 @@ function mapGenres(authOptions) {
 function arrayArtists(authOptions) {
   console.log('Constructing Array');
   return new Promise((resolve, reject) =>
-    request.get(authOptions, (err, response, body) => {
+    request.get(authOptions, async (err, response, body) => {
       if (err) {
         reject(err);
       }
@@ -116,10 +122,12 @@ function arrayArtists(authOptions) {
         reject({message: 'Unauthorized Request'});
       }
       const artistArray = [];
-      const items = body.items;
-      items.forEach((item, index) => {
-        artistArray.push(item);
-      });
+      const items = await body.items;
+      if (items !== null) {
+        items.forEach((item, index) => {
+          artistArray.push(item);
+        });
+      }
       resolve(artistArray);
     }));
 }
