@@ -12,6 +12,7 @@ export class User {
   image: string;
   gender: string;
   sexuality: string;
+  age: string;
   bio: string;
   top: Array<Artist>;
 }

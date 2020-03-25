@@ -76,11 +76,10 @@
             </mat-select>
           </mat-form-field>
           <br>
-          <mat-form-field>
-            <input matInput placeholder="Image URL" formControlName="image">
-            <button type="button" md-button (click)="fileUpload.click()">Add a photo</button>
-            <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;" (click)="onClick()" />
-          </mat-form-field>
+
+            <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button>
+            <input formControlName="image" type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;" (click)="onClick()" />
+         
           <mat-form-field>
             <mat-label>Date of birth</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="dob">

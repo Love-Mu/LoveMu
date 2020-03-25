@@ -74,7 +74,7 @@ export class ProfileComponent implements OnInit {
 
   onSubmit(userData) {
     this.checkFormData(userData);
-    this.http.put('https://lovemu.compsoc.ie/profiles/' + this.userService.getCurrentUser(), userData, {withCredentials: true}).subscribe((res) => {
+    this.http.put('https://lovemu.compsoc.ie/profiles/' + this.userService.getCurrentUser(), userData).subscribe((res) => {
       console.log("Amendments Made")
     });
   }

@@ -17,6 +17,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 export class RegistrationComponent implements OnInit {
   registrationForm;
   msg: string;
+  image: string;
   @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;files  = [];  
   constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient, private uploadService: UploadService) {
     this.registrationForm = this.formBuilder.group({
@@ -38,6 +39,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit(userData) {
+    userData.image = this.image;
     this.http.post('https://lovemu.compsoc.ie/auth/register', userData, {withCredentials: true}).subscribe((res) => {
       this.msg = JSON.stringify(res['message']);
       this.authService.setUserInfo(res['token'], res['id']);
@@ -47,7 +49,7 @@ export class RegistrationComponent implements OnInit {
     });
   }
   
-  uploadFile(file) {  
+uploadFile(file) {  
     const formData = new FormData();  
     formData.append('file', file.data);  
     file.inProgress = true;  
@@ -65,9 +67,13 @@ export class RegistrationComponent implements OnInit {
         file.inProgress = false;  
         return of(`${file.data.name} upload failed.`);  
       })).subscribe((event: any) => {  
-        if (typeof (event) === 'object') {  
+        if (typeof (event) === 'object') { 
+          this.image = event.body.filename; 
           console.log(event.body);  
         }  
+        else {
+          this.image = "default.png";
+        }
       });  
   }
 

@@ -2,6 +2,7 @@ const {validationResult} = require('express-validator');
 const request = require('request');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const moment = require('moment');
 
 const spotifyController = require('./spotifyController');
 const User = require('../models/User');
