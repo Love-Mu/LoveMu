@@ -22,8 +22,8 @@ module.exports = {
             }
             Chatroom.find({ members: [req.user._id, req.body.recipient]}).exec((err, chatroom) => {
                 console.log(chatroom);
-                if(chatroom != '[]'){
-                    Chatroom.update({_id:chatroom._id},{$push: {messages:message._id}});
+                if(chatroom[0]._id != undefined){
+                    Chatroom.findByIdAndUpdate(chatroom[0]._id, {$push: {messages: message._id}});
                     return res.status(200).json({message: "Message Successfully Saved to DB", sender: message.sender, recipient: message.recipient});
                 } else {
                     let chatroom = new Chatroom({
