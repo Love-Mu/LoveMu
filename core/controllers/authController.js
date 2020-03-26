@@ -33,7 +33,7 @@ exports.register = (req, res, next) => {
     if (err) {
       return res.status(404).json(err);
     }
-    if (user && user.complete === true) {
+    if (user) {
       if (user.email.toLowerCase() === req.body.email.toLowerCase()) {
         return res.status(409).json({message: 'Email already part of account'});  
       }

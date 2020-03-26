@@ -4,18 +4,34 @@ const moment = require('moment');
 const User = require('../models/User');
 
 module.exports = {
-  getProfiles:  (req, res, next) => {
-    let curr = req.user;
-    let sexuality = curr.sexuality;
-    let gender = curr.gender;
-    User.find({_id: {$ne: curr.id}, gender: {$in: sexuality}, sexuality: {$in: gender}}).select('-password -refresh_token -access_token').exec((err, users) => {
-      res.json(similarityGenerator(req.user, users));
+  getProfiles: (req, res, next) => {
+    const curr = req.user;
+    const sexuality = curr.sexuality;
+    const gender = curr.gender;
+    let filters = {
+      _id: {$ne: curr.id},
+      gender: {$in: sexuality},
+      sexuality: {$in: gender}
+    };
+    if (req.body.location != null) {
+      filters.location = req.body.location;
+    }
+    const sortOrder = req.body.score || 1;
+    const pageNum = req.body.page || 1;
+    const skips = 12 * (pageNum - 1)
+    User.find(filters).select('-password -refresh_token -access_token').skip(skips).limit(12).exec((err, users) => {
+      if (!users) { 
+        return res.json({message: 'No Users Found'});
+      }
+      similarityGenerator(req.user, users, sortOrder).then((result) => {
+        return res.json(result);
+      });
     });
-  },
-    getProfile: (req, res, next) => {
+  },  
+    getProfile: async (req, res, next) => {
       const uId = req.params.id;
+      const currUser = await req.user;
       // Find user based on this id and serve it
-
       User.findOne({_id: uId}).select('-password').exec(async (err, user) => {
         if (err) {
           return res.json({error: err});
@@ -23,8 +39,21 @@ module.exports = {
         if (!user) {
           return res.status(404).json({message: 'User does not exist'});
         }
-        user.sexuality = await generateSexuality(user.sexuality)
-        res.json(user);
+        Promise.all([generateAge(user.dob), generateSexuality(user.sexuality), similarityGeneratorUser(currUser, user, 1)]).then(values => {
+          res.json({
+            user_name: user.user_name,
+            fname: user.fname,
+            sname: user.sname,
+            age: values[0],
+            sexuality: values[1],
+            gender: user.gender,
+            location: user.location,
+            bio: user.bio,
+            artists: user.artists,
+            image: user.image,
+            score: Math.round(values[2].score * 100)
+          });
+        })
       })
     },
     updateProfile: async (req, res, next) => {
@@ -68,7 +97,8 @@ module.exports = {
     }
   };
 
-  function similarityGenerator(currUsr, users) {
+  function similarityGenerator(currUsr, users, sortOrder) {
+    return new Promise((resolve, reject) => {
       const currUsrMap = currUsr.genres;
       const usrGenreArr = [];
       currUsrMap.forEach((val, key, map) => {
@@ -103,18 +133,70 @@ module.exports = {
         usr.score = similarity(tempScore, tempUsrScore);
         console.log(usr.email + ' : ' + usr.score);
       });
-      return users.sort((a, b) => (a.score >= b.score) ? -1 : 1);
+      resolve(users.sort((a, b) => (a.score >= b.score) ? -1 : 1));
+    });
   }
 
-  function generateSexuality(sexuality) {
-    return new Promise((resolve, reject) => {
-        if (sexuality === ['Male']) {
-          resolve('Men');
-        }
-        else if (sexuality === ['Female']) {
-          resolve('Women');
-        } else {
-          resolve('Everyone');
+  function similarityGeneratorUser(currUsr, user, sortOrder) {
+    return new Promise(function (resolve, reject) {
+      const currUsrMap = currUsr.genres;
+      const usrGenreArr = [];
+      currUsrMap.forEach((val, key, map) => {
+        usrGenreArr.push(key);
+      });
+      const tempScore = [];
+      const tempUsrScore = [];
+      const checkGenreArr = [];
+      const checkUsrMap = user.genres;
+      checkUsrMap.forEach((val, key, map) => {
+        checkGenreArr.push(key);
+      });
+      checkGenreArr.concat(usrGenreArr);
+      usrGenreArr.forEach((val, idx) => {
+        if (!checkGenreArr.includes(val)) {
+          usrGenreArr.push(val);
         }
       });
+      checkGenreArr.forEach((item, idx) => {
+        if (currUsrMap.has(item)) {
+          tempScore.push(currUsrMap.get(item));
+        } else {
+          tempScore.push(0);
+        }
+        if (checkUsrMap.has(item)) {
+          tempUsrScore.push(checkUsrMap.get(item));
+        } else {
+          tempUsrScore.push(0);
+        }
+      });
+      user.score = similarity(tempScore, tempUsrScore);
+      resolve(user);
+    });
+  }
+  function generateSexuality(sexuality) {
+    return new Promise((resolve, reject) => {
+      if (sexuality.length === 4) {
+        resolve('Everyone');
+      }
+      else if (sexuality[0] == ['Male']) {
+        resolve('Men');
+      }
+      else if (sexuality[0] == ['Female']) {
+        resolve('Women');
+      } else {
+        reject({message: 'Error Generating Sexuality'});
+      }
+    });
+  }
+  
+  function generateAge(dob) {
+    const age = new Promise(function (resolve, reject) {  
+      if (dob === null) {
+        reject({message: 'No DOB'});
+      }
+      const diff_ms = Date.now() - dob.getTime();
+      const age_dt = new Date(diff_ms); 
+      resolve(Math.abs(age_dt.getUTCFullYear() - 1970));
+    });
+    return age;
   }
