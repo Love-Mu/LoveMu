@@ -16,21 +16,20 @@ module.exports = {
     if (req.body.location != null) {
       filters.location = req.body.location;
     }
-    const sortOrder = req.body.score || 1;
-    /*const pageNum = req.body.page || 1;
-    const skips = 12 * (pageNum - 1)*/
-    User.find(filters).select('-password -refresh_token -access_token')/*.skip(skips).limit(12)*/.exec((err, users) => {
+    User.find(filters).select('-password -refresh_token -access_token').exec((err, users) => {
       if (!users) { 
         return res.json({message: 'No Users Found'});
       }
-      similarityGenerator(req.user, users, sortOrder).then((result) => {
-        return res.json(result);
+      similarityGenerator(req.user, users).then((result) => {
+        sortPromise(result).then((sortedUsers) => {
+          return res.json(sortedUsers);
+        });
       });
     });
   },  
-    getProfile: async (req, res, next) => {
+    getProfile: (req, res, next) => {
       const uId = req.params.id;
-      const currUser = await req.user;
+      const currUser = req.user;
       // Find user based on this id and serve it
       User.findOne({_id: uId}).select('-password').exec(async (err, user) => {
         if (err) {
@@ -39,7 +38,7 @@ module.exports = {
         if (!user) {
           return res.status(404).json({message: 'User does not exist'});
         }
-        Promise.all([generateAge(user.dob), generateSexuality(user.sexuality), similarityGeneratorUser(currUser, user, 1)]).then(values => {
+        Promise.all([generateAge(user.dob), generateSexuality(user.sexuality), similarityGenerator(currUser, user)]).then(values => {
           res.json({
             _id: user._id,
             user_name: user.user_name,
@@ -55,7 +54,7 @@ module.exports = {
             playlists: user.playlists || [],
             favouriteSong: user.favouriteSong || '',
             image: user.image,
-            score: Math.round(values[2].score * 100)
+            score: Math.round(values[2] * 100)
           });
         })
       })
@@ -102,80 +101,10 @@ module.exports = {
     }
   };
 
-  function similarityGenerator(currUsr, users, sortOrder) {
-    return new Promise((resolve, reject) => {
-      const currUsrMap = currUsr.genres;
-      const usrGenreArr = [];
-      currUsrMap.forEach((val, key, map) => {
-        usrGenreArr.push(key);
-      });
-      users.forEach((usr) => {
-        const tempScore = [];
-        const tempUsrScore = [];
-        const checkGenreArr = [];
-        const checkUsrMap = usr.genres;
-        checkUsrMap.forEach((val, key, map) => {
-          checkGenreArr.push(key);
-        });
-        checkGenreArr.concat(usrGenreArr);
-        usrGenreArr.forEach((val, idx) => {
-          if (!checkGenreArr.includes(val)) {
-            usrGenreArr.push(val);
-          }
-        });
-        checkGenreArr.forEach((item, idx) => {
-          if (currUsrMap.has(item)) {
-            tempScore.push(currUsrMap.get(item));
-          } else {
-            tempScore.push(0);
-          }
-          if (checkUsrMap.has(item)) {
-            tempUsrScore.push(checkUsrMap.get(item));
-          } else {
-            tempUsrScore.push(0);
-          }
-        });
-        usr.score = similarity(tempScore, tempUsrScore);
-        console.log(usr.email + ' : ' + usr.score);
-      });
-      resolve(users.sort((a, b) => (a.score >= b.score) ? -1 : 1));
-    });
-  }
 
-  function similarityGeneratorUser(currUsr, user, sortOrder) {
-    return new Promise(function (resolve, reject) {
-      const currUsrMap = currUsr.genres;
-      const usrGenreArr = [];
-      currUsrMap.forEach((val, key, map) => {
-        usrGenreArr.push(key);
-      });
-      const tempScore = [];
-      const tempUsrScore = [];
-      const checkGenreArr = [];
-      const checkUsrMap = user.genres;
-      checkUsrMap.forEach((val, key, map) => {
-        checkGenreArr.push(key);
-      });
-      checkGenreArr.concat(usrGenreArr);
-      usrGenreArr.forEach((val, idx) => {
-        if (!checkGenreArr.includes(val)) {
-          usrGenreArr.push(val);
-        }
-      });
-      checkGenreArr.forEach((item, idx) => {
-        if (currUsrMap.has(item)) {
-          tempScore.push(currUsrMap.get(item));
-        } else {
-          tempScore.push(0);
-        }
-        if (checkUsrMap.has(item)) {
-          tempUsrScore.push(checkUsrMap.get(item));
-        } else {
-          tempUsrScore.push(0);
-        }
-      });
-      user.score = similarity(tempScore, tempUsrScore);
-      resolve(user);
+  function artistSimilarity() {
+    return new Promise((resolve, reject) => {
+
     });
   }
  
@@ -194,7 +123,50 @@ module.exports = {
       }
     });
   }
+
+  function similarityGenerator(currUser, users) {
+    let userArray = [];
+    return new Promise(function (resolve, reject) {
+      if (users.length > 1) {
+        users.forEach((user) => {
+          compareGenres(currUser, user).then(result => {
+            userArray.push({
+              _id: user._id,
+              fname: user.fname,
+              sname: user.sname,
+              location: user.location,
+              bio: user.bio,
+              image: user.image,
+              score: result});
+          }).catch((error) => {
+            userArray.push({
+              _id: user._id,
+              fname: user.fname,
+              sname: user.sname,
+              location: user.location,
+              bio: user.bio,
+              image: user.image,
+              score: 0});
+          });
+          resolve(userArray);
+        });
+      } else {
+        compareGenres(currUser, users).then(result => {
+          resolve(result);
+        }).catch((error) => {
+          resolve(0);
+        });
+      }
+    })
+  }
   
+  function sortPromise(users) {
+    return new Promise(function (resolve, reject) {
+      const result = users.sort((a, b) => (a.score >= b.score) ? -1 : 1);
+      resolve(result);
+    })
+  }
+
   function generateAge(dob) {
     const age = new Promise(function (resolve, reject) {  
       if (dob === null) {
@@ -205,4 +177,37 @@ module.exports = {
       resolve(Math.abs(age_dt.getUTCFullYear() - 1970));
     });
     return age;
+  }
+  
+  function compareGenres(usr1, usr2) {
+    return new Promise(function (resolve, reject) {
+      let keys = [];
+      let usr1Score = [];
+      let usr2Score = [];
+      if (usr1.genres == null || usr2.genres == null) {
+        reject({message: "Genres Is Undefined"});
+      }
+      usr1.genres.forEach((value, key, map) => {
+        keys.push(key);
+      });
+      usr2.genres.forEach((value, key, map) => {
+        if (!keys.includes(key)) {
+          keys.push(key);
+        }
+      });
+      keys.forEach((key) => {
+        if (usr1.genres.has(key)) {
+          usr1Score.push(usr1.genres.get(key));
+        } else {
+          usr1Score.push(0);
+        }
+        if (usr2.genres.has(key)) {
+          usr2Score.push(usr2.genres.get(key));
+        } else {
+          usr2Score.push(0);
+        }
+      });
+      const score = similarity(usr1Score, usr2Score);
+      resolve(score);
+    });
   }
