@@ -7,7 +7,7 @@ const User = require('../models/User');
 const clientId = process.env.clientID;
 const secretId = process.env.secretID;
 const redirectUri = 'https://lovemu.compsoc.ie/spotify/reqCallback';
-const scope = 'user-top-read';
+const scope = 'user-top-read playlist-read-private';
 
 /* We need to save the access and refresh tokens to each user
   - The access token is used to make calls to the Spotify API and
@@ -48,7 +48,6 @@ module.exports = {
   },
 
   retrieveDetails: (req, res, next) => {
-    console.log('Retrieving Details...');
     const authOptionsArtists = {
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${req.body.access_token}`},
@@ -60,8 +59,13 @@ module.exports = {
       headers: {'Authorization': `Bearer ${req.body.access_token}`},
       json: true,
     };
-    Promise.all([arrayArtists(authOptionsArtists), mapGenres(authOptionsGenres)]).then((values) => {
-      console.log('Finding Users');
+
+    const authOptionsPlaylists = {
+      url: `https://api.spotify.com/v1/me/playlists?limit=50`,
+      headers: {'Authorization': `Bearer ${req.body.access_token}`},
+      json: true,
+    };
+    Promise.all([arrayArtists(authOptionsArtists), mapGenres(authOptionsGenres), retrievePlaylists(authOptionsPlaylists)]).then((values) => {
       User.findOne({_id: req.user._id}).exec((err, user) => {
         if (err) {
           return res.json({error: err});
@@ -71,6 +75,7 @@ module.exports = {
         }
         user.artists = values[0];
         user.genres = values[1];
+        user.playlists = values[2];
         user.save((err) => {
           if (err) {
             return res.json({error: err});
@@ -78,13 +83,12 @@ module.exports = {
           return res.json({message: 'Successfully Retrieved Details!'});
         });
       });
-    }).catch((err) => console.log(err));
+    }).catch((err) => {return res.status(404).json({message: 'Error in Retrieving Details', error: err})});
   },
 };
 
 // Promise to return hash map of Genres
 function mapGenres(authOptions) {
-  console.log('Constructing Map');
   return new Promise((resolve, reject) => {
     const genreMap = new Map();
     request.get(authOptions, async (err, response, body) => {
@@ -112,8 +116,7 @@ function mapGenres(authOptions) {
 }
 
 function arrayArtists(authOptions) {
-  console.log('Constructing Array');
-  return new Promise((resolve, reject) =>
+  return new Promise((resolve, reject) => {
     request.get(authOptions, async (err, response, body) => {
       if (err) {
         reject(err);
@@ -122,12 +125,27 @@ function arrayArtists(authOptions) {
         reject({message: 'Unauthorized Request'});
       }
       const artistArray = [];
-      const items = await body.items;
+      const items = body.items;
       if (items !== null) {
         items.forEach((item, index) => {
           artistArray.push(item);
         });
       }
       resolve(artistArray);
-    }));
-}
+    })});
+  }
+
+  function retrievePlaylists(authOptions) {
+    return new Promise((resolve, reject) => {
+      request.get(authOptions, async (err, response, body) => {
+        if (err) {
+          reject(err);
+        }
+        if (response.statusCode !== 200) {
+          reject({message: 'Unauthorized Request'});
+        }
+        const playlists = body.items;
+        resolve(playlists);
+      });
+    });
+  }

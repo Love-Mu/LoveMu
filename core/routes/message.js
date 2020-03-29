@@ -15,4 +15,6 @@ router.get('/retrieve/:id', passport.authenticate('jwt', {session: false}), Mess
 
 router.post('/send', passport.authenticate('jwt', {session: false}), MessageController.send);
 
+router.get('/chatroom', passport.authenticate('jwt', {session: false}), MessageController.chatroom);
+
 module.exports = router;

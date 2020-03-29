@@ -4,8 +4,8 @@ const moment = require('moment');
 const User = require('../models/User');
 
 module.exports = {
-  getProfiles: (req, res, next) => {
-    const curr = req.user;
+  getProfiles: async (req, res, next) => {
+    const curr = await req.user;
     const sexuality = curr.sexuality;
     const gender = curr.gender;
     let filters = {
@@ -17,9 +17,9 @@ module.exports = {
       filters.location = req.body.location;
     }
     const sortOrder = req.body.score || 1;
-    const pageNum = req.body.page || 1;
-    const skips = 12 * (pageNum - 1)
-    User.find(filters).select('-password -refresh_token -access_token').skip(skips).limit(12).exec((err, users) => {
+    /*const pageNum = req.body.page || 1;
+    const skips = 12 * (pageNum - 1)*/
+    User.find(filters).select('-password -refresh_token -access_token')/*.skip(skips).limit(12)*/.exec((err, users) => {
       if (!users) { 
         return res.json({message: 'No Users Found'});
       }
@@ -41,6 +41,7 @@ module.exports = {
         }
         Promise.all([generateAge(user.dob), generateSexuality(user.sexuality), similarityGeneratorUser(currUser, user, 1)]).then(values => {
           res.json({
+            _id: user._id,
             user_name: user.user_name,
             fname: user.fname,
             sname: user.sname,
@@ -49,7 +50,10 @@ module.exports = {
             gender: user.gender,
             location: user.location,
             bio: user.bio,
-            artists: user.artists,
+            artists: user.artists || [],
+            playlist: user.playlist || '',
+            playlists: user.playlists || [],
+            favouriteSong: user.favouriteSong || '',
             image: user.image,
             score: Math.round(values[2].score * 100)
           });
@@ -91,8 +95,9 @@ module.exports = {
         }
         if (!user) {
           return res.status(404).json({message: 'User does not exist'});
+        } else {
+          return res.status(200).json({message: 'Successfully Updated!'});
         }
-        return res.status(200).json({message: 'Successfully Updated!'});
       });
     }
   };
@@ -173,6 +178,7 @@ module.exports = {
       resolve(user);
     });
   }
+ 
   function generateSexuality(sexuality) {
     return new Promise((resolve, reject) => {
       if (sexuality.length === 4) {

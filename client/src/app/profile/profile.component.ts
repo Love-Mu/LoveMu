@@ -1,24 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder } from '@angular/forms';
 import { User } from '../users/User';
 import { UsersService } from '../users.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from '../authentication.service';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { Artist } from '../users/Artist';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
   user: User;
+  artists: Artist[];
   public isCurrentUser: boolean;
   profileForm;
+  playlistUrl: SafeResourceUrl;
+  songUrl: SafeResourceUrl;
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private cookieService: CookieService, private route: ActivatedRoute, private userService: UsersService, private authService: AuthenticationService) {
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private cookieService: CookieService, private route: ActivatedRoute, private userService: UsersService, private authService: AuthenticationService, private sanitizer: DomSanitizer) {
     this.profileForm = this.formBuilder.group({
       fname: '',
       sname: '',
@@ -64,18 +69,23 @@ export class ProfileComponent implements OnInit {
     if (currentId == id) {
       this.isCurrentUser = true;
     }
-    this.userService.getUser(id.toString()).subscribe(
-      user => {
-        this.user = user;
-        this.getFormData();
+    this.userService.getUser(id.toString()).subscribe((user) => {
+      this.user = user;
+      this.artists = user.artists;
+      if (this.songUrl != '') {
+        this.songUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.user.favouriteSong);
       }
-    );
+      if (this.playlistUrl != '') {
+        this.playlistUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.user.playlist);
+      }
+      this.getFormData();
+    });
   }
 
   onSubmit(userData) {
     this.checkFormData(userData);
     this.http.put('https://lovemu.compsoc.ie/profiles/' + this.userService.getCurrentUser(), userData).subscribe((res) => {
-      console.log("Amendments Made")
+      console.log("Amendments Made");
     });
   }
 }

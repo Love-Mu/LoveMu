@@ -1,7 +1,6 @@
 <h2>Registration</h2>
 
   <div class = "regDiv">
-    <p>{{msg}}</p>
     <form class = "registration" [formGroup]="registrationForm" (ngSubmit)="onSubmit(registrationForm.value)">
       <mat-card class = "registrationCard">
         <mat-card-content>
@@ -76,25 +75,24 @@
             </mat-select>
           </mat-form-field>
           <br>
-
-            <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button>
-            <input formControlName="image" type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;" (click)="onClick()" />
-         
           <mat-form-field>
             <mat-label>Date of birth</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="dob">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
-          <br>
           <mat-form-field class = "bio">
             <textarea matInput placeholder="Bio" formControlName="bio"></textarea>
           </mat-form-field>
+          <br>
+          <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button>
+          <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;"  (click)="onClick()" />
+
         </mat-card-content>
         <mat-card-footer>
-          <button type="submit" mat-raised-button>Register</button>
+          <button type="submit" mat-raised-button>Register</button><br>
+          <a href="https://lovemu.compsoc.ie/auth/google"><img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"></a>
         </mat-card-footer>
       </mat-card>
     </form>
   </div>
-

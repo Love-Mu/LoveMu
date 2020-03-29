@@ -1,38 +1,88 @@
-.profileDiv{
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  align-content: flex-start;
-  flex-wrap: wrap;
-  height: 93vh;
-  width: 100vw;
-  overflow: hidden;
+.container{
+  align-content: center;
+  width: 100%;
+  height: 100%;
 }
-
 
 .profile{
-  display: inline-block;
-  min-height: 100%;
-  width:33%;
   text-align: center;
-  font-size: 20px;
-  color: #626262;
+  width: 48%;
+  min-height: 100vh;
+  float: left;
+  display: block;
+  font-family: 'Gotu', sans-serif;
+  margin: 1%;
 }
 
+.music{
+  width: 48%;
+  min-height: 100vh;
+  max-height: 140vh;
+  float: left;
+  margin: 1%;
+  overflow-y: scroll;
+  font-family: 'Gotu', sans-serif;
+
+}
+
+
+@media screen and (max-width: 800px) {
+  .profile, .music{
+    width: 100%;
+    margin-left: 0%;
+    margin-right: 0%;
+    margin-bottom: 1%;
+  }
+}
 
 .userImage{
   width:200px;
   height:200px;
+  border-radius: 5%;
   object-fit:cover;
-  border-radius: 50%;
 }
+
 
 .info{
+  display: inline-block;
+  text-align: left;
   padding: 2%;
-  text-align: center;
+  margin: 2%;
+  width: fit-content;
 }
 
-.profileDiv .profile{
-  flex: 1 0 250px;
+.bio{
+  display: inline-block;
+  text-align: left;
+  padding: 2%;
+  width: fit-content;
+
+}
+
+.basicInfo{
+  font-size: 4vh;
+}
+
+.section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  margin-bottom: 5%;
+
+}
+
+
+i{
+ font-size: 100%;
+}
+
+.artistImage{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.playlist{
+  padding: 10px;
 }

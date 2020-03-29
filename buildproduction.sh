@@ -1,6 +1,6 @@
 #!/bin/sh
 cd client
-ng build
+ng build --prod
 wait
 mkdir ../core/public/
 wait

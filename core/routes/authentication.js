@@ -3,16 +3,16 @@ const {check} = require('express-validator');
 const passport = require('passport');
 const request = require('request');
 
-const { userValidationRules, validate } = require('../config/validator');
+const { registrationValidationRules, validate } = require('../config/validator');
 
 const Authentication = require('../controllers/authController');
 
 const router = express.Router();
 
 
-router.post('/register', userValidationRules(), validate, Authentication.register);
+router.post('/register', registrationValidationRules(), validate, Authentication.register);
 
-router.post('/login',  userValidationRules(), validate, Authentication.login);
+router.post('/login', Authentication.login);
 
 router.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}));
 

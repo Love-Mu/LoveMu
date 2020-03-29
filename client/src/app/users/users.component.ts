@@ -25,7 +25,7 @@ export class UsersComponent implements OnInit {
 
   getUsers(): void {
     this.userService.getUsers().subscribe(
-      users => this.users = users,
+      users => {this.users = users; console.log(this.users)},
       error => console.log(error)
     );
   }

@@ -1,11 +1,11 @@
 const {body, validationResult} = require('express-validator');
-const passport = require('passport');
+
 module.exports = {
-  userValidationRules: () => {
-    return [body('email').isEmail(), body('password').isLength({min: 5})];
+  registrationValidationRules: () => {
+    return [body('email').isEmail().normalizeEmail(), body('password').isLength({min: 5}), body('user_name').trim().isLength({min: 5, max:20}), body('gender').escape().notEmpty(), body('sexuality').escape().notEmpty(), body('dob').notEmpty(), body('fname').notEmpty().escape(), body('sname').trim().notEmpty().escape(), body('location').notEmpty().trim().escape()];
   },
   messageValidationRules: () => {
-    return [body('message').trim().escape().isLength({min: 1})]
+    return [body('message').trim().escape().notEmpty()]
   },
   validate: (req, res, next) => {
     const errors = validationResult(req);

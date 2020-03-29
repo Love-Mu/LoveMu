@@ -9,8 +9,7 @@ const userSchema = new Schema({
     unique: true, 
   },
   password: {
-    type: String,
-    trim: true,
+    type: String
   },
   artists: {
     type: Array,
@@ -19,6 +18,10 @@ const userSchema = new Schema({
   genres: {
     type: Map,
     default: new Map()
+  },
+  playlists: {
+    type: [],
+    default: []
   },
   user_name: {
     type: String, 
@@ -56,6 +59,14 @@ const userSchema = new Schema({
     type: String, 
     default: ""
   },
+  playlist: {
+    type: String,
+    default: ""
+  },
+  favouriteSong: {
+    type: String,
+    default: ""
+  },
   complete: {
     type: Boolean,
     default: false
@@ -63,7 +74,9 @@ const userSchema = new Schema({
 });
 
 userSchema.methods.hashPassword = function(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  return new Promise((resolve, reject) => {
+    resolve(bcrypt.hashSync(password, bcrypt.genSaltSync(8), null));
+  });
 };
 
 userSchema.methods.comparePassword = function(password) {

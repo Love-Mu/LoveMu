@@ -1,4 +1,4 @@
-<h2> Welcome back to LoveMu! </h2>
+<h2> Welcome Back to LoveMu! </h2>
 <h3> Login </h3>
 <div class = "loginDiv">
 <form [formGroup]="loginForm" class = "loginForm" (ngSubmit)="onSubmit(loginForm.value)">
@@ -14,6 +14,9 @@
     </mat-card-content>
     <mat-card-footer>
       <button type="submit" mat-raised-button>Login</button>
+      <a href = "https://lovemu.compsoc.ie/auth/google">
+        <div class="g-signin2"></div>
+      </a>
     </mat-card-footer>
   </mat-card>
 </form>

@@ -6,6 +6,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDividerModule} from '@angular/material/divider';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
@@ -23,7 +24,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {FormsModule} from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
-
+import {ScrollingModule} from '@angular/cdk/scrolling';
 import {AppComponent} from './app.component';
 import {UsersComponent} from './users/users.component';
 import {LoginComponent} from './login/login.component';
@@ -58,6 +59,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     FormsModule,
     MatCardModule,
     MatDatepickerModule,
+    MatDividerModule,
     MatToolbarModule,
     MatGridListModule,
     MatSidenavModule,
@@ -73,6 +75,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     HttpClientModule,
     RouterTestingModule,
     SocketIoModule.forRoot(config),
+    ScrollingModule,
     MatProgressBarModule
   ],
   providers: [
