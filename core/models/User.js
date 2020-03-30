@@ -12,8 +12,8 @@ const userSchema = new Schema({
     type: String
   },
   artists: {
-    type: Array,
-    default: []
+    type: Map,
+    default: new Map()
   },
   genres: {
     type: Map,

@@ -49,23 +49,26 @@ module.exports = {
 
   retrieveDetails: (req, res, next) => {
     const authOptionsArtists = {
+      method:"get",
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${req.body.access_token}`},
       json: true,
     };
 
     const authOptionsGenres = {
+      method:"get",
       url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
       headers: {'Authorization': `Bearer ${req.body.access_token}`},
       json: true,
     };
 
     const authOptionsPlaylists = {
+      method:"get",
       url: `https://api.spotify.com/v1/me/playlists?limit=50`,
       headers: {'Authorization': `Bearer ${req.body.access_token}`},
       json: true,
     };
-    Promise.all([arrayArtists(authOptionsArtists), mapGenres(authOptionsGenres), retrievePlaylists(authOptionsPlaylists)]).then((values) => {
+    Promise.all([mapArtists(authOptionsArtists), mapGenres(authOptionsGenres), retrievePlaylists(authOptionsPlaylists)]).then((values) => {
       User.findOne({_id: req.user._id}).exec((err, user) => {
         if (err) {
           return res.json({error: err});
@@ -83,7 +86,10 @@ module.exports = {
           return res.json({message: 'Successfully Retrieved Details!'});
         });
       });
-    }).catch((err) => {return res.status(404).json({message: 'Error in Retrieving Details', error: err})});
+    }).catch((err) => {
+      console.log(err);
+      return res.status(404).json({message: 'Error in Retrieving Details', error: err
+    })});
   },
 };
 
@@ -91,7 +97,7 @@ module.exports = {
 function mapGenres(authOptions) {
   return new Promise((resolve, reject) => {
     const genreMap = new Map();
-    request.get(authOptions, async (err, response, body) => {
+    request(authOptions, async (err, response, body) => {
       if (err) {
         reject(err);
       }
@@ -99,7 +105,7 @@ function mapGenres(authOptions) {
         reject({message: 'Unauthorized Request'});
       }
       const items = await body.items;
-      if (items !== null) {
+      if (items != null) {
         items.forEach((item, index) => {
           const genres = item.genres;
           genres.forEach((genre, index) => {
@@ -115,7 +121,70 @@ function mapGenres(authOptions) {
   });
 }
 
-function arrayArtists(authOptions) {
+function mapArtists(authOptions) {
+  return new Promise((resolve, reject) => {
+    request(authOptions, async (err, response, body) => {
+      if (err) {
+        reject(err);
+      }
+      if (response.statusCode !== 200) {
+        reject({message: 'Unauthorized Request'});
+      }
+      const artistMap = new Map();
+      const items = await body.items;
+      if (items != null) {
+        items.forEach((item, index) => {
+          artistMap.set(item.name, item);
+        });
+      } 
+      resolve(artistMap);
+    })});
+  }
+
+  function retrievePlaylists(authOptions) {
+    return new Promise((resolve, reject) => {
+      request(authOptions, async (err, response, body) => {
+        if (err) {
+          reject(err);
+        }
+        if (response.statusCode !== 200) {
+          reject({message: 'Unauthorized Request'});
+        }
+        const playlists = await body.items;
+        resolve(playlists);
+      });
+    });
+  }
+
+ /* // Promise to return hash map of Genres
+function mapGenres(authOptions) {
+  return new Promise((resolve, reject) => {
+    const genreMap = new Map();
+    request.get(authOptions, async (err, response, body) => {
+      if (err) {
+        reject(err);
+      }
+      if (response.statusCode !== 200) {
+        reject({message: 'Unauthorized Request'});
+      }
+      const items = await body.items;
+      if (items != null) {
+        items.forEach((item, index) => {
+          const genres = item.genres;
+          genres.forEach((genre, index) => {
+            if (!genreMap.has(genre)) {
+              genreMap.set(genre, 0);
+            }
+            genreMap.set(genre, genreMap.get(genre) + 1);
+          });
+        });
+      }
+      resolve(genreMap);
+    });
+  });
+}
+
+function mapArtists(authOptions) {
   return new Promise((resolve, reject) => {
     request.get(authOptions, async (err, response, body) => {
       if (err) {
@@ -124,14 +193,14 @@ function arrayArtists(authOptions) {
       if (response.statusCode !== 200) {
         reject({message: 'Unauthorized Request'});
       }
-      const artistArray = [];
-      const items = body.items;
-      if (items !== null) {
+      const artistMap = new Map();
+      const items = await body.items;
+      if (items != null) {
         items.forEach((item, index) => {
-          artistArray.push(item);
+          artistMap.set(item.name, item);
         });
-      }
-      resolve(artistArray);
+      } 
+      resolve(artistMap);
     })});
   }
 
@@ -144,8 +213,8 @@ function arrayArtists(authOptions) {
         if (response.statusCode !== 200) {
           reject({message: 'Unauthorized Request'});
         }
-        const playlists = body.items;
+        const playlists = await body.items;
         resolve(playlists);
       });
     });
-  }
+  }*/

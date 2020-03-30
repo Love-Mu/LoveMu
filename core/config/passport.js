@@ -46,7 +46,7 @@ passport.use(new GoogleStrategy({
       usr.fname = profile.name.givenName;
       usr.sname = profile.name.familyName;
       usr.image = profile.photos[0].value;
-      usr.artists = [];
+      usr.artists = new Map();
       usr.genres = new Map();
       usr.sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
       usr.gender = 'Rather Not Say';

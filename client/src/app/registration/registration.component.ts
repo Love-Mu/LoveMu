@@ -25,17 +25,17 @@ export class RegistrationComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient, private uploadService: UploadService, private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
     this.registrationForm = this.formBuilder.group({
-      email: '',
-      password: '',
-      user_name: '',
-      fname: '',
-      sname: '',
-      location: '',
-      dob: '',
+      email: ['', Validators.required, Validators.email],
+      password:['', Validators.required, Validators.min(5)],
+      user_name: ['', Validators.required, Validators.min(5), Validators.max(20)],
+      fname: ['', Validators.required, Validators.max(20)],
+      sname: ['', Validators.required, Validators.max(20)],
+      location: ['', Validators.required],
+      dob: ['', Validators.required],
       image: '',
-      gender: '',
-      sexuality: '',
-      bio: ''
+      gender: ['', Validators.required],
+      sexuality: ['', Validators.required],
+      bio: ['']
     });
   }
 

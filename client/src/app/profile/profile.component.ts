@@ -72,6 +72,7 @@ export class ProfileComponent implements OnInit {
     this.userService.getUser(id.toString()).subscribe((user) => {
       this.user = user;
       this.artists = user.artists;
+      console.log(user);
       if (this.songUrl != '') {
         this.songUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.user.favouriteSong);
       }
