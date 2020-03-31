@@ -1,26 +1,65 @@
 <!-- Generic profile page shown for all profiles -->
-<div class = "profileDiv" *ngIf="user && !this.isCurrentUser">
+<div class = "container" *ngIf="user && !this.isCurrentUser">
   <mat-card class = "profile">
-    <mat-card-header>
-      <img src = {{user.image}} class = "userImage">
-    </mat-card-header>
-
     <mat-card-content>
+      {{user.score}}% Match
+      <section class="section">
+        <mat-progress-bar value = "{{user.score}}" color = "accent">
+        </mat-progress-bar>
+      </section>
+      <img src = {{user.image}} class = "userImage">
+      <br><br>
       <div class = "info">
-        {{user.fname}} {{user.sname}}, {{user.age}}
+        <div class = "basicInfo">
+          {{user.fname}} {{user.sname}}, {{user.age}}
+        </div>
+        <div>
+          <i class="material-icons">location_on</i>{{user.location}}
+        </div>
+        <div *ngIf = "user.gender != 'Rather Not Say'">
+          <i *ngIf = "user.gender == 'Male'" class = 'fas fa-male'></i>
+          <i *ngIf = "user.gender == 'Female'" class = 'fas fa-female'></i>
+          <i *ngIf = "user.gender == 'Other'" class="material-icons">person</i>
+          {{user.gender}}
+        </div>
+        <div>
+          <i *ngIf = "user.sexuality == 'Women'" class="fas fa-venus"></i>
+          <i *ngIf = "user.sexuality == 'Men'" class="fa fa-mars"></i>
+          <i *ngIf = "user.sexuality == 'Everyone'" class="fa fa-venus-mars"></i>
+          {{user.sexuality}}
+        </div>
       </div>
-
-
+      <br>
+      <mat-divider></mat-divider>
+      <div class = "bio">
+        {{user.bio}}
+      </div>
+      <mat-divider></mat-divider>
+      <div class="playlist">
+        <iframe *ngIf="songUrl"[src]=playlistUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <iframe *ngIf="playlistUrl"[src]=songUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+      </div>
     </mat-card-content>
   </mat-card>
 
-  <mat-card class = "profile"> <p> hallo </p></mat-card>
-  <mat-card class = "profile"> <p> banter </p></mat-card>
+  <mat-card class = "music">
+    <div>
+      Top Artists!
+    </div>
+    <div class = "artists">
+        <div *ngFor = "let artist of artists">
+          <a href={{artist.external_urls.spotify}}>
+            <img class = "artistImage" src = "{{artist.images[0].url}}">
+            {{artist.name}}
+          </a>
+        </div>
+    </div>
+  </mat-card>
+
 </div>
 
 
-
-<!-- This is only shown to a user when they are editing a profile that is their own
+<!-- This is only shown to a user when they are editing a profile that is their own -->
 <div *ngIf="user && this.isCurrentUser">
   <form class = "profile" [formGroup]="profileForm" (ngSubmit)="onSubmit(profileForm.value)">
     <mat-card class = "profileCard">
@@ -74,10 +113,10 @@
         <br>
         <mat-form-field>
           <mat-select formControlName="gender" placeholder="Gender">
-              <mat-option value="Female">Female</mat-option>
-              <mat-option value="Male">Male</mat-option>
-              <mat-option value="Rather Not Say">Rather Not Say</mat-option>
-              <mat-option value="Other">Other</mat-option>
+            <mat-option value="Female">Female</mat-option>
+            <mat-option value="Male">Male</mat-option>
+            <mat-option value="Rather Not Say">Rather Not Say</mat-option>
+            <mat-option value="Other">Other</mat-option>
           </mat-select>
         </mat-form-field>&nbsp;
 
@@ -103,4 +142,3 @@
     </mat-card>
   </form>
 </div>
--->

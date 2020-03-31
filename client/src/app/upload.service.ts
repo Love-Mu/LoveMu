@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent, HttpErrorResponse, HttpEventType } from  '@angular/common/http';  
+import { HttpClient, HttpEvent, HttpErrorResponse, HttpEventType, HttpParams } from  '@angular/common/http';  
 import { map } from  'rxjs/operators';
 import { Injectable } from '@angular/core';
 
@@ -8,11 +8,11 @@ import { Injectable } from '@angular/core';
 export class UploadService { 
 	SERVER_URL: string = "https://lovemu.compsoc.ie/upload/upload";  
   constructor(private httpClient: HttpClient) { }
-  public upload(formData) {
 
-    return this.httpClient.post<any>(this.SERVER_URL, formData, {  
-        reportProgress: true,  
-        observe: 'events'  
-      });  
+  public upload(formData) {
+    return this.httpClient.post<any>(this.SERVER_URL, formData, {
+      reportProgress: true,  
+      observe: 'events'  
+    });
   }
-}
+}                                                                                       

@@ -16,6 +16,7 @@ export class SpotifyService {
       const tempArr = queryParams.split('=');
       if (tempArr[0] === '?spotify_token') {
         const spotifyToken = tempArr[1];
+        console.log(spotifyToken)
         return this.http.post('https://lovemu.compsoc.ie/spotify/retrieveDetails', {access_token: spotifyToken}).subscribe();
       }
     }

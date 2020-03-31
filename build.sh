@@ -2,9 +2,8 @@
 cd client
 ng build
 wait
-rm -r ../core/dist
+mkdir ../core/public/
 wait
-mv dist ../core/
+mv -f dist/client/* ../core/public/
 wait
-cd ../core/
-mv uploads dist/client/
+cp -r ../core/uploads/* ../core/public

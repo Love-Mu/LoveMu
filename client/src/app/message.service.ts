@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as io from 'socket.io-client';
 import { Observable } from 'rxjs/Observable';
 import { Message } from './message/Message';
+import { Chatroom } from './message/Chatroom'
 import { UsersService } from './users.service';
 
 @Injectable({
@@ -19,6 +20,8 @@ export class MessageService {
   }
 
   sendMessage(userData) {
+    console.log(userData);
+    if (userData.recipient == "") userData.recipient = "5e5fbb06b13a0a5dd22a8008";
     this.http.post('https://lovemu.compsoc.ie/messages/send', userData).subscribe((res => {
       this.socket.emit('dm', userData);
     }));
@@ -32,8 +35,12 @@ export class MessageService {
     });
   }
 
+  getInitChatrooms(): Observable<Chatroom[]> {
+    return this.http.get<Chatroom[]>('https://lovemu.compsoc.ie/messages/chatroom');
+  }
+
   getMessages(id): Observable<Message[]> {
-    return this.http.get<Message[]>('https://lovemu.compsoc.ie/messages/retrieve/' + id);
+    return this.http.get<Message[]>('https://lovemu.compsoc.ie/messages/retrieve/'+id);
   }
 
   /*sendMessage(userData) {

@@ -14,5 +14,13 @@ export class User {
   sexuality: string;
   age: string;
   bio: string;
-  top: Array<Artist>;
+  artists: Array<Artist>;
+  score: number;
+  favouriteSong: string;
+  playlist: string;
+  playlists: Array<Playlist>;
+}
+
+class Playlist {
+  href: string;
 }

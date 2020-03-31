@@ -12,12 +12,12 @@ passport.use(new LocalStrategy({
   passwordField: 'password',
 }, (email, pass, done) => {
   // Search for a user here that matches email
-  User.findOne({email: email}).exec(async (err, user) => {
+  User.findOne({$or: [{email: email}, {user_name: email}]}).exec(async (err, user) => {
     if (err) {
       return done(err);
     }
     if (!user) {
-      return done(null, false, {message: 'Email not linked to account'});
+      return done(null, false, {message: 'Email or Username not linked to account'});
     }
     const passwordMatch = await user.comparePassword(pass);
     if (!passwordMatch) {
@@ -46,7 +46,7 @@ passport.use(new GoogleStrategy({
       usr.fname = profile.name.givenName;
       usr.sname = profile.name.familyName;
       usr.image = profile.photos[0].value;
-      usr.artists = [];
+      usr.artists = new Map();
       usr.genres = new Map();
       usr.sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
       usr.gender = 'Rather Not Say';

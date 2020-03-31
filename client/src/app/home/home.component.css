@@ -1,0 +1,18 @@
+.welcome{
+  width: 40%;
+  font-family: 'Gotu', sans-serif;
+  padding: 5%;
+}
+
+.sub{
+  font-size: 5vh;
+}
+
+.head{
+  font-size: 10vh;
+}
+
+.login{
+  float: right;
+  text-align: left;
+}

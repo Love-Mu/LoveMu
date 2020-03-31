@@ -21,7 +21,7 @@ const messageSchema = new Schema ({
     },
     body:{
         type: String
-    },
+    }
 });
 
 module.exports = mongoose.model('Message', messageSchema);
