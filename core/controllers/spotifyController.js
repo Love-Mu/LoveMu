@@ -68,30 +68,25 @@ module.exports = {
       headers: {'Authorization': `Bearer ${req.body.access_token}`},
       json: true,
     };
-    Promise.all([mapArtists(authOptionsArtists), mapGenres(authOptionsGenres), retrievePlaylists(authOptionsPlaylists)]).then((values) => {
-      User.findOne({_id: req.user._id}).exec((err, user) => {
+    User.findOne({_id: req.user._id}).exec(async (err, user) => {
+      if (err) {
+        return res.json({error: err});
+      }
+      if (!user) {
+        return res.json({message: 'User not found'});
+      }      
+      user.artists = await mapArtists(authOptionsArtists);
+      user.genres = await mapGenres(authOptionsGenres);
+      user.playlists = await retrievePlaylists(authOptionsPlaylists);
+      user.save((err) => {
         if (err) {
           return res.json({error: err});
         }
-        if (!user) {
-          return res.json({message: 'User not found'});
-        }
-        user.artists = values[0];
-        user.genres = values[1];
-        user.playlists = values[2];
-        user.save((err) => {
-          if (err) {
-            return res.json({error: err});
-          }
-          return res.json({message: 'Successfully Retrieved Details!'});
-        });
+        return res.json({message: 'Successfully Retrieved Details!'});
       });
-    }).catch((err) => {
-      console.log(err);
-      return res.status(404).json({message: 'Error in Retrieving Details', error: err
-    })});
-  },
-};
+    });
+  }
+}
 
 // Promise to return hash map of Genres
 function mapGenres(authOptions) {

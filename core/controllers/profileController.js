@@ -22,11 +22,15 @@ module.exports = {
       if (!users) { 
         return res.json({message: 'No Users Found'});
       }
-      if (Array.isArray(users)) {
+      if (users.length > 1) {
         similarityGeneratorAll(req.user, users).then((result) => {
-          sortPromise(result).then((sortedUsers) => {
-              return res.json(sortedUsers);
+          console.log("Users:", result);
+          return new Promise(async (resolve, reject) => {
+            const sortedArray = result.sort((a, b) => (a.score >= b.score) ? -1 : 1)
+            resolve(sortedArray);
           });
+        }).then((sorted) => {
+          res.json(sorted);
         });
       } else {
         similarityGeneratorUser(currUser, user).then(score => {
@@ -83,43 +87,41 @@ module.exports = {
     updateProfile: async (req, res, next) => {
       // Find user and update by id
       const id = req.user._id;
-      if (req.user_name !== req.body.user_name) {
-        User.findOne({user_name: req.body.user_name}).exec((err, user) => {
-          if (err) {
-            return res.json({error: err});
-          }
-          if (user && (req.body.email !== req.user.email)) {
-            return res.status(403).json({message: 'Username already in use'});
-          }
-        });
-      }
       let sexuality = [];
       if (req.body.sexuality == 'Everyone') {
         sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
       } else {
         sexuality = [req.body.sexuality];
       }
-      User.findOneAndUpdate({_id: id}, {$set: {
-        user_name: req.body.user_name,
-        fname: req.body.fname,
-        sname: req.body.sname,
-        location: req.body.location,
-        image: req.body.image,
-        gender: req.body.gender,
-        sexuality: sexuality,
-        bio: req.body.bio,
-        complete: true}}).exec((err, user) => {
+      User.findOne({user_name: req.body.user_name}).exec((err, user) => {
         if (err) {
           return res.json({error: err});
         }
-        if (!user) {
-          return res.status(404).json({message: 'User does not exist'});
-        } else {
-          return res.status(200).json({message: 'Successfully Updated!'});
+        if (user && (user._id != id)) {
+          return res.status(403).json({message: 'Username already in use'});
         }
-      });
-    }
-  };
+        User.findOneAndUpdate({_id: id}, {$set: {
+            user_name: req.body.user_name,
+            fname: req.body.fname,
+            sname: req.body.sname,
+            location: req.body.location,
+            image: req.body.image,
+            gender: req.body.gender,
+            sexuality: sexuality,
+            bio: req.body.bio,
+            complete: true}}).exec((err, usr) => {
+            if (err) {
+              return res.json({error: err});
+            }
+            if (!usr) {
+              return res.status(404).json({message: 'User does not exist'});
+            } else {
+              return res.status(200).json({message: 'Successfully Updated!'});
+            }
+          });
+        });
+      }
+    };
 
   function generateSexuality(sexuality) {
     return new Promise((resolve, reject) => {
@@ -148,39 +150,22 @@ module.exports = {
   }
   
   function similarityGeneratorAll(currUser, users) {
-    let userArray = [];
     return new Promise(function (resolve, reject) {
-      users.forEach((user) => {
-        Promise.all([compareGenres(currUser, user), compareArtists(currUser, user)]).then((values) => {
-          userArray.push({
-            _id: user._id,
-            fname: user.fname,
-            sname: user.sname,
-            location: user.location,
-            bio: user.bio,
-            image: user.image,
-            score: (((values[0] + values[1]) / 2) * 100) || 0
-          });
-          }).catch((error) => {
-            userArray.push({
-              _id: user._id,
-              fname: user.fname,
-              sname: user.sname,
-              location: user.location,
-              bio: user.bio,
-              image: user.image,
-              score: 0});
-          });
+      let userArray = [];
+      users.forEach(async (user) => {
+        let score1 = await compareGenres(currUser, user);
+        userArray.push({
+          _id: user._id,
+          fname: user.fname,
+          sname: user.sname,
+          location: user.location,
+          bio: user.bio,
+          image: user.image,
+          score: Math.round(score1 * 100) || 0
         });
-        resolve(userArray);
+      });
+      resolve(userArray);
     });
-  }
-
-  function sortPromise(users) {
-    return new Promise(function (resolve, reject) {
-      const result = users.sort((a, b) => (a.score >= b.score) ? -1 : 1);
-      resolve(result);
-    })
   }
 
   function generateAge(dob) {

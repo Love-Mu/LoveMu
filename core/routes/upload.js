@@ -32,19 +32,20 @@ router.post('/save', (req, res) =>{
       if (err) return console.error(err);
       console.log('2 success!');
     });
-    var deleteFolderRecursive = function() {
-      if( fs.existsSync('./temp/'+req.body.cookie) ) {
-        fs.readdirSync('./temp/'+req.body.cookie).forEach(function(file,index){
-          var curPath = './temp/'+req.body.cookie + "/" + file;
+    var deleteFolderRecursive = function(curPath) {
+      if( fs.existsSync(curPath) ) {
+        fs.readdirSync(curPath).forEach(function(file,index){
+          var curPath = curPath+ "/" + file;
           if(fs.lstatSync(curPath).isDirectory()) { // recurse
             deleteFolderRecursive(curPath);
           } else { // delete file
             fs.unlinkSync(curPath);
           }
         });
-        fs.rmdirSync('./temp/'+req.body.cookie);
+        fs.rmdirSync(curPath);
       }
     };
+    deleteFolderRecursive('./temp/'+req.body.cookie);
   }
   return res.status(200).json({message: "done"});
 });

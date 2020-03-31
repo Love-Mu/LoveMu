@@ -19,7 +19,7 @@ import { DomSanitizer} from '@angular/platform-browser';
 export class RegistrationComponent implements OnInit {
   registrationForm;
   cookie: string;
-  image: string;
+  image: string = "default.png";
   @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
   files  = [];
 

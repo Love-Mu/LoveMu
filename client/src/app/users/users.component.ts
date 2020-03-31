@@ -25,7 +25,10 @@ export class UsersComponent implements OnInit {
 
   getUsers(): void {
     this.userService.getUsers().subscribe(
-      users => {this.users = users; console.log(this.users)},
+      users => {
+        this.users = users;//.sort((a, b) => (a.score >= b.score) ? -1 : 1);
+        console.log(this.users);
+      },
       error => console.log(error)
     );
   }

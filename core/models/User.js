@@ -11,6 +11,11 @@ const userSchema = new Schema({
   password: {
     type: String
   },
+  user_name: {
+    type: String, 
+    default: "",
+    unique: true
+  },
   artists: {
     type: Map,
     default: new Map()
@@ -22,11 +27,6 @@ const userSchema = new Schema({
   playlists: {
     type: [],
     default: []
-  },
-  user_name: {
-    type: String, 
-    default: "",
-    unique: true
   },
   fname: {
     type: String, 
