@@ -31,7 +31,7 @@ import {LoginComponent} from './login/login.component';
 import {RegistrationComponent} from './registration/registration.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {ProfileComponent} from './profile/profile.component';
-import { MessageTestComponent } from './message-test/message-test.component';
+//import { MessageTestComponent } from './message-test/message-test.component';
 import { MessageComponent } from './message/message.component';
 import {AuthInterceptor} from './authInterceptor';
 import { GoogleRegistrationComponent } from './google-registration/google-registration.component';
@@ -47,7 +47,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     RegistrationComponent,
     ProfileComponent,
     NavbarComponent,
-    MessageTestComponent,
+//    MessageTestComponent,
     MessageComponent,
     GoogleRegistrationComponent,
     FileListComponent

@@ -100,14 +100,15 @@ module.exports = {
       } else {
         sexuality = [req.body.sexuality];
       }
-      User.findOne({user_name: req.body.user_name}).exec((err, user) => {
+      User.findOne({user_name: req.body.user_name}).exec(async (err, user) => {
         if (err) {
           return res.json({error: err});
         }
-        if (user && (user._id != id)) {
+        const sameUser = await ((user._id).toString() == (req.user._id).toString());
+        if (user && !sameUser) {
           return res.status(403).json({message: 'Username already in use'});
         }
-        User.findOneAndUpdate({_id: id}, {$set: {
+        User.findOneAndUpdate({_id: req.user._id}, {$set: {
             user_name: req.body.user_name,
             fname: req.body.fname,
             sname: req.body.sname,

@@ -7,7 +7,8 @@
 .profile{
   display: block;
   float: left;
-  max-height: 150vh;
+  min-height: 150vh;
+  height: fit-content;
   width: 46%;
   margin: 2%;
 }
@@ -116,8 +117,8 @@ i{
   font-size: 1.2em;
 }
 
-.editButton{
-  margin-bottom: 2%;
+button{
+  margin: 2%;
 }
 
 .updateDiv{
@@ -132,10 +133,6 @@ i{
 }
 
 .updateCard{
-  margin: 2%;
-}
-
-.updateButton{
   margin: 2%;
 }
 

@@ -1,5 +1,5 @@
 <!-- Generic profile page shown for all profiles -->
-<div *ngIf="!editUser" class = "container">
+<div *ngIf="user && !editUser" class = "container">
   <div class = "profile">
     <!-- First card in profile div: main info, pic, match, etc -->
     <mat-card class = "mainProfile">
@@ -45,6 +45,8 @@
         <div class = "bio">
           {{user.bio}}
         </div>
+        <mat-divider></mat-divider>
+        <button routerLink="/message/{{user._id}}"mat-raised-button="">Send a message!</button>
       </mat-card-content>
     </mat-card>
 
@@ -79,7 +81,7 @@
 </div> <!-- End of container div -->
 
 <!-- This is only shown to a user when they are editing a profile that is their own after they click edit profile button -->
-<div class ="updateDiv" *ngIf="editUser">
+<div class ="updateDiv" *ngIf="user && editUser">
   <form class = "updateForm" [formGroup]="profileForm" (ngSubmit)="onSubmit(profileForm.value)">
     <mat-card class = "updateCard">
       <mat-card-content>

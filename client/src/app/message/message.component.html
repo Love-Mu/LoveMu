@@ -1,32 +1,6 @@
-<h2> Messages </h2>
 
-<form [formGroup]="messageForm" (ngSubmit)="onSubmit(messageForm.value)">
-    <mat-card class = "messageCard">
-      <mat-card-content>
-        <mat-form-field>
-          <input matInput placeholder="Body" formControlName="body">
-        </mat-form-field>
-      </mat-card-content>
-      <mat-card-footer>
-        <button type="submit" mat-raised-button>Send Message</button>
-      </mat-card-footer>
-    </mat-card>
-  </form>
-
-<div class = "container">
-  <mat-card class = "messageCard">
-    <mat-card-content>
-      <div *ngFor="let message of messages" class = "userInfo">
-        <h3>{{message.sender}}</h3><br>
-        <h3>{{message.body}}</h3><br>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</div>
-
-<div class="form">
-  <div class="formBox">
-    <input />
-    <button>Send</button>
-  </div>
-</div>
+<p>message page</p>
+<!--<div *ngIf="user && activeUser">
+    <p>{{user.fname}}</p>
+    <p>{{activeUser.fname}}</p>
+</div>-->

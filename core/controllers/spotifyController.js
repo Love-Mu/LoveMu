@@ -49,7 +49,7 @@ module.exports = {
   },
 
   storeToken: (req, res, next) => {
-    if (req.body.access_token == null || req.body.refresh_token = null) {
+    if (req.body.access_token == null || req.body.refresh_token == null) {
       return res.status(403).json({error: "access_token or refresh_token not provided"});
     }
     User.findOneAndUpdate({_id: id}, {$set: {access_token: access_token, refresh_token: refresh_token}}).exec((error, user) => {
