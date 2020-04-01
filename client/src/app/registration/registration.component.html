@@ -6,6 +6,8 @@
         <mat-card-content>
           <mat-form-field>
             <input matInput placeholder="Email Address" formControlName="email">
+            <mat-error *ngIf="email.errors.required">Email is Required</mat-error>
+            <mat-error *ngIf="email.errors.email">Email is Invalid</mat-error>
           </mat-form-field> &nbsp;
           <mat-form-field>
             <input type="password" matInput placeholder="Password" formControlName="password">

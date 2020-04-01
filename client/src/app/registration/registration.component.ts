@@ -27,16 +27,16 @@ export class RegistrationComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient, private uploadService: UploadService, private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer, private cookieService: CookieService) {
     this.registrationForm = this.formBuilder.group({
       email: ['', Validators.required, Validators.email],
-      password:['', Validators.required, Validators.min(5)],
+      password:['', Validators.required, Validators.min(5), Validators.max(40)],
       user_name: ['', Validators.required, Validators.min(5), Validators.max(20)],
-      fname: ['', Validators.required, Validators.max(20)],
-      sname: ['', Validators.required, Validators.max(20)],
+      fname: ['', Validators.required, Validators.max(30)],
+      sname: ['', Validators.required, Validators.max(30)],
       location: ['', Validators.required],
       dob: ['', Validators.required],
       image: '',
       gender: ['', Validators.required],
       sexuality: ['', Validators.required],
-      bio: ['']
+      bio: ['', Validators.required, Validators.min(3), Validators.max(240)]
     });
   }
 
@@ -72,7 +72,6 @@ export class RegistrationComponent implements OnInit {
   googleSubmit() {
     window.location.href='https://lovemu.compsoc.ie/auth/google';
   }
-
   
   uploadFile(file) {
       const formData = new FormData(); 
@@ -108,6 +107,7 @@ export class RegistrationComponent implements OnInit {
     this.files.forEach(file => {  
       this.uploadFile(file);  
     });  
+    this.files = [];
     return true;
   }
 
@@ -122,4 +122,15 @@ export class RegistrationComponent implements OnInit {
     };  
     fileUpload.click();  
   }
+
+  get email() { return this.registrationForm.get('email') }
+  get password() { return this.registrationForm.get('password') }
+  get user_name() { return this.registrationForm.get('user_name') }
+  get fname() { return this.registrationForm.get('fname') }
+  get sname() { return this.registrationForm.get('sname') }
+  get location() { return this.registrationForm.get('location') }
+  get dob() { return this.registrationForm.get('dob') }
+  get gender() { return this.registrationForm.get('gender') }
+  get sexuality() { return this.registrationForm.get('sexuality') }
+  get bio() { return this.registrationForm.get('bio') }
 }

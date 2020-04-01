@@ -6,13 +6,22 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'  
 })  
 export class UploadService { 
-	SERVER_URL: string = "https://lovemu.compsoc.ie/upload/upload";  
+  uploadURL: string = "https://lovemu.compsoc.ie/upload/upload"; 
+  updateURL: string = "https://lovemu.compsoc.ie/upload/reupload"; 
   constructor(private httpClient: HttpClient) { }
 
   public upload(formData) {
-    return this.httpClient.post<any>(this.SERVER_URL, formData, {
+    return this.httpClient.post<any>(this.uploadURL, formData, {
       reportProgress: true,  
       observe: 'events'  
     });
   }
+
+  public update(formData) {
+    return this.httpClient.post<any>(this.updateURL, formData, {
+      reportProgress: true,  
+      observe: 'events'  
+    });
+  }
+
 }                                                                                       
