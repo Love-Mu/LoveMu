@@ -68,6 +68,10 @@ app.io.on('connection', (socket) => {
       console.log('A User Disconnected');
   });
 
+  socket.on('message', function(data) {
+    console.log(socket.handshake.query.id + " says hello");
+  });
+
   socket.on('dm', function(data) {
     io.to(people[data.recipient]).emit('message', data);
   });

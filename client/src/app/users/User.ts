@@ -15,6 +15,7 @@ export class User {
   age: string;
   bio: string;
   artists: Array<Artist>;
+  overlappingArtists: Array<Artist>;
   score: number;
   favouriteSong: string;
   playlist: string;

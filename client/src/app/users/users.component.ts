@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { UsersService } from '../users.service';
 import { User } from './User';
 
@@ -12,7 +11,7 @@ export class UsersComponent implements OnInit {
   users: User[];
   breakpoint;
 
-  constructor(private userService: UsersService, private socket: Socket) { }
+  constructor(private userService: UsersService) { }
 
   ngOnInit() {
     this.getUsers();

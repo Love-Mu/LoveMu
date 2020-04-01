@@ -24,7 +24,6 @@ module.exports = {
       }
       if (users.length > 1) {
         similarityGeneratorAll(curr, users).then((result) => {
-          console.log("Users:", result);
           return new Promise(async (resolve, reject) => {
             const sortedArray = result.sort((a, b) => (a.score >= b.score) ? -1 : 1)
             resolve(sortedArray);
@@ -33,7 +32,7 @@ module.exports = {
           res.json(sorted);
         });
       } else {
-        similarityGeneratorUser(curr, users).then(score => {
+        similarityGeneratorUser(curr, users).then((result) => {
           res.json([{
             _id: users._id,
             user_name: users.user_name,
@@ -47,7 +46,7 @@ module.exports = {
             playlists: users.playlists || [],
             favouriteSong: users.favouriteSong || '',
             image: users.image,
-            score: Math.round(score) || 0
+            score: Math.round(result.score) || 0
           }]);
         });
       }
@@ -69,6 +68,7 @@ module.exports = {
           promises.push(similarityGeneratorUser(currUser, user))
         }
         Promise.all(promises).then(values => {
+          Math.round("SCORE: " + values[2].score)
           res.json({
             _id: user._id,
             email: user.email,
@@ -81,12 +81,13 @@ module.exports = {
             gender: user.gender,
             location: user.location,
             bio: user.bio,
-            artists: Array.from(user.artists.values()) || new Map(),
+            artists: values[2].artists,
+            overlappingArtists: values[2].overlappingArtists,
             playlist: user.playlist || '',
             playlists: user.playlists || [],
             favouriteSong: user.favouriteSong || '',
             image: user.image,
-            score: Math.round(values[2]) || 0
+            score: Math.round(values[2].score) || 0
           });
         }).catch((err) => {console.log(err)})
       })
@@ -153,9 +154,9 @@ module.exports = {
   function similarityGeneratorUser(currUser, user) {
     return new Promise(function (resolve, reject) {
       Promise.all([compareGenres(currUser, user), compareArtists(currUser, user)]).then((value) => {
-        resolve((((value[0] * .8) + (value[1]) * .2)) * 100);
+        resolve({score: (value[0] * 100), overlappingArtists: value[1].overlappingArtists, artists: value[1].artists});
         }).catch((error) => { 
-          resolve(0);
+          reject(error);
       });
     })
   }
@@ -163,17 +164,21 @@ module.exports = {
   function similarityGeneratorAll(currUser, users) {
     return new Promise(function (resolve, reject) {
       let userArray = [];
-      users.forEach(async (user) => {
-        let score1 = await compareGenres(currUser, user);
-        userArray.push({
-          _id: user._id,
-          fname: user.fname,
-          sname: user.sname,
-          location: user.location,
-          bio: user.bio,
-          image: user.image,
-          score: Math.round(score1 * 100) || 0
-        });
+      users.forEach((user) => {
+        compareGenres(currUser, user).then((score) => {
+          if (score != null) {
+            console.log("Score: " + score);
+          }
+          userArray.push({
+            _id: user._id,
+            fname: user.fname,
+            sname: user.sname,
+            location: user.location,
+            bio: user.bio,
+            image: user.image,
+            score: Math.round(score * 100) || 0
+          });
+        })
       });
       resolve(userArray);
     });
@@ -216,7 +221,7 @@ module.exports = {
     });
   }
 
-  function compareArtists(usr1, usr2) {
+  function scoreArtists(usr1, usr2) {
     return new Promise((resolve, reject) => {
       let usr1Score = [];
       let usr2Score = [];
@@ -235,7 +240,25 @@ module.exports = {
         }
       })
       const score = similarity(usr1Score, usr2Score);
-      resolve(score);
+      resolve({score: score, overlappingArtists: overlap, artists: artists});
+    });
+  }
+
+  function compareArtists(usr1, usr2) {
+    return new Promise((resolve, reject) => {
+      let overlap = [];
+      let artists = [];
+      usr1.artists.forEach((value, key, map) => {
+        if (usr2.artists.has(key)) {
+          overlap.push(value);
+        }
+      });
+      usr2.artists.forEach((value, key, map) => {
+        if (!usr1.artists.has(key)) {
+          artists.push(value);
+        }
+      })
+      resolve({overlappingArtists: overlap, artists: artists});
     });
   }
  

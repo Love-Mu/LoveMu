@@ -26,7 +26,7 @@ module.exports = {
                         if (err) {
                             return res.status(404).json(err);
                         }
-                        return res.status(200).json({message: "Message Successfully Saved to DB", chatroom: chatroom._id, sender: message.sender, recipient: message.recipient});
+                        return res.status(200).json({message: "Message Successfully Saved to DB", _id: message._id, created_at: message.created_at});
                     })
                 } else {
                     let chatroom = new Chatroom({
@@ -49,7 +49,7 @@ module.exports = {
             if (err) {
                 throw err;
                 return res.status(500).json(err);
-            } else {
+            } else if (chatroom != undefined) {
                 Message.find().where('_id').in(chatroom.messages).exec((err, messages) => {
                     return res.status(200).json(messages);
                 });
@@ -75,7 +75,7 @@ module.exports = {
                         });
                     });
                     messagePromise.then(() => {
-                        rooms.push({"_id": element._id, "members": element.members, "message": message});
+                        rooms.push({"_id": element._id, "members": element.members, "messages": [message]});
                         if(index == chatroom.length - 1) return res.status(200).json(rooms);
                     })
                 });

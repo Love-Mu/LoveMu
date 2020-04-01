@@ -39,9 +39,8 @@ module.exports = {
 
     request.post(authOptions, (err, response, body) => {
       if (!err && response.statusCode === 200) {
-        const access_token = body.access_token;
         const refresh_token = body.refresh_token;
-        res.redirect('https://lovemu.compsoc.ie/?' + querystring.stringify({access_token: access_token, refresh_token: refresh_token }));
+        res.redirect('https://lovemu.compsoc.ie/?' + querystring.stringify({spotify_token: refresh_token }));
       } else {
         throw (err);
       }
@@ -49,17 +48,43 @@ module.exports = {
   },
 
   storeToken: (req, res, next) => {
-    if (req.body.access_token == null || req.body.refresh_token == null) {
+    if (req.body.refresh_token == null) {
       return res.status(403).json({error: "access_token or refresh_token not provided"});
     }
-    User.findOneAndUpdate({_id: id}, {$set: {access_token: access_token, refresh_token: refresh_token}}).exec((error, user) => {
-      if (err) {
+    console.log(req.body.refresh_token);
+    User.findOneAndUpdate({_id: req.user._id}, {$set: {refresh_token: req.body.refresh_token}}).exec((error, user) => {
+      if (error) {
         return res.json({error: err});
       }
       if (!user) {
         return res.json({message: 'User not found'});
       }
       return res.status(200).json({message: 'Successfully Updated Tokens'});
+    });
+  },
+
+  refreshAccess: (req, res, next) => {
+    const refreshToken = req.user.refresh_token; // use this to find User's refresh token
+    const authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      headers: {
+        'Authorization': 'Basic ' + ((Buffer.from(clientId + ':' + secretId)).toString('base64')),
+      },
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+      },
+      json: true,
+    };
+    request.post(authOptions, (error, response, body) => {
+      if (!error) {
+        User.findOneAndUpdate({_id: req.user._id}, {$set: {access_token: body.access_token}}).exec((err, user) => {
+          if (err) {
+            res.json({error: err});
+          }
+          res.json({message: "Successful Refresh!"});
+        });
+      }
     });
   },
 
@@ -73,14 +98,14 @@ module.exports = {
       }
       const authOptionsArtists = {
         method:"get",
-        url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=medium_term`,
+        url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
         headers: {'Authorization': `Bearer ${user.access_token}`},
         json: true,
       };
   
       const authOptionsGenres = {
         method:"get",
-        url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=medium_term`,
+        url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
         headers: {'Authorization': `Bearer ${user.access_token}`},
         json: true,
       };
@@ -93,19 +118,32 @@ module.exports = {
       };
 
       mapArtists(authOptionsArtists).then((artists) => {
-        User.findOneAndUpdate({_id: req.user._id} , {$set: {artists: artists}}); 
+        console.log(artists);
+        User.updateOne({_id: user._id}, {$set: {artists: artists}}).exec((err, user) => {
+          if (err) {
+            return res.json(err);
+          }
+        })
       }).catch((error) => { 
         console.log(error);
         return;
       });
       mapGenres(authOptionsGenres).then((genres) => {
-        User.findOneAndUpdate({_id: req.user._id} , {$set: {genres: genres}}); 
+        User.updateOne({_id: user._id} , {$set: {genres: genres}}).exec((err, user) => {
+            if (err) {
+              return res.json(err);
+            }
+        }); 
       }).catch((error) => { 
         console.log(error);
         return;
       });
       retrievePlaylists(authOptionsPlaylists).then((playlists) => {
-        User.findOneAndUpdate({_id: req.user._id} , {$set: {playlists: playlists}}); 
+        User.updateOne({_id: user._id} , {$set: {playlists: playlists}}).exec((err, user) => {
+          if (err) {
+            return res.json(err);
+          }
+        });
       }).catch((error) => {
         console.log(error);
         return;

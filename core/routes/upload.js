@@ -7,7 +7,7 @@ const User = require('../models/User');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      let path = './temp/'+req.cookies.io+'/';
+      let path = './temp/'+req.cookies.tempuser+'/';
       fs.mkdirsSync(path);
       cb(null, path);
     },
@@ -19,36 +19,36 @@ var storage = multer.diskStorage({
   var upload = multer({ storage: storage })
 
 router.post('/upload', upload.single('file'), function (req, res, next) {
-  return res.status(200).json({filename: req.file.filename, cookie:req.cookies.io});
+  return res.status(200).json({filename: req.file.filename, cookie:req.cookies.tempuser});
 });
 
 router.post('/save', (req, res) =>{
+  var deleteFolderRecursive = function(curPath) {
+    console.log(curPath);
+    if( fs.existsSync(curPath) ) {
+      fs.readdirSync(curPath).forEach(function(file,index){
+        console.log(curPath);
+        var nextPath = curPath + "/" + file;
+        if(fs.lstatSync(nextPath).isDirectory()) { // recurse
+          deleteFolderRecursive(nextPath);
+        } else { // delete file
+          fs.unlinkSync(nextPath);
+        }
+      });
+      fs.rmdirSync(curPath);
+      console.log("3 success!");
+    }
+  };
   if(req.body.filename != null && req.body.filename != undefined && req.body.filename != "default.png"){
     fs.copy('./temp/'+req.body.cookie+'/'+req.body.filename, './public/'+req.body.filename, err =>{
       if (err) return console.error(err);
       console.log('1 success!');
+      fs.copy('./temp/'+req.body.cookie+'/'+req.body.filename, './uploads/'+req.body.filename, err =>{
+        if (err) return console.error(err);
+        console.log('2 success!');
+        deleteFolderRecursive('./temp/'+req.body.cookie);
+      });
     });
-    fs.copy('./temp/'+req.body.cookie+'/'+req.body.filename, './uploads/'+req.body.filename, err =>{
-      if (err) return console.error(err);
-      console.log('2 success!');
-    });
-    var deleteFolderRecursive = function(curPath) {
-      console.log(curPath);
-      if( fs.existsSync(curPath) ) {
-        fs.readdirSync(curPath).forEach(function(file,index){
-          console.log(curPath);
-          var nextPath = curPath + "/" + file;
-          if(fs.lstatSync(nextPath).isDirectory()) { // recurse
-            deleteFolderRecursive(nextPath);
-          } else { // delete file
-            fs.unlinkSync(nextPath);
-          }
-        });
-        fs.rmdirSync(curPath);
-        console.log("This has been done");
-      }
-    };
-    deleteFolderRecursive('./temp/'+req.body.cookie);
   }
   return res.status(200).json({message: "done"});
 });

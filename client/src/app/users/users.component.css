@@ -10,10 +10,10 @@
 }
 
 .userCard{
+  padding: 0;
   max-width: 300px;
   margin: 2.5%;
   text-align: center;
-  min-height: 300px;
 }
 /* Makes web page responsive so that cards will go to next line*/
 .container .userCard{
@@ -24,7 +24,7 @@
 .userDiv{
   display: inline-block;
   width: 30%;
-  min-height: 30%;
+  height: 100px;
 }
 
 .userImage{
@@ -35,17 +35,25 @@
 }
 
 
-.userInfo, .userBio{
-  width: 100%;
-  background-color: cadetblue;
+.userInfo{
+  background-color: #6c919e;
 }
 
 .userBio{
-  min-height: 30px;
+  background-color: #6f94a0;
+}
+
+.userInfo{
+  height: 40px;
+}
+
+.userBio{
+  height: 80px;
 }
 
 h3{
   color: white;
   font-family: 'Gotu', sans-serif;
 }
+
 

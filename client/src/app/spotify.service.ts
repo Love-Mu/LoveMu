@@ -16,9 +16,16 @@ export class SpotifyService {
       const tempArr = queryParams.split('=');
       if (tempArr[0] === '?spotify_token') {
         const spotifyToken = tempArr[1];
-        console.log(spotifyToken)
-        return this.http.post('https://lovemu.compsoc.ie/spotify/retrieveDetails', {access_token: spotifyToken}).subscribe();
+        return this.http.post('https://lovemu.compsoc.ie/spotify/storeToken', {refresh_token: spotifyToken}).subscribe();
       }
     }
+  }
+
+  public refreshSpotify() {
+    console.log("Calling Refresh Access Route");
+    return this.http.post('https://lovemu.compsoc.ie/spotify/refreshAccess', {}).subscribe(() => {
+      console.log("Calling Retrieve Details Route")
+      this.http.post('https://lovemu.compsoc.ie/spotify/retrieveDetails', {}).subscribe();
+    })
   }
 }

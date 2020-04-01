@@ -9,6 +9,7 @@ import { UploadService } from  '../upload.service';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer} from '@angular/platform-browser';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-registration',
@@ -23,7 +24,7 @@ export class RegistrationComponent implements OnInit {
   @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
   files  = [];
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient, private uploadService: UploadService, private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient, private uploadService: UploadService, private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer, private cookieService: CookieService) {
     this.registrationForm = this.formBuilder.group({
       email: ['', Validators.required, Validators.email],
       password:['', Validators.required, Validators.min(5)],
@@ -40,7 +41,21 @@ export class RegistrationComponent implements OnInit {
   }
 
   ngOnInit() {  
-    
+    this.cookie = this.makeString();
+    this.cookieService.set('tempuser', this.cookie);
+  }
+
+  makeString(): string {
+    let outString: string = '';
+    let inOptions: string = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < 32; i++) {
+
+      outString += inOptions.charAt(Math.floor(Math.random() * inOptions.length));
+
+    }
+
+    return outString;
   }
 
   onSubmit(userData) {

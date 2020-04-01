@@ -5,7 +5,7 @@
     </span>
     <span class = "spacer"> </span>
     <a *ngIf = "authService.isAuthenticated()" routerLink = "/users">Dashboard</a>
-    <a routerLink = "/messageTest" *ngIf = "authService.isAuthenticated()">Messaging</a>
+    <a routerLink = "/message" *ngIf = "authService.isAuthenticated()">Messaging</a>
     <a *ngIf = "!authService.isAuthenticated()" routerLink = "/register" >Register</a>
     <a *ngIf = "!authService.isAuthenticated()" routerLink = "/login">Login</a>
     <a *ngIf = "authService.isAuthenticated()" [routerLink] = "['/users/', userService.getCurrentUser()]">Edit Profile</a>

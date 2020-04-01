@@ -9,6 +9,7 @@ import { AuthenticationService } from '../authentication.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Artist } from '../users/Artist';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import { SpotifyService } from '../spotify.service';
 
 @Component({
   selector: 'app-profile',
@@ -24,7 +25,7 @@ export class ProfileComponent implements OnInit {
   songUrl: SafeResourceUrl;
   public editUser: boolean
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private cookieService: CookieService, private route: ActivatedRoute, private userService: UsersService, private authService: AuthenticationService, private sanitizer: DomSanitizer) {
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private cookieService: CookieService, private route: ActivatedRoute, private userService: UsersService, private authService: AuthenticationService, private sanitizer: DomSanitizer, public spotifyService: SpotifyService) {
     this.profileForm = this.formBuilder.group({
       fname: '',
       sname: '',

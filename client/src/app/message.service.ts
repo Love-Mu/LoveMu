@@ -12,7 +12,7 @@ import { UsersService } from './users.service';
 export class MessageService {
   private url = 'https://lovemu.compsoc.ie';
   private socket;  
-  messages: Message[]; 
+  messages: Message[];
 
   constructor(private userService: UsersService, public http: HttpClient) { 
     this.socket = io(this.url, { query: { id: userService.getCurrentUser() }});
@@ -20,9 +20,9 @@ export class MessageService {
   }
 
   sendMessage(userData) {
-    console.log(userData);
-    if (userData.recipient == "") userData.recipient = "5e5fbb06b13a0a5dd22a8008";
     this.http.post('https://lovemu.compsoc.ie/messages/send', userData).subscribe((res => {
+      userData._id = res['_id'];
+      userData.created_at = res['created_at'];
       this.socket.emit('dm', userData);
     }));
   }
@@ -42,13 +42,6 @@ export class MessageService {
   getMessages(id): Observable<Message[]> {
     return this.http.get<Message[]>('https://lovemu.compsoc.ie/messages/retrieve/'+id);
   }
-
-  /*sendMessage(userData) {
-    //this.socket.emit('message', message);
-    this.http.post('https://lovemu.compsoc.ie/messages/send', userData).subscribe((res => {
-      console.log('Req Made');
-    }));
-  }*/
 
   /*public getNewMessages = () => {
     return Observable.create((observer) => {

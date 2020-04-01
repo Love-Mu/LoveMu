@@ -10,5 +10,8 @@ module.exports = {
     socket.on('msg', (msg) => {
       socket.emit('msg', msg);
     });
-  },*/
+    socket.on('dm', (msg) => {
+      socket.emit('dm', msg);
+    });
+  }*/
 };

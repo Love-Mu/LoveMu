@@ -46,7 +46,8 @@
           {{user.bio}}
         </div>
         <mat-divider></mat-divider>
-        <button routerLink="/message/{{user._id}}"mat-raised-button="">Send a message!</button>
+        <button *ngIf = "user && !this.isCurrentUser" routerLink="/message/{{user._id}}"mat-raised-button="">Send a message!</button>
+        <button *ngIf = "user && this.isCurrentUser" mat-raised-button (click)="spotifyService.refreshSpotify()">Refresh Spotify</button>
       </mat-card-content>
     </mat-card>
 
