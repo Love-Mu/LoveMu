@@ -47,10 +47,6 @@ export class GoogleRegistrationComponent implements OnInit {
     this.registrationForm.controls['bio'].setValue(this.user.bio);
   }
 
-  checkFormData(userData): void {
-    if (userData.image === '') userData.image = this.user.image;
-  }
-
 
   getUser(): void {
     this.userService.getUser(this.userService.getCurrentUser()).subscribe(
@@ -62,9 +58,8 @@ export class GoogleRegistrationComponent implements OnInit {
   }
 
   onSubmit(userData) {
-    this.checkFormData(userData)
     this.http.put(`https://lovemu.compsoc.ie/profiles/${this.userService.getCurrentUser()}`, userData).subscribe((res) => {
-      window.location.href= 'https://lovemu.compsoc.ie/spotify/reqAccess';
+      window.location.href='https://lovemu.compsoc.ie/spotify/reqAccess';
     });
   }
 }

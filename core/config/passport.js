@@ -37,7 +37,7 @@ passport.use(new GoogleStrategy({
     if (err) {
       return done(err);
     }
-    if (user && user.complete) {
+    if (user) {
       return done(null, user);
     }
     else {
@@ -48,6 +48,9 @@ passport.use(new GoogleStrategy({
       usr.image = profile.photos[0].value;
       usr.artists = new Map();
       usr.genres = new Map();
+      usr.playlists = [];
+      usr.playlist = '';
+      usr.favouriteSong = '';
       usr.sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
       usr.gender = 'Rather Not Say';
       usr.save(); 

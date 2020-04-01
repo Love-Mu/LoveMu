@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
   profileForm;
   playlistUrl: SafeResourceUrl;
   songUrl: SafeResourceUrl;
+  public editUser: boolean
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private cookieService: CookieService, private route: ActivatedRoute, private userService: UsersService, private authService: AuthenticationService, private sanitizer: DomSanitizer) {
     this.profileForm = this.formBuilder.group({
@@ -32,7 +33,8 @@ export class ProfileComponent implements OnInit {
       gender: '',
       sexuality: '',
       bio: '',
-      user_name: ''
+      user_name: '',
+      dob: ''
     });
   }
 
@@ -49,6 +51,9 @@ export class ProfileComponent implements OnInit {
     this.profileForm.controls['sexuality'].setValue(this.user.sexuality);
     this.profileForm.controls['user_name'].setValue(this.user.user_name);
     this.profileForm.controls['bio'].setValue(this.user.bio);
+    this.profileForm.controls['gender'].setValue(this.user.gender);
+    this.profileForm.controls['sexuality'].setValue(this.user.sexuality);
+    this.profileForm.controls['dob'].setValue(this.user.dob);
   }
 
   checkFormData(userData): void {
@@ -86,7 +91,9 @@ export class ProfileComponent implements OnInit {
   onSubmit(userData) {
     this.checkFormData(userData);
     this.http.put('https://lovemu.compsoc.ie/profiles/' + this.userService.getCurrentUser(), userData).subscribe((res) => {
-      console.log("Amendments Made");
+      this.editUser = false;
     });
   }
+
+  
 }

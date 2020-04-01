@@ -54,8 +54,8 @@ export class AuthenticationService {
         const token = tempArr[1].substring(0, tempArr[1].indexOf("&"));
         const id = tempArr[2].substring(0, tempArr[2].indexOf("&"));
         this.setUserInfo(token, id);
-        const verified = tempArr[3];
-        if (verified == 'false') {
+        const verified = tempArr[3].substring(0, 3);
+        if (verified != 'true') {
           this.router.navigate(['/google']);
         }
       }

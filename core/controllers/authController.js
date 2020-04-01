@@ -28,7 +28,7 @@ exports.register = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(404).json(errors);
   }
-  User.findOne({'$or':[{'email' : req.body.email },{'user_name' : req.body.user_name}]}).exec(async (err, user) => {
+  User.findOne({'$or':[{'email' : req.body.email.toLowerCase() },{'user_name' : req.body.user_name}]}).exec(async (err, user) => {
     if (err) {
       return res.status(404).json(err);
     }
@@ -41,7 +41,7 @@ exports.register = (req, res, next) => {
       }
     }
     let usr = new User();
-    usr.email = req.body.email;
+    usr.email = req.body.email.toLowerCase();
     usr.user_name = req.body.user_name;
     usr.fname = req.body.fname;
     usr.sname = req.body.sname;
@@ -85,7 +85,7 @@ exports.google = (req, res, next) => {
     const token = jwt.sign({id: req.user.id}, process.env.SECRET);
     const id = req.user.id;
     const verified = req.user.complete;
-    return res.redirect(`https://lovemu.compsoc.ie?google_token=${token}&id=${id}&verified=${verified}`);  
+    return res.redirect(`https://lovemu.compsoc.ie/?google_token=${token}&id=${id}&verified=${verified}`);  
 }
 
   function generateAge(dob) {

@@ -23,7 +23,7 @@
 .userDiv{
   display: inline-block;
   width: 30%;
-  height: 30%;
+  min-height: 30%;
 }
 
 .userImage{
@@ -37,6 +37,10 @@
 .userInfo, .userBio{
   width: 100%;
   background-color: cadetblue;
+}
+
+.userBio{
+  min-height: 20vh;
 }
 
 h3{

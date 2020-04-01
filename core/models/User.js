@@ -16,6 +16,14 @@ const userSchema = new Schema({
     default: "",
     unique: true
   },
+  access_token: {
+    type: String,
+    default: ""
+  },
+  refresh_token: {
+    type: String,
+    default: ""
+  },
   artists: {
     type: Map,
     default: new Map()

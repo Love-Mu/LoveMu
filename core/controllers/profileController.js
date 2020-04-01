@@ -8,7 +8,7 @@ module.exports = {
   getProfiles: async (req, res, next) => {
     const curr = await req.user;
     const sexuality = curr.sexuality;
-    // Find user based on this id and serve ity;
+    // Find user based on this id and serve it
     const gender = curr.gender;
     let filters = {
       _id: {$ne: curr.id},
@@ -18,12 +18,12 @@ module.exports = {
     if (req.body.location != null) {
       filters.location = req.body.location;
     }
-    User.find(filters).select('-password -refresh_token -access_token').exec((err, users) => {
+    User.find(filters).select('-password').exec((err, users) => {
       if (!users) { 
         return res.json({message: 'No Users Found'});
       }
       if (users.length > 1) {
-        similarityGeneratorAll(req.user, users).then((result) => {
+        similarityGeneratorAll(curr, users).then((result) => {
           console.log("Users:", result);
           return new Promise(async (resolve, reject) => {
             const sortedArray = result.sort((a, b) => (a.score >= b.score) ? -1 : 1)
@@ -33,25 +33,26 @@ module.exports = {
           res.json(sorted);
         });
       } else {
-        similarityGeneratorUser(currUser, user).then(score => {
+        similarityGeneratorUser(curr, users).then(score => {
           res.json([{
-            _id: user._id,
-            user_name: user.user_name,
-            fname: user.fname,
-            sname: user.sname,
-            gender: user.gender,
-            location: user.location,
-            bio: user.bio,
-            artists: user.artists || new Map(),
-            playlist: user.playlist || '',
-            playlists: user.playlists || [],
-            favouriteSong: user.favouriteSong || '',
-            image: user.image,
-            score: Math.round(score * 100) || 0
+            _id: users._id,
+            user_name: users.user_name,
+            fname: users.fname,
+            sname: users.sname,
+            gender: users.gender,
+            location: users.location,
+            bio: users.bio,
+            artists: users.artists || new Map(),
+            playlist: users.playlist || '',
+            playlists: users.playlists || [],
+            favouriteSong: users.favouriteSong || '',
+            image: users.image,
+            score: Math.round(score) || 0
           }]);
         });
-      }});
-    },
+      }
+    });
+  },
     getProfile: (req, res, next) => {
       const uId = req.params.id;
       const currUser = req.user;
@@ -63,13 +64,19 @@ module.exports = {
         if (!user) {
           return res.status(404).json({message: 'User does not exist'});
         }
-        Promise.all([generateAge(user.dob), generateSexuality(user.sexuality), similarityGeneratorUser(currUser, user)]).then(values => {
+        let promises = [generateAge(user.dob ), generateSexuality(user.sexuality)]
+        if (user != null) {
+          promises.push(similarityGeneratorUser(currUser, user))
+        }
+        Promise.all(promises).then(values => {
           res.json({
             _id: user._id,
+            email: user.email,
             user_name: user.user_name,
             fname: user.fname,
             sname: user.sname,
             age: values[0],
+            dob: user.dob,
             sexuality: values[1],
             gender: user.gender,
             location: user.location,
@@ -81,7 +88,7 @@ module.exports = {
             image: user.image,
             score: Math.round(values[2]) || 0
           });
-        })
+        }).catch((err) => {console.log(err)})
       })
     },
     updateProfile: async (req, res, next) => {
@@ -109,6 +116,9 @@ module.exports = {
             gender: req.body.gender,
             sexuality: sexuality,
             bio: req.body.bio,
+            playlist: req.body.playlist,
+            favouriteSong: req.body.favouriteSong,
+            dob: req.body.dob || new Date(),
             complete: true}}).exec((err, usr) => {
             if (err) {
               return res.json({error: err});
@@ -142,7 +152,7 @@ module.exports = {
   function similarityGeneratorUser(currUser, user) {
     return new Promise(function (resolve, reject) {
       Promise.all([compareGenres(currUser, user), compareArtists(currUser, user)]).then((value) => {
-        resolve(((value[0] + value[1]) / 2) * 100);
+        resolve((((value[0] * .8) + (value[1]) * .2)) * 100);
         }).catch((error) => { 
           resolve(0);
       });
@@ -172,10 +182,11 @@ module.exports = {
     const age = new Promise(function (resolve, reject) {  
       if (dob === null) {
         reject({message: 'No DOB'});
+      } else {
+        const diff_ms = Date.now() - dob.getTime();
+        const age_dt = new Date(diff_ms); 
+        resolve(Math.abs(age_dt.getUTCFullYear() - 1970));
       }
-      const diff_ms = Date.now() - dob.getTime();
-      const age_dt = new Date(diff_ms); 
-      resolve(Math.abs(age_dt.getUTCFullYear() - 1970));
     });
     return age;
   }
@@ -185,29 +196,20 @@ module.exports = {
       let keys = [];
       let usr1Score = [];
       let usr2Score = [];
-      if (usr1.genres == null || usr2.genres == null) {
-        reject({message: "Genres Is Undefined"});
-      }
       usr1.genres.forEach((value, key, map) => {
-        keys.push(key);
-      });
-      usr2.genres.forEach((value, key, map) => {
-        if (!keys.includes(key)) {
-          keys.push(key);
-        }
-      });
-      keys.forEach((key) => {
-        if (usr1.genres.has(key)) {
-          usr1Score.push(usr1.genres.get(key));
-        } else {
-          usr1Score.push(0);
-        }
+        usr1Score.push(value);
         if (usr2.genres.has(key)) {
-          usr2Score.push(usr2.genres.get(key));
+          usr2Score.push(value);
         } else {
           usr2Score.push(0);
         }
       });
+      usr2.genres.forEach((value, key, map) => {
+        if (!usr1.genres.has(key)) {
+          usr1Score.push(0);
+          usr2Score.push(value);
+        }
+      })
       const score = similarity(usr1Score, usr2Score);
       resolve(score);
     });
@@ -219,7 +221,7 @@ module.exports = {
       let usr2Score = [];
       usr1.artists.forEach((value, key, map) => {
         usr1Score.push(1);
-        if (usr1.artists.has(key)) {
+        if (usr2.artists.has(key)) {
           usr2Score.push(1);
         } else {
           usr2Score.push(0);

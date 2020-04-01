@@ -1,116 +1,128 @@
 <!-- Generic profile page shown for all profiles -->
-<div class = "container" *ngIf="user && !this.isCurrentUser">
-  <mat-card class = "profile">
-    <mat-card-content>
-      {{user.score}}% Match
-      <section class="section">
-        <mat-progress-bar value = "{{user.score}}" color = "accent">
-        </mat-progress-bar>
-      </section>
-      <img src = {{user.image}} class = "userImage">
-      <br><br>
-      <div class = "info">
-        <div class = "basicInfo">
-          {{user.fname}} {{user.sname}}, {{user.age}}
+<div *ngIf="!editUser" class = "container">
+  <div class = "profile">
+    <!-- First card in profile div: main info, pic, match, etc -->
+    <mat-card class = "mainProfile">
+      <mat-card-content>
+        <div *ngIf = "user && !this.isCurrentUser">
+          <!-- Match % -->
+          {{user.score}}% Match
+          <section class="section">
+            <mat-progress-bar value = "{{user.score}}" color = "accent">
+            </mat-progress-bar>
+          </section>
         </div>
-        <div>
-          <i class="material-icons">location_on</i>{{user.location}}
+        <div *ngIf = "user && this.isCurrentUser">
+          <button (click)="editUser = true" class = "editButton" mat-raised-button>Edit Profile</button>
         </div>
-        <div *ngIf = "user.gender != 'Rather Not Say'">
-          <i *ngIf = "user.gender == 'Male'" class = 'fas fa-male'></i>
-          <i *ngIf = "user.gender == 'Female'" class = 'fas fa-female'></i>
-          <i *ngIf = "user.gender == 'Other'" class="material-icons">person</i>
-          {{user.gender}}
+        <!-- User image -->
+        <img src = {{user.image}} class = "userImage">
+        <br><br>
+        <!-- Name, Sexuality, Gender, Location - with icons -->
+        <div class = "info">
+          <div class = "basicInfo">
+            {{user.fname}} {{user.sname}}, {{user.age}}
+          </div>
+          <div>
+            <i class="material-icons">location_on</i>{{user.location}}
+          </div>
+          <div *ngIf = "user.gender != 'Rather Not Say'">
+            <i *ngIf = "user.gender == 'Male'" class = 'fas fa-male'></i>
+            <i *ngIf = "user.gender == 'Female'" class = 'fas fa-female'></i>
+            <i *ngIf = "user.gender == 'Other'" class="material-icons">person</i>
+            {{user.gender}}
+          </div>
+          <div>
+            <i *ngIf = "user.sexuality == 'Women'" class="fas fa-venus"></i>
+            <i *ngIf = "user.sexuality == 'Men'" class="fa fa-mars"></i>
+            <i *ngIf = "user.sexuality == 'Everyone'" class="fa fa-venus-mars"></i>
+            {{user.sexuality}}
+          </div>
         </div>
-        <div>
-          <i *ngIf = "user.sexuality == 'Women'" class="fas fa-venus"></i>
-          <i *ngIf = "user.sexuality == 'Men'" class="fa fa-mars"></i>
-          <i *ngIf = "user.sexuality == 'Everyone'" class="fa fa-venus-mars"></i>
-          {{user.sexuality}}
+        <br>
+        <!-- Bio divided with divider -->
+        <mat-divider></mat-divider>
+        <div class = "bio">
+          {{user.bio}}
         </div>
-      </div>
-      <br>
-      <mat-divider></mat-divider>
-      <div class = "bio">
-        {{user.bio}}
-      </div>
-      <mat-divider></mat-divider>
-      <div class="playlist">
-        <iframe *ngIf="songUrl"[src]=playlistUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        <iframe *ngIf="playlistUrl"[src]=songUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-      </div>
-    </mat-card-content>
-  </mat-card>
+      </mat-card-content>
+    </mat-card>
 
+    <br>
+
+    <!-- Second card in profile div: spotify widget -->
+    <mat-card class = "spotifyWidget">
+      <div class="playlist">
+        <iframe class = "spotify" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX6p4TJxzMRDe" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <!--  <iframe *ngIf="songUrl"[src]=playlistUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+          <iframe *ngIf="playlistUrl"[src]=songUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> -->
+      </div>
+    </mat-card>
+  </div> <!-- End of profile div -->
+
+  <!-- Card that will go either to right or underneath that shows users music info -->
   <mat-card class = "music">
-    <div>
+    <div class = "top">
       Top Artists!
     </div>
     <div class = "artists">
-        <div *ngFor = "let artist of artists">
-          <a href={{artist.external_urls.spotify}}>
-            <img class = "artistImage" src = "{{artist.images[0].url}}">
-            {{artist.name}}
-          </a>
-        </div>
+      <div *ngFor = "let artist of artists">
+        <a class = "artistLink" href={{artist.external_urls.spotify}}>
+          <img class = "artistImage" src = "{{artist.images[0].url}}">
+          {{artist.name}}
+        </a>
+        <mat-divider></mat-divider>
+      </div>
     </div>
   </mat-card>
 
-</div>
+</div> <!-- End of container div -->
 
-
-<!-- This is only shown to a user when they are editing a profile that is their own -->
-<div *ngIf="user && this.isCurrentUser">
-  <form class = "profile" [formGroup]="profileForm" (ngSubmit)="onSubmit(profileForm.value)">
-    <mat-card class = "profileCard">
+<!-- This is only shown to a user when they are editing a profile that is their own after they click edit profile button -->
+<div class ="updateDiv" *ngIf="editUser">
+  <form class = "updateForm" [formGroup]="profileForm" (ngSubmit)="onSubmit(profileForm.value)">
+    <mat-card class = "updateCard">
       <mat-card-content>
+
         <mat-form-field>
           <input matInput placeholder="First Name" formControlName="fname">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Username" formControlName="user_name">
-        </mat-form-field>
-        <br>
-        <mat-form-field>
-          <input matInput placeholder="Surname" formControlName="sname">
         </mat-form-field>&nbsp;
+
         <mat-form-field>
-          <mat-select placeholder="County" formControlName="location">
-            <mat-option value="Antrim">Antrim</mat-option>
-            <mat-option value="Armagh">Armagh</mat-option>
-            <mat-option value="Carlow">Carlow</mat-option>
-            <mat-option value="Cavan">Cavan</mat-option>
-            <mat-option value="Clare">Clare</mat-option>
-            <mat-option value="Cork">Cork</mat-option>
-            <mat-option value="Derry">Derry</mat-option>
-            <mat-option value="Donegal">Donegal</mat-option>
-            <mat-option value="Down">Down</mat-option>
-            <mat-option value="Dublin">Dublin</mat-option>
-            <mat-option value="Fermanagh">Fermanagh</mat-option>
-            <mat-option value="Galway">Galway</mat-option>
-            <mat-option value="Kerry">Kerry</mat-option>
-            <mat-option value="Kildare">Kildare</mat-option>
-            <mat-option value="Kilkenny">Kilkenny</mat-option>
-            <mat-option value="Laois">Laois</mat-option>
-            <mat-option value="Leitrim">Leitrim</mat-option>
-            <mat-option value="Limerick">Limerick</mat-option>
-            <mat-option value="Longford">Longford</mat-option>
-            <mat-option value="Louth">Louth</mat-option>
-            <mat-option value="Mayo">Mayo</mat-option>
-            <mat-option value="Meath">Meath</mat-option>
-            <mat-option value="Monaghan">Monaghan</mat-option>
-            <mat-option value="Offaly">Offaly</mat-option>
-            <mat-option value="Roscommon">Roscommon</mat-option>
-            <mat-option value="Sligo">Sligo</mat-option>
-            <mat-option value="Tipperary">Tipperary</mat-option>
-            <mat-option value="Tyrone">Tyrone</mat-option>
-            <mat-option value="Waterford">Waterford</mat-option>
-            <mat-option value="Westmeath">Westmeath</mat-option>
-            <mat-option value="Wexford">Wexford</mat-option>
-            <mat-option value="Wicklow">Wicklow</mat-option>
+          <input matInput placeholder="Surname" formControlName = "sname">
+        </mat-form-field>
+
+        <br>
+
+        <mat-form-field>
+          <input matInput placeholder="Username" formControlName = "user_name">
+        </mat-form-field>&nbsp;
+
+        <mat-form-field>
+          <mat-label>Date of birth</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dob">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <br>
+
+        <!--
+        <mat-form-field>
+          <mat-select name="country" placeholder="Country" formControlName = "country">
+            <option *ngFor = "let country of countries" value="{{country??}}">Select Country</option>
+          </mat-select>
+        </mat-form-field>&nbsp;
+
+        <mat-form-field>
+          <mat-select name="state" class="states order-alpha" id="stateId">
+            <option value="">Select State</option>
           </mat-select>
         </mat-form-field>
+        -->
+
         <br>
+
         <mat-form-field>
           <mat-select formControlName="gender" placeholder="Gender">
             <mat-option value="Female">Female</mat-option>
@@ -127,17 +139,22 @@
             <mat-option value="Everyone"> Everyone </mat-option>
           </mat-select>
         </mat-form-field>
+
         <br>
-        <mat-form-field>
-          <input matInput placeholder="Image URL" formControlName="image">
-        </mat-form-field>
-        <br>
+
         <mat-form-field class = "bio">
           <textarea matInput placeholder="Bio" formControlName="bio"></textarea>
         </mat-form-field>
+
+        <br>
+
+        <!--
+        <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button>
+        <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;"  (click)="onClick()" />
+        -->
       </mat-card-content>
       <mat-card-footer>
-        <button type="submit" mat-raised-button>Change</button>
+        <button class = "updateButton" type="submit" mat-raised-button>Change</button>
       </mat-card-footer>
     </mat-card>
   </form>

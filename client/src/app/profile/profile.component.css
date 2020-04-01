@@ -5,34 +5,53 @@
 }
 
 .profile{
-  text-align: center;
-  width: 48%;
-  min-height: 100vh;
-  float: left;
   display: block;
+  float: left;
+  max-height: 150vh;
+  width: 46%;
+  margin: 2%;
+}
+
+.mainProfile{
+  display: inline-block;
+  text-align: center;
   font-family: 'Gotu', sans-serif;
-  margin: 1%;
+  height: 100vh;
+  width: 100%;
+}
+
+.spotifyWidget{
+  display: inline-block;
+  height: 45vh;
+  width: 100%;
+  margin-top: 5vh;
+  background-color: #131719;
 }
 
 .music{
-  width: 48%;
-  min-height: 100vh;
-  max-height: 140vh;
   float: left;
-  margin: 1%;
   overflow-y: scroll;
   font-family: 'Gotu', sans-serif;
-
+  min-height: 150vh;
+  max-height: 150vh;
+  width: 46%;
+  margin: 2%;
 }
 
+.top{
+  text-align: center;
+}
 
 @media screen and (max-width: 800px) {
   .profile, .music{
     width: 100%;
-    margin-left: 0%;
-    margin-right: 0%;
-    margin-bottom: 1%;
+    margin: 0%;
   }
+  .profile{
+    margin-bottom: 5vh;
+    margin-top: 2.5vh;
+  }
+
 }
 
 .userImage{
@@ -60,7 +79,8 @@
 }
 
 .basicInfo{
-  font-size: 4vh;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 .section {
@@ -71,9 +91,8 @@
 
 }
 
-
 i{
- font-size: 100%;
+  font-size: 100%;
 }
 
 .artistImage{
@@ -83,6 +102,43 @@ i{
   padding: 10px;
 }
 
-.playlist{
-  padding: 10px;
+.spotify{
+  width: 100%;
+}
+
+.artistLink{
+  color: #FF4081;
+  text-decoration: none;
+}
+
+.top{
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.editButton{
+  margin-bottom: 2%;
+}
+
+.updateDiv{
+  display: block;
+  text-align: center;
+}
+
+.updateForm{
+  display: inline-block;
+  margin: 2%;
+  min-width: 60%;
+}
+
+.updateCard{
+  margin: 2%;
+}
+
+.updateButton{
+  margin: 2%;
+}
+
+.mat-form-field{
+  max-width: 45%;
 }
