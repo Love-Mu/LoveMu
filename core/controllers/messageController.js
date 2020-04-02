@@ -21,7 +21,7 @@ module.exports = {
             }
             Chatroom.findOne({$or:[{ members: [req.user._id, req.body.recipient] },{ members: [req.body.recipient, req.user._id] }]}).exec((err, chatroom) => {
                 if(chatroom != undefined){
-                    chatroom.messages.push(message._id);
+                    chatroom.messages.push(message);
                     chatroom.save((err) => {
                         if (err) {
                             return res.status(404).json(err);
@@ -29,10 +29,12 @@ module.exports = {
                         return res.status(200).json({message: "Message Successfully Saved to DB", _id: message._id, created_at: message.created_at});
                     })
                 } else {
+                    console.log(message);
                     let chatroom = new Chatroom({
-                        members: [req.user._id, req.body.recipient],
-                        messages: message._id
+                        members: [req.user, req.body.recipient]
                     });
+                    chatroom.messages.push(message);
+                    console.log(chatroom);
                     chatroom.save((err) => {
                         if (err) {
                             return res.status(404).json(err);
@@ -64,6 +66,22 @@ module.exports = {
             } else {
                 let rooms = [];
                 chatroom.forEach((element, index) => {
+                    let messagePromise = new Promise(function (resolve, reject) {
+                        Message.find({_id: [element.messages]}).limit(5).exec((err, msgs) => {
+                            if (err) {
+                                reject(err);
+                            }
+                            console.log(msgs);
+                            rooms.push({"_id": element._id, "members": element.members, "messages": msgs});
+                            resolve();
+                        });
+                    });
+                    messagePromise.then(() => {
+                        return res.status(200).json(rooms);
+                    })
+                });
+                /*let rooms = [];
+                chatroom.forEach((element, index) => {
                     let message = "";
                     let messagePromise = new Promise(function (resolve, reject) {
                         Message.findOne({_id: element.messages.pop()}).exec((err, msg) => {
@@ -78,7 +96,7 @@ module.exports = {
                         rooms.push({"_id": element._id, "members": element.members, "messages": [message]});
                         if(index == chatroom.length - 1) return res.status(200).json(rooms);
                     })
-                });
+                });*/
             }
         });
     }

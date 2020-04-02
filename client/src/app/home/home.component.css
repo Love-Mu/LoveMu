@@ -5,14 +5,15 @@
 }
 
 .sub{
-  font-size: 5vh;
+  font-size: 1.5em;
+  height: fit-content;
+  width: fit-content;
 }
 
 .head{
-  font-size: 10vh;
+  font-size: 3em;
+  height: fit-content;
+  width: fit-content;
 }
 
-.login{
-  float: right;
-  text-align: left;
-}
+

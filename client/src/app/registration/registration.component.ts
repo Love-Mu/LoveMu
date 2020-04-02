@@ -26,23 +26,23 @@ export class RegistrationComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router, private http: HttpClient, private uploadService: UploadService, private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer, private cookieService: CookieService) {
     this.registrationForm = this.formBuilder.group({
-      email: ['', Validators.required, Validators.email],
-      password:['', Validators.required, Validators.min(5), Validators.max(40)],
-      user_name: ['', Validators.required, Validators.min(5), Validators.max(20)],
-      fname: ['', Validators.required, Validators.max(30)],
-      sname: ['', Validators.required, Validators.max(30)],
+      email: ['', [Validators.required, Validators.email]],
+      password:['', [Validators.required, Validators.minLength(5), Validators.maxLength(40)]],
+      user_name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]],
+      fname: ['', [Validators.required, Validators.maxLength(30)]],
+      sname: ['', [Validators.required, Validators.maxLength(30)]],
       location: ['', Validators.required],
       dob: ['', Validators.required],
       image: '',
       gender: ['', Validators.required],
       sexuality: ['', Validators.required],
-      bio: ['', Validators.required, Validators.min(3), Validators.max(240)]
+      bio: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(240)]]
     });
   }
 
   ngOnInit() {  
     this.cookie = this.makeString();
-    this.cookieService.set('tempuser', this.cookie);
+    this.cookieService.set('fileCookie', this.cookie);
   }
 
   makeString(): string {
@@ -102,7 +102,7 @@ export class RegistrationComponent implements OnInit {
         });  
     }
 
-  private async uploadFiles() {  
+  private uploadFiles() {  
     this.fileUpload.nativeElement.value = '';  
     this.files.forEach(file => {  
       this.uploadFile(file);  

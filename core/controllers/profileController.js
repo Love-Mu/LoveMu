@@ -68,7 +68,6 @@ module.exports = {
           promises.push(similarityGeneratorUser(currUser, user))
         }
         Promise.all(promises).then(values => {
-          Math.round("SCORE: " + values[2].score)
           res.json({
             _id: user._id,
             email: user.email,
@@ -248,6 +247,9 @@ module.exports = {
     return new Promise((resolve, reject) => {
       let overlap = [];
       let artists = [];
+      if (usr1._id == usr2._id) {
+        resolve({overlappingArtists: [], artists: artists: Array.from(usr1.artists.values())})
+      }
       usr1.artists.forEach((value, key, map) => {
         if (usr2.artists.has(key)) {
           overlap.push(value);

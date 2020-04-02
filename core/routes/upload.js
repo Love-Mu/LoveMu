@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const router = express.Router();
 const multer  = require('multer')
 const fs = require('fs-extra');
@@ -7,7 +8,7 @@ const User = require('../models/User');
 
 var storage1 = multer.diskStorage({
   destination: function (req, file, cb) {
-    let path = './temp/'+req.cookies.tempuser+'/';
+    let path = './temp/'+req.cookies.fileCookie+'/';
     fs.mkdirsSync(path);
     cb(null, path);
   },
@@ -28,7 +29,6 @@ var storage2 = multer.diskStorage({
 var deleteFolderRecursive = function(curPath) {
   if( fs.existsSync(curPath) ) {
     fs.readdirSync(curPath).forEach(function(file,index){
-      console.log(curPath);
       var nextPath = curPath + "/" + file;
       if(fs.lstatSync(nextPath).isDirectory()) { // recurse
         deleteFolderRecursive(nextPath);
@@ -44,7 +44,7 @@ var deleteFolderRecursive = function(curPath) {
 var upload = multer({ storage: storage1 })
 var update = multer({ storage: storage2 })
 
-router.post('/upload', upload.single('file'), function (req, res, next) {
+router.post('/upload',  upload.single('file'), function (req, res, next) {
     return res.status(200).json({filename: req.file.filename, cookie:req.cookies.tempuser});
 });
 
@@ -63,11 +63,14 @@ router.post('/save', (req, res) =>{
   return res.status(200).json({message: "done"});
 });
 
-router.post('/reupload', update.single('file') (req,res) =>{
-  return res.status(200).json({newFile: req.file.filename, oldFile: req.user.image});
+router.post('/reupload', passport.authenticate('jwt', {session: false}), update.single('file'), (req,res) =>{
+  return res.status(200).json({newFile: req.file.filename});
 });
 
-router.post('/update', (req,res) =>{
+router.post('/update', passport.authenticate('jwt', {session: false}),(req,res) =>{
+  if (req.body.oldFile == req.body.newFile){
+    return res.status(200).json({message: "Old and new file the same"});
+  }
   //first remove old file from public and uploads
   fs.unlinkSync('./public/' + req.body.oldFile);
   fs.unlinkSync('./uploads/' + req.body.oldFile);
@@ -81,7 +84,7 @@ router.post('/update', (req,res) =>{
       deleteFolderRecursive('./temp/'+req.user.id);
     });
   });
-
+  return res.status(200).json({message: "done"});
 });
 
 module.exports = router;

@@ -10,7 +10,7 @@ const chatroomSchema = new Schema ({
         ref: 'User'
     },
     messages:{
-        type: [mongoose.Schema.Types.ObjectId], 
+        type: [mongoose.Schema.Message], 
         ref: 'Message'
     }
 });

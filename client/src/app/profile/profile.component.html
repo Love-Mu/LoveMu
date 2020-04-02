@@ -45,7 +45,9 @@
         <div class = "bio">
           {{user.bio}}
         </div>
+        <br>
         <mat-divider></mat-divider>
+        <br>
         <button *ngIf = "user && !this.isCurrentUser" routerLink="/message/{{user._id}}"mat-raised-button="">Send a message!</button>
         <button *ngIf = "user && this.isCurrentUser" mat-raised-button (click)="spotifyService.refreshSpotify()">Refresh Spotify</button>
       </mat-card-content>
@@ -151,10 +153,9 @@
 
         <br>
 
-        <!--
         <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button>
         <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;"  (click)="onClick()" />
-        -->
+
       </mat-card-content>
       <mat-card-footer>
         <button class = "updateButton" type="submit" mat-raised-button>Change</button>
