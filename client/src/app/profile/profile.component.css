@@ -29,16 +29,26 @@
 
 .music{
   float: left;
-  overflow-y: scroll;
   font-family: 'Gotu', sans-serif;
   min-height: 150vh;
-  max-height: 150vh;
   width: 46%;
   margin: 2%;
 }
 
-.top{
+.topArtists, .overlappingArtists{
+  overflow-y: scroll;
+  min-height: 72.5vh;
+  max-height: 72.5vh;
+}
+
+.overlappingArtists{
+  margin-bottom: 5%;
+}
+
+.title{
   text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 @media screen and (max-width: 800px) {
@@ -110,10 +120,6 @@ i{
   text-decoration: none;
 }
 
-.top{
-  font-weight: bold;
-  font-size: 1.2em;
-}
 
 button{
   margin: 2%;

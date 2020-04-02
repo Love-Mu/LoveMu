@@ -52,12 +52,7 @@ app.use('/spotify', spotifyRouter);
 app.use('/profiles', profileRouter);
 app.use('/messages', messageRouter);
 app.use('/upload', uploadRouter);
-/*io.engine.generateId = (req) => {
-  return "custom:id:" + req.user._id;
-}*/
-/*io.engine.generateId = function (req) {
-  return req.user._id;
-}*/
+
 var people={};
 app.io.on('connection', (socket) => {
   people[socket.handshake.query.id]=socket.id;
@@ -73,6 +68,7 @@ app.io.on('connection', (socket) => {
   });
 
   socket.on('dm', function(data) {
+    console.log("sending message to " + people[data.recipient]);
     io.to(people[data.recipient]).emit('message', data);
   });
 });

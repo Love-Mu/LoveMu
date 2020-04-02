@@ -248,7 +248,7 @@ module.exports = {
       let overlap = [];
       let artists = [];
       if (usr1._id == usr2._id) {
-        resolve({overlappingArtists: [], artists: artists: Array.from(usr1.artists.values())})
+        resolve({overlappingArtists: [], artists: Array.from(usr1.artists.values())})
       }
       usr1.artists.forEach((value, key, map) => {
         if (usr2.artists.has(key)) {

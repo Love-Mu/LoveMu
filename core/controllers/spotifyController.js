@@ -117,13 +117,12 @@ module.exports = {
         json: true,
       };
 
-      mapArtists(authOptionsArtists).then((artists) => {
-        console.log(artists);
-        User.updateOne({_id: user._id}, {$set: {artists: artists}}).exec((err, user) => {
+      mapArtists(authOptionsArtists).then((mapArtists) => {
+        User.updateOne({_id: user._id}, {$set: {artists: mapArtists}}).exec((err, user) => {
           if (err) {
             return res.json(err);
           }
-        })
+        });
       }).catch((error) => { 
         console.log(error);
         return;
@@ -189,14 +188,13 @@ function mapArtists(authOptions) {
       if (response.statusCode !== 200) {
         reject({message: 'Unauthorized Request'});
       }
-      const artistMap = new Map();
       const items = await body.items;
       if (items != null) {
-        items.forEach((item, index) => {
-          artistMap.set(item.name, item);
-        });
-      } 
-      resolve(artistMap);
+        const artistMap = new Map(items.map(i => [i.name, i]));
+        resolve(artistMap);
+      } else {
+        resolve(new Map());
+      }
     })});
   }
 

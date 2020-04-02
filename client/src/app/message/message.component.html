@@ -17,22 +17,22 @@
       <div class="left-section mCustomScrollbar" data-mcs-theme="minimal-dark">
         <ul *ngIf="activeUser && user">
             <div *ngFor="let convo of chatrooms">
-                <li (click)="changeActive(convo)" [ngClass]="{'active': convo.user._id == activeUser._id}">
+                <li (click)="changeActive(convo)" [ngClass]="{'active': convo.members[1]._id == activeUser._id}">
                     <div class="chatList">
                     <div class="img">
                         <i class="fa fa-circle"></i>
-                        <img src="{{convo.user.image}}">
+                        <img src="{{activeUser.image}}">
                     </div>
                     <div class="desc">
-                        <small class="time">{{convo.messages[convo.messages.length() - 1].created_at | date:'short'}}</small>
-                        <h5>{{convo.user.fname}} {{convo.user.sname}}</h5>
-                        <small>{{convo.messages[convo.messages.length() - 1].body}}</small>
+                        <small class="time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</small>
+                        <h5>{{activeUser.fname}} {{activeUser.sname}}</h5>
+                        <small>{{convo.messages[convo.messages.length - 1].body}}</small>
                     </div>
                     </div>
                 </li>
             </div>
         </ul>
-        <ul *ngIf="user && !activeUser">
+        <ul *ngIf="user != null && !activeUser">
             <div *ngFor="let convo of chatrooms">
                 <li (click)="changeActive(convo)">
                     <div class="chatList">
@@ -41,9 +41,9 @@
                         <img src="{{convo.user.image}}">
                     </div>
                     <div class="desc">
-                        <small class="time">{{convo.messages[convo.messages.length() - 1].created_at | date:'short'}}</small>
-                        <h5>{{convo.user.fname}} {{convo.user.sname}}</h5>
-                        <small>{{convo.messages[convo.messages.length() - 1].body}}</small>
+                        <small class="time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</small>
+                        <h5>{{activeUser.fname}} {{activeUser.sname}}</h5>
+                        <small>{{convo.messages[convo.messages.length - 1].body}}</small>
                     </div>
                     </div>
                 </li>
@@ -78,45 +78,6 @@
                     </div>
                 </div>
             </li>
-            <!--<li class="msg-day"><small>Wednesday</small></li>
-            <li class="msg-left">
-              <div class="msg-left-sub">
-                <img src="https://www.nicesnippets.com/demo/man03.png">
-                <div class="msg-desc">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit
-                </div>
-                <small>05:25 am</small>
-              </div>
-            </li>
-            <li class="msg-right">
-              <div class="msg-left-sub">
-                <img src="https://www.nicesnippets.com/demo/man04.png">
-                <div class="msg-desc">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua.
-                </div>
-                <small>05:25 am</small>
-              </div>
-            </li>
-            <li class="msg-left">
-              <div class="msg-left-sub">
-                <img src="https://www.nicesnippets.com/demo/man03.png">
-                <div class="msg-desc">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit
-                </div>
-                <small>05:25 am</small>
-              </div>
-            </li>
-            <li class="msg-right">
-              <div class="msg-left-sub">
-                <img src="https://www.nicesnippets.com/demo/man04.png">
-                <div class="msg-desc">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua.
-                </div>
-                <small>05:25 am</small>
-              </div>
-            </li>-->
           </ul>
         </div>
         <div class="right-section-bottom">

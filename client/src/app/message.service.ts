@@ -23,6 +23,7 @@ export class MessageService {
     this.http.post('https://lovemu.compsoc.ie/messages/send', userData).subscribe((res => {
       userData._id = res['_id'];
       userData.created_at = res['created_at'];
+      userData.chatroomId = res['chatroomId'];
       this.socket.emit('dm', userData);
     }));
   }

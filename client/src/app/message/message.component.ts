@@ -18,7 +18,7 @@ export class MessageComponent implements OnInit {
   user: User;
   messageForm;
   chatrooms: Chatroom[] = [];
-  messages: Message[];
+  messages: Message[] = [];
 
   constructor(private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute) {
     this.messageForm = this.formBuilder.group({
@@ -32,27 +32,45 @@ export class MessageComponent implements OnInit {
     let id = this.route.snapshot.paramMap.get('id');
     if (id != null) this.getActiveUser(id);
     this.messageService.onNewMessage().subscribe(data => {
-      //this.messages.unshift(data);
-      this.chatrooms.forEach(c => {
-        if (c.user._id == data.sender) {
-          if (c.messages == null) c.messages = data;
-          else c.messages.push(data);
-          if (data.sender == this.activeUser._id) this.messages.push(data);
-        }
+      let msg = new Message();
+      msg = {
+        _id: data._id, 
+        sender: data.sender, 
+        recipient: data.recipient, 
+        body: data.body, 
+        created_at: data.created_at
+      };
+      this.chatrooms.forEach(chatroom => {
+        if (chatroom._id == data.chatroomId) chatroom.messages.push(msg);
       });
+      if (this.activeChatroom != null) {
+        if (data._id == this.activeChatroom._id) {
+          this.activeChatroom.messages.push(msg);
+        }
+      }
+      console.log(data);
+      console.log(msg);
     });
   }
 
   changeActive(chatroom): void {
     this.activeChatroom = chatroom;
-    this.activeUser = chatroom.user;
-    this.getMessages(this.activeUser._id);
+    chatroom.members.forEach(member => {
+      if (member != this.user._id) {
+        this.userService.getUser(member.toString()).subscribe((user) => {
+          this.activeUser = user;
+        });
+      }
+    });
+    this.getMessages(this.activeUser._id, chatroom);
   }
 
-  getMessages(id) {
+  getMessages(id, chatroom) {
     this.messageService.getMessages(id.toString()).subscribe(messages => {
-      this.messages = messages;
-      console.log(this.messages);
+      messages.forEach(message => {
+        chatroom.messages.push(message);
+        this.messages.push(message);
+      });
     });
   }
 
@@ -84,7 +102,7 @@ export class MessageComponent implements OnInit {
   getActiveUser(id): void {
     this.userService.getUser(id.toString()).subscribe((user) => {
       this.activeUser = user;
-      this.getMessages(user._id);
+      //this.getMessages(user._id);
     });
   }
 

@@ -65,21 +65,41 @@
     </mat-card>
   </div> <!-- End of profile div -->
 
-  <!-- Card that will go either to right or underneath that shows users music info -->
-  <mat-card class = "music">
-    <div class = "top">
-      Top Artists!
-    </div>
-    <div class = "artists">
-      <div *ngFor = "let artist of artists">
-        <a class = "artistLink" href={{artist.external_urls.spotify}}>
-          <img class = "artistImage" src = "{{artist.images[0].url}}">
-          {{artist.name}}
-        </a>
-        <mat-divider></mat-divider>
+  <!-- this second div will contain music info and will either be to right or underneath above div -->
+  <div class = "music">
+
+    <!-- card that displays artists that overlap with current user and user of profile they're viewing -->
+    <mat-card class = "overlappingArtists">
+      <div class = "title">
+        Artists you have in common!
       </div>
-    </div>
-  </mat-card>
+      <div>
+        <div *ngFor = "let artist of user.overlappingArtists">
+          <a class = "artistLink" href={{artist.external_urls.spotify}}>
+            <img class = "artistImage" src = "{{artist.images[0].url}}">
+            {{artist.name}}
+          </a>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Card that displays a users top/favourite artists -->
+    <mat-card class = "topArtists">
+      <div class = "title">
+        Top Artists!
+      </div>
+      <div>
+        <div *ngFor = "let artist of artists">
+          <a class = "artistLink" href={{artist.external_urls.spotify}}>
+            <img class = "artistImage" src = "{{artist.images[0].url}}">
+            {{artist.name}}
+          </a>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+    </mat-card>
+  </div>
 
 </div> <!-- End of container div -->
 
