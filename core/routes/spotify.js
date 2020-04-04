@@ -14,4 +14,6 @@ router.post('/refreshAccess', passport.authenticate('jwt', {session: false}), Sp
 
 router.post('/storeToken', passport.authenticate('jwt', {session: false}), Spotify.storeToken);
 
+router.post('/search', passport.authenticate('jwt', {session: false}), Spotify.search);
+
 module.exports = router;

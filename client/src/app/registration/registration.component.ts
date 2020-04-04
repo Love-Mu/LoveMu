@@ -19,8 +19,10 @@ import {CookieService} from 'ngx-cookie-service';
 
 export class RegistrationComponent implements OnInit {
   registrationForm;
-  cookie: string;
+  cookie: string = "";
   image: string = "default.png";
+  filePath: string = "default.png";
+  message: string = "";
   @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
   files  = [];
 
@@ -60,6 +62,7 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit(userData) {
     userData.image = this.image;
+    this.cookieService.delete("fileCookie");
     this.http.post('https://lovemu.compsoc.ie/auth/register', userData, {withCredentials: true}).subscribe((res) => {
       this.http.post('https://lovemu.compsoc.ie/upload/save', {filename:this.image, cookie:this.cookie}).subscribe();
       this.authService.setUserInfo(res['token'], res['id']);
@@ -92,8 +95,14 @@ export class RegistrationComponent implements OnInit {
           return of(`${file.data.name} upload failed.`);  
         })).subscribe((event: any) => {  
           if (typeof (event) === 'object') { 
-            this.image = event.body.filename;
-            this.cookie = event.body.cookie; 
+            if(event.body.filename){
+              this.image = event.body.filename;
+              this.filePath = this.cookie + "/" + this.image;
+              this. message = "";
+            }
+            if(event.body.message){
+              this.message = event.body.message;
+            }
             console.log(event.body);  
           }  
           else {
@@ -112,13 +121,12 @@ export class RegistrationComponent implements OnInit {
   }
 
   onClick() {  
-    const fileUpload = this.fileUpload.nativeElement;fileUpload.onchange = () => {  
-    for (let index = 0; index < fileUpload.files.length; index++)  
-    {  
-    const file = fileUpload.files[0];  
-    this.files.push({ data: file, inProgress: false, progress: 0});  
-    }  
-       this.uploadFiles(); 
+    const fileUpload = this.fileUpload.nativeElement;fileUpload.onchange = () => {
+      for (let index = 0; index < fileUpload.files.length; index++)  {  
+        const file = fileUpload.files[0];  
+        this.files.push({ data: file, inProgress: false, progress: 0});  
+      }  
+      this.uploadFiles(); 
     };  
     fileUpload.click();  
   }

@@ -76,7 +76,7 @@ exports.register = (req, res, next) => {
             return res.status(200).json({message: 'Successful Login!', token, id});
           });
         });
-      })
+      }).catch((err) => {console.log(err)});
     }).catch((err) => { return res.status(404).json({message: 'Unsuccessful Registration!', error: err}) });
   })
 };

@@ -21,6 +21,7 @@
 
 .spotifyWidget{
   display: inline-block;
+  text-align: center;
   min-height: 45vh;
   width: 100%;
   margin-top: 5vh;
@@ -36,13 +37,19 @@
 }
 
 .topArtists, .overlappingArtists{
-  overflow-y: scroll;
+  overflow-y: auto;
   min-height: 72.5vh;
   max-height: 72.5vh;
 }
 
 .overlappingArtists{
   margin-bottom: 5%;
+}
+
+.topCurrent{
+  overflow-y: scroll;
+  min-height: 150vh;
+  max-height: 150vh;
 }
 
 .title{
@@ -63,7 +70,7 @@
 
 }
 
-.userImage{
+.userImage, .updateImage{
   width:200px;
   height:200px;
   border-radius: 5%;
@@ -111,9 +118,6 @@ i{
   padding: 10px;
 }
 
-.spotify{
-  width: 100%;
-}
 
 .artistLink{
   color: #FF4081;

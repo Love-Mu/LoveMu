@@ -5,13 +5,18 @@
         <mat-card-content>
           <mat-form-field>
             <input matInput placeholder="Username" formControlName="user_name">
+            <mat-error *ngIf="user_name.hasError('required')">Username is Required</mat-error>
+            <mat-error *ngIf="user_name.hasError('minlength')">Username Must Have 5 Characters</mat-error>
+            <mat-error *ngIf="user_name.hasError('maxlength')">Username Must Have Less Than 20 Characters</mat-error>
           </mat-form-field>&nbsp;
           <mat-form-field>
             <input matInput placeholder="First Name" formControlName="fname">
+            <mat-error *ngIf="fname.hasError('required')">First Name is Required</mat-error>
           </mat-form-field>
           <br>
           <mat-form-field>
             <input matInput placeholder="Surname" formControlName="sname">
+            <mat-error *ngIf="sname.hasError('required')">Surname is Required</mat-error>
           </mat-form-field>&nbsp;
           <mat-form-field>
             <mat-select placeholder="County" formControlName="location">
@@ -48,6 +53,7 @@
               <mat-option value="Wexford">Wexford</mat-option>
               <mat-option value="Wicklow">Wicklow</mat-option>
             </mat-select>
+            <mat-error *ngIf="location.hasError('required')">Location is Required</mat-error>
           </mat-form-field>
           <br>
           <mat-form-field>
@@ -57,6 +63,7 @@
                 <mat-option value="Rather Not Say">Rather Not Say</mat-option>
                 <mat-option value="Other">Other</mat-option>
             </mat-select>
+            <mat-error *ngIf="gender.hasError('required')">Gender is Required</mat-error>
           </mat-form-field>&nbsp;
 
           <mat-form-field>
@@ -65,26 +72,25 @@
               <mat-option value="Female"> Women </mat-option>
               <mat-option value="Everyone"> Everyone </mat-option>
             </mat-select>
+            <mat-error *ngIf="sexuality.hasError('required')">Sexuality is Required</mat-error>
           </mat-form-field>
           <br>
           <mat-form-field>
-            <input matInput placeholder="Image URL" formControlName="image">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Date of Birth</mat-label>
+            <mat-label>Date of birth</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="dob">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="dob.hasError('required')">Date of Birth is Required</mat-error>
           </mat-form-field>
-          <br>
           <mat-form-field class = "bio">
             <textarea matInput placeholder="Bio" formControlName="bio"></textarea>
+            <mat-error *ngIf="bio.hasError('required')">Bio is Required</mat-error>
           </mat-form-field>
         </mat-card-content>
         <mat-card-footer>
-          <button type="submit" mat-raised-button>Register</button>
+          <p>{{msg}}</p>
+          <button type="submit" mat-raised-button>Register</button><br>
         </mat-card-footer>
       </mat-card>
     </form>
   </div>
-

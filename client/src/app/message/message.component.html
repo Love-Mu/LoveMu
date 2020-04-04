@@ -15,43 +15,48 @@
     </div>
     <div class="body-section">
       <div class="left-section mCustomScrollbar" data-mcs-theme="minimal-dark">
-        <ul *ngIf="activeUser && user">
+        <ul *ngIf="activeUser != undefined && online != undefined">
             <div *ngFor="let convo of chatrooms">
-                <li (click)="changeActive(convo)" [ngClass]="{'active': convo.members[1]._id == activeUser._id}">
-                    <div class="chatList">
-                    <div class="img">
-                        <i class="fa fa-circle"></i>
-                        <img src="{{activeUser.image}}">
-                    </div>
-                    <div class="desc">
-                        <small class="time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</small>
-                        <h5>{{activeUser.fname}} {{activeUser.sname}}</h5>
-                        <small>{{convo.messages[convo.messages.length - 1].body}}</small>
-                    </div>
-                    </div>
-                </li>
-            </div>
-        </ul>
-        <ul *ngIf="user != null && !activeUser">
-            <div *ngFor="let convo of chatrooms">
-                <li (click)="changeActive(convo)">
-                    <div class="chatList">
-                    <div class="img">
-                        <i class="fa fa-circle"></i>
+                <li (click)="changeActive(convo)" [ngClass]="{'active': convo.user._id == activeUser._id}">
+                    <div *ngIf="convo.user != undefined" class="chatList">
+                      <div class="img">
+                        <div *ngIf="online.includes(convo.user._id)">
+                          <i class="fa fa-circle"></i>
+                        </div>
                         <img src="{{convo.user.image}}">
-                    </div>
-                    <div class="desc">
-                        <small class="time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</small>
-                        <h5>{{activeUser.fname}} {{activeUser.sname}}</h5>
-                        <small>{{convo.messages[convo.messages.length - 1].body}}</small>
-                    </div>
+                      </div>
+                      <div class="desc">
+                          <small class="time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</small>
+                          <h5>{{convo.user.fname}} {{convo.user.sname}}</h5>
+                          <small>{{convo.messages[convo.messages.length - 1].body}}</small>
+                      </div>
                     </div>
                 </li>
             </div>
         </ul>
+        <ul *ngIf="activeUser == undefined && online != undefined">
+          <div *ngFor="let convo of chatrooms">
+              <li (click)="changeActive(convo)">
+                  <div *ngIf="convo.user != undefined" class="chatList">
+                    <div class="img">
+                      <div *ngIf="online.includes(convo.user._id)">
+                        <i class="fa fa-circle"></i>
+                      </div>
+                      <img src="{{convo.user.image}}">
+                    </div>
+                    <div class="desc">
+                        <small class="time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</small>
+                        <h5>{{convo.user.fname}} {{convo.user.sname}}</h5>
+                        <small>{{convo.messages[convo.messages.length - 1].body}}</small>
+                    </div>
+                  </div>
+              </li>
+          </div>
+      </ul>
       </div>
   
       <div class="right-section">
+        <div style="overflow-y: scroll; height: 76vh;">
         <div class="message mCustomScrollbar" data-mcs-theme="minimal-dark">
           <ul>
             <li *ngFor="let msg of messages">
@@ -80,6 +85,7 @@
             </li>
           </ul>
         </div>
+      </div>
         <div class="right-section-bottom">
           <form [formGroup]="messageForm" (ngSubmit)="onSubmit(messageForm.value)">
             <div class="upload-btn">

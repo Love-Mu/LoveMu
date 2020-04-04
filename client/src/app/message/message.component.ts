@@ -19,6 +19,7 @@ export class MessageComponent implements OnInit {
   messageForm;
   chatrooms: Chatroom[] = [];
   messages: Message[] = [];
+  online: String[] = [];
 
   constructor(private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute) {
     this.messageForm = this.formBuilder.group({
@@ -31,47 +32,75 @@ export class MessageComponent implements OnInit {
     this.getUser();
     let id = this.route.snapshot.paramMap.get('id');
     if (id != null) this.getActiveUser(id);
+    
+    this.socketMessages();
+  }
+
+  onlineContains(id): boolean {
+    this.online.forEach(pId => {
+      if (pId == id) {
+        return true;
+      }
+      else return false;
+    });
+    return false;
+  }
+
+  socketMessages() {
+    // When a new message is recieved, whether it we our own sent back to us or another persons, its put into the respective chatroom in the array
     this.messageService.onNewMessage().subscribe(data => {
-      let msg = new Message();
-      msg = {
+      let chatroom = this.chatrooms.find(x => x._id == data.chatroomId);
+      let msg = {
         _id: data._id, 
         sender: data.sender, 
         recipient: data.recipient, 
         body: data.body, 
         created_at: data.created_at
       };
-      this.chatrooms.forEach(chatroom => {
-        if (chatroom._id == data.chatroomId) chatroom.messages.push(msg);
-      });
-      if (this.activeChatroom != null) {
-        if (data._id == this.activeChatroom._id) {
-          this.activeChatroom.messages.push(msg);
-        }
+    
+      // Checking if existing chatroom exists to push to, otherwise getting the chatroom by reiniting the chatroom array.
+      if (chatroom == null || chatroom == undefined) {
+        this.getInitChatrooms();
+      } else {
+        chatroom.messages.push(msg);
       }
-      console.log(data);
-      console.log(msg);
+    });
+
+    // Removing Id from online list if they go offline
+    this.messageService.onGoneOffline().subscribe(data => {
+      this.online = this.online.filter(id => id !== data.id);
+      console.log("removed ", data.id, " from online");
+      console.log(this.online);
+    });
+    
+    // Adding Id to online if they come online.
+    this.messageService.onGoneOnline().subscribe(data => {
+      let id = this.online.filter(x => x.includes(data.id));
+      if (id == undefined || id.length == 0) {
+        this.online.push(data.id);
+        console.log(data.id, "is online");
+      }
+    });
+
+    this.messageService.getInitOnline().subscribe(data => {
+      data.forEach(e => {
+        this.online.push(e.id);
+      });
+      console.log(this.online);
     });
   }
 
   changeActive(chatroom): void {
     this.activeChatroom = chatroom;
-    chatroom.members.forEach(member => {
-      if (member != this.user._id) {
-        this.userService.getUser(member.toString()).subscribe((user) => {
-          this.activeUser = user;
-        });
-      }
-    });
-    this.getMessages(this.activeUser._id, chatroom);
+    this.activeUser = chatroom.user;
+    this.getMessages(this.activeUser._id);
   }
 
-  getMessages(id, chatroom) {
-    this.messageService.getMessages(id.toString()).subscribe(messages => {
-      messages.forEach(message => {
-        chatroom.messages.push(message);
-        this.messages.push(message);
-      });
-    });
+  getMessages(id) {
+    this.messageService.getMessages(id).subscribe(messages => {
+        this.messages = messages;
+        this.activeChatroom.messages = messages;
+    })
   }
 
   checkActiveClass(id): boolean {
@@ -102,7 +131,7 @@ export class MessageComponent implements OnInit {
   getActiveUser(id): void {
     this.userService.getUser(id.toString()).subscribe((user) => {
       this.activeUser = user;
-      //this.getMessages(user._id);
+      this.getMessages(user._id);
     });
   }
 

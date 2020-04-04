@@ -58,9 +58,7 @@
     <!-- Second card in profile div: spotify widget -->
     <mat-card class = "spotifyWidget">
       <div class="playlist">
-        <iframe class = "spotify" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX6p4TJxzMRDe" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        <!--  <iframe *ngIf="songUrl"[src]=playlistUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-          <iframe *ngIf="playlistUrl"[src]=songUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> -->
+          <iframe *ngIf="playlistUrl != undefined"[src]=playlistUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
       </div>
     </mat-card>
   </div> <!-- End of profile div -->
@@ -69,7 +67,7 @@
   <div class = "music">
 
     <!-- card that displays artists that overlap with current user and user of profile they're viewing -->
-    <mat-card class = "overlappingArtists">
+    <mat-card class = "overlappingArtists" *ngIf = "(user && !this.isCurrentUser) && (user.overlappingArtists.length != 0)">
       <div class = "title">
         Artists you have in common!
       </div>
@@ -85,7 +83,23 @@
     </mat-card>
 
     <!-- Card that displays a users top/favourite artists -->
-    <mat-card class = "topArtists">
+    <mat-card class = "topArtists" *ngIf = "(user && !this.isCurrentUser) && (user.overlappingArtists.length != 0)">
+      <div class = "title">
+        Top Artists!
+      </div>
+      <div>
+        <div *ngFor = "let artist of user.artists">
+          <a class = "artistLink" href={{artist.external_urls.spotify}}>
+            <img class = "artistImage" *ngIf = "artist.images[0] == null" src = "default.png">
+            <img class = "artistImage" *ngIf = "artist.images[0] != null" src = "{{artist.images[0].url}}">
+            {{artist.name}}
+          </a>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class = "topCurrent" *ngIf = "(user && this.isCurrentUser) || user.overlappingArtists.length == 0">
       <div class = "title">
         Top Artists!
       </div>
@@ -166,16 +180,27 @@
         </mat-form-field>
 
         <br>
+        <mat-form-field>
+          <mat-select formControlName="playlist" placeholder="Playlist">
+            <mat-option *ngFor="let playlist of user.playlists" value={{playlist.external_urls.spotify}}>{{playlist.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>&nbsp;
+        <mat-form-field>
+          <input type="text" matInput placeholder="Search" [matAutocomplete]="auto" formControlName="q" (keyup)="search(profileForm.value.q, 'track')">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let result of searchResults" value={{result.name}}>{{result.name}}</mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <br>
 
         <mat-form-field class = "bio">
           <textarea matInput placeholder="Bio" formControlName="bio"></textarea>
         </mat-form-field>
 
         <br>
-
-        <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button>
+        <img src = "{{filePath}}" class = "updateImage"><br>
+        <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button><p>{{message}}</p>
         <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;"  (click)="onClick()" />
-
       </mat-card-content>
       <mat-card-footer>
         <button class = "updateButton" type="submit" mat-raised-button>Change</button>

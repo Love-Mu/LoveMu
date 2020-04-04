@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder } from '@angular/forms';
@@ -13,6 +13,7 @@ import { SpotifyService } from '../spotify.service';
 import { UploadService } from  '../upload.service';
 import { of } from 'rxjs';  
 import { catchError, map } from 'rxjs/operators';  
+import { Track } from '../users/Track';
 
 @Component({
   selector: 'app-profile',
@@ -20,6 +21,7 @@ import { catchError, map } from 'rxjs/operators';
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
+  @Input() update: EventEmitter<String>;
   user: User;
   artists: Artist[];
   public isCurrentUser: boolean;
@@ -29,6 +31,10 @@ export class ProfileComponent implements OnInit {
   public editUser: boolean;
   oldFile: string;
   newFile: string;
+  filePath: string;
+  userID: string;
+  message: string;
+  searchResults: Array<Track>;
   @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
   files  = [];
 
@@ -42,12 +48,21 @@ export class ProfileComponent implements OnInit {
       sexuality: '',
       bio: '',
       user_name: '',
-      dob: ''
+      dob: '',
+      playlist: '',
+      favouriteSong: '',
+      q: ''
     });
   }
 
   ngOnInit(): void {
     this.getUser();
+    if (this.update) {
+      this.update.subscribe(() => {
+          console.log("running");
+          this.ngOnInit();
+      });
+    }
   }
 
   getFormData(): void {
@@ -77,6 +92,7 @@ export class ProfileComponent implements OnInit {
   getUser(): void {
     let id = this.route.snapshot.paramMap.get('id');
     let currentId = this.userService.getCurrentUser();
+    this.userID = id.toString();
 
     if (currentId == id) {
       this.isCurrentUser = true;
@@ -86,11 +102,14 @@ export class ProfileComponent implements OnInit {
       this.artists = user.artists;
       this.oldFile = user.image;
       this.newFile = user.image;
+      this.filePath = user.image;
       console.log(user);
-      if (this.songUrl != '') {
+      if (this.user.favouriteSong != null) {
+        this.user.favouriteSong = `https://open.spotify.com/embed/track/${this.user.favouriteSong.substring(34, this.user.favouriteSong.length)}`;
         this.songUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.user.favouriteSong);
       }
-      if (this.playlistUrl != '') {
+      if (this.user.playlist != null) {
+        this.user.playlist = `https://open.spotify.com/embed/playlist/${this.user.playlist.substring(34, this.user.playlist.length)}`;
         this.playlistUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.user.playlist);
       }
       this.getFormData();
@@ -103,9 +122,15 @@ export class ProfileComponent implements OnInit {
     }
     this.checkFormData(userData);
     this.http.put('https://lovemu.compsoc.ie/profiles/' + this.userService.getCurrentUser(), userData).toPromise().then((res) => {
+      this.user = res['user'];
+      console.log(this.user);
       this.editUser = false;
       if(this.oldFile != this.newFile){
-        this.http.post('https://lovemu.compsoc.ie/upload/update', {oldFile:this.oldFile, newFile:this.newFile}).subscribe();
+        this.http.post('https://lovemu.compsoc.ie/upload/update', {oldFile:this.oldFile, newFile:this.newFile}).subscribe(() => {
+          this.ngOnInit();
+        });
+      } else {
+        this.ngOnInit();
       }
     });
 
@@ -130,7 +155,15 @@ export class ProfileComponent implements OnInit {
         return of(`${file.data.name} upload failed.`);  
       })).subscribe((event: any) => {  
         if (typeof (event) === 'object') { 
-          this.newFile = event.body.newFile; 
+          if(event.body.message){
+            this.message = event.body.message;
+          }
+          else{
+            this.newFile = event.body.newFile;
+            this.filePath = "temp/" + this.userID + "/" + this.newFile; 
+            this.message = "";
+          }
+          
           console.log(event.body);  
         }  
         else {
@@ -139,26 +172,34 @@ export class ProfileComponent implements OnInit {
       });  
   }
 
-private uploadFiles() {  
-  this.fileUpload.nativeElement.value = '';  
-  this.files.forEach(file => {  
-    this.uploadFile(file);  
-  });  
-  this.files = [];
-  return true;
-}
+  private uploadFiles() {  
+    this.fileUpload.nativeElement.value = '';  
+    this.files.forEach(file => {  
+      this.uploadFile(file);  
+    });  
+    this.files = [];
+    return true;
+  }
 
-onClick() {  
-  const fileUpload = this.fileUpload.nativeElement;fileUpload.onchange = () => {  
-  for (let index = 0; index < fileUpload.files.length; index++)  
-  {  
-  const file = fileUpload.files[0];  
-  this.files.push({ data: file, inProgress: false, progress: 0});  
-  }  
-     this.uploadFiles(); 
-  };  
-  fileUpload.click();  
-}
+  onClick() {  
+    const fileUpload = this.fileUpload.nativeElement;
+    fileUpload.onchange = () => {  
+      for (let index = 0; index < fileUpload.files.length; index++)  {  
+        const file = fileUpload.files[0];  
+        this.files.push({ data: file, inProgress: false, progress: 0});  
+      }  
+      this.uploadFiles(); 
+    };  
+    fileUpload.click();  
+  }
 
-  
+  search(query, type) {
+    if (query != '') {
+      this.http.post("https://lovemu.compsoc.ie/spotify/refreshAccess", {}).toPromise().then(() => {
+        this.http.post("https://lovemu.compsoc.ie/spotify/search", {query: query, type: type}).subscribe((res) => {
+          this.searchResults = res['items'];
+        });
+      });
+    }
+  }
 }

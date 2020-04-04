@@ -48,7 +48,6 @@
     
     .body-section{
     clear: both;
-    overflow: hidden;
     width: 100%;
     }
     
@@ -74,9 +73,6 @@
     background: #009EF7;
     color: #fff;
     position: relative;
-    }
-    .mCustomScrollBox, .mCSB_container{
-    overflow: unset !important;
     }
     .left-section ul li.active .desc .time{
     color: #fff;
@@ -154,7 +150,6 @@
     list-style: none;
     margin: 0px auto;
     width: 90%;
-    overflow:hidden;
     }
     .message ul li{
     position: relative;

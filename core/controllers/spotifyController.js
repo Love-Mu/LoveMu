@@ -118,35 +118,59 @@ module.exports = {
       };
 
       mapArtists(authOptionsArtists).then((mapArtists) => {
+        console.log(mapArtists);
         User.updateOne({_id: user._id}, {$set: {artists: mapArtists}}).exec((err, user) => {
           if (err) {
-            return res.json(err);
+            console.log(err);
+            return res.status(500).json(err);
+            
           }
         });
-      }).catch((error) => { 
+      }).catch((error) => {
+        console.log("Artist Error");
         console.log(error);
-        return;
       });
       mapGenres(authOptionsGenres).then((genres) => {
         User.updateOne({_id: user._id} , {$set: {genres: genres}}).exec((err, user) => {
             if (err) {
-              return res.json(err);
+              console.log(err);
+              return res.status(500).json(err);
             }
         }); 
       }).catch((error) => { 
+        console.log("Genre Error");
         console.log(error);
-        return;
       });
       retrievePlaylists(authOptionsPlaylists).then((playlists) => {
         User.updateOne({_id: user._id} , {$set: {playlists: playlists}}).exec((err, user) => {
           if (err) {
-            return res.json(err);
+            console.log(err);
+            return res.status(500).json(err);
           }
         });
       }).catch((error) => {
+        console.log("Playlist Error");
         console.log(error);
-        return;
       });
+    });
+  },
+
+  search: (req, res, next) => {
+    const query = req.body.query;
+    const type = req.body.type;
+    const params = querystring.stringify({q: query, type: type});
+    console.log(params);
+    const authOptions = {
+      method:"get",
+      url: `https://api.spotify.com/v1/search/?${params}`,
+      headers: {'Authorization': `Bearer ${req.user.access_token}`},
+      json: true,
+    };
+    searchSpotify(query, type, authOptions).then((results) => {
+      res.status(200).json(results);
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).json({error: err});
     });
   }
 }
@@ -190,7 +214,7 @@ function mapArtists(authOptions) {
       }
       const items = await body.items;
       if (items != null) {
-        const artistMap = new Map(items.map(i => [i.name, i]));
+        const artistMap = new Map(items.map(i => [i.id.toString(), i]));
         resolve(artistMap);
       } else {
         resolve(new Map());
@@ -209,6 +233,25 @@ function mapArtists(authOptions) {
         }
         const playlists = await body.items;
         resolve(playlists);
+      });
+    });
+  }
+
+  function searchSpotify(query, type, authOptions) {
+    return new Promise((resolve, reject) => {
+      request.get(authOptions, (err, res, body) => {
+        if (err) {
+          reject(err);
+        }
+        if (res.statusCode !== 200) {
+          reject({message: 'Unauthorized Request'})
+        }
+        if (type == 'track') {
+          resolve(body.tracks);
+        }
+        if (type == 'artist') {
+          resolve(body.artists);
+        }
       });
     });
   }

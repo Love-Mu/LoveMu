@@ -8,7 +8,7 @@ const User = require('../models/User');
 
 var storage1 = multer.diskStorage({
   destination: function (req, file, cb) {
-    let path = './temp/'+req.cookies.fileCookie+'/';
+    let path = './public/temp/'+req.cookies.fileCookie+'/';
     fs.mkdirsSync(path);
     cb(null, path);
   },
@@ -18,7 +18,7 @@ var storage1 = multer.diskStorage({
 })
 var storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
-    let path = './temp/'+req.user.id+'/';
+    let path = './public/temp/'+req.user.id+'/';
     fs.mkdirsSync(path);
     cb(null, path);
   },
@@ -41,22 +41,49 @@ var deleteFolderRecursive = function(curPath) {
   }
 };
    
-var upload = multer({ storage: storage1 })
-var update = multer({ storage: storage2 })
+var upload = multer({ storage: storage1, 
+  fileFilter: (req, file, cb) => {
+    if (
+      !file.mimetype.includes("jpeg") &&
+      !file.mimetype.includes("jpg") &&
+      !file.mimetype.includes("png") &&
+      !file.mimetype.includes("gif")
+    ) {
+      return cb(null, false, new Error("Only images are allowed"));
+    }
+    cb(null, true);
+  } 
+})
+var update = multer({ storage: storage2, 
+  fileFilter: (req, file, cb) => {
+    if (
+      !file.mimetype.includes("jpeg") &&
+      !file.mimetype.includes("jpg") &&
+      !file.mimetype.includes("png") &&
+      !file.mimetype.includes("gif")
+    ) {
+      return cb(null, false, new Error("Only images are allowed"));
+    }
+    cb(null, true);
+  } 
+})
 
 router.post('/upload',  upload.single('file'), function (req, res, next) {
-    return res.status(200).json({filename: req.file.filename, cookie:req.cookies.tempuser});
+  if(!req.file){
+    return res.status(200).json({message: "File is not an image"});
+  }
+  return res.status(200).json({filename: req.file.filename, cookie:req.cookies.fileCookie});
 });
 
 router.post('/save', (req, res) =>{
   if(req.body.filename != null && req.body.filename != undefined && req.body.filename != "default.png"){
-    fs.copy('./temp/'+req.body.cookie+'/'+req.body.filename, './public/'+req.body.filename, err =>{
+    fs.copy('./public/temp/'+req.body.cookie+'/'+req.body.filename, './public/'+req.body.filename, err =>{
       if (err) return console.error(err);
       console.log('1 success!');
-      fs.copy('./temp/'+req.body.cookie+'/'+req.body.filename, './uploads/'+req.body.filename, err =>{
+      fs.copy('./public/temp/'+req.body.cookie+'/'+req.body.filename, './uploads/'+req.body.filename, err =>{
         if (err) return console.error(err);
         console.log('2 success!');
-        deleteFolderRecursive('./temp/'+req.body.cookie);
+        deleteFolderRecursive('./public/temp/'+req.body.cookie);
       });
     });
   }
@@ -64,6 +91,9 @@ router.post('/save', (req, res) =>{
 });
 
 router.post('/reupload', passport.authenticate('jwt', {session: false}), update.single('file'), (req,res) =>{
+  if(!req.file){
+    return res.status(200).json({message: "File is not an image"});
+  }
   return res.status(200).json({newFile: req.file.filename});
 });
 
@@ -71,17 +101,24 @@ router.post('/update', passport.authenticate('jwt', {session: false}),(req,res) 
   if (req.body.oldFile == req.body.newFile){
     return res.status(200).json({message: "Old and new file the same"});
   }
-  //first remove old file from public and uploads
-  fs.unlinkSync('./public/' + req.body.oldFile);
-  fs.unlinkSync('./uploads/' + req.body.oldFile);
+  //first remove old file from public and uploads (if not default)
+  if(req.body.oldFile != "default.png"){
+    if(fs.existsSync('./public/' + req.body.oldFile) ){
+      fs.unlinkSync('./public/' + req.body.oldFile);
+    }
+    if(fs.existsSync('./uploads/' + req.body.oldFile)){
+      fs.unlinkSync('./uploads/' + req.body.oldFile);
+    }
+  }
+  
   //now transfer new file and delete from temp
-  fs.copy('./temp/'+req.user.id+'/'+req.body.newFile, './public/'+req.body.newFile, err =>{
+  fs.copy('./public/temp/'+req.user.id+'/'+req.body.newFile, './public/'+req.body.newFile, err =>{
     if (err) return console.error(err);
     console.log('1 success!');
-    fs.copy('./temp/'+req.user.id+'/'+req.body.newFile, './uploads/'+req.body.newFile, err =>{
+    fs.copy('./public/temp/'+req.user.id+'/'+req.body.newFile, './uploads/'+req.body.newFile, err =>{
       if (err) return console.error(err);
       console.log('2 success!');
-      deleteFolderRecursive('./temp/'+req.user.id);
+      deleteFolderRecursive('./public/temp/'+req.user.id);
     });
   });
   return res.status(200).json({message: "done"});

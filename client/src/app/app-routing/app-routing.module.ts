@@ -10,6 +10,7 @@ import { MessageComponent } from '../message/message.component';
 //import { MessageTestComponent } from '../message-test/message-test.component';
 import { AuthGuardService } from '../auth-guard.service';
 import { GoogleRegistrationComponent} from '../google-registration/google-registration.component';
+import { MessaginglayoutstuffComponent } from '../messaginglayoutstuff/messaginglayoutstuff.component';
 
 const routes: Routes = [
   { path: 'users', component: UsersComponent, canActivate: [AuthGuardService]},
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'message', component: MessageComponent, canActivate: [AuthGuardService] },
   { path: 'message/:id', component: MessageComponent, canActivate: [AuthGuardService] },
   { path: 'google', component: GoogleRegistrationComponent},
+  { path: 'Messaginglayoutstuff', component: MessaginglayoutstuffComponent},
   { path: '**', redirectTo: '' } // otherwise redirect to home
 ];
 

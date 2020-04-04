@@ -88,46 +88,49 @@ module.exports = {
             image: user.image,
             score: Math.round(values[2].score) || 0
           });
-        }).catch((err) => {console.log(err)})
+        }).catch((err) => {
+          console.log(err);
+          res.json(user);
+        })
       })
     },
     updateProfile: async (req, res, next) => {
       // Find user and update by id
       const id = req.user._id;
       let sexuality = [];
-      if (req.body.sexuality == 'Everyone') {
-        sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
-      } else {
-        sexuality = [req.body.sexuality];
-      }
       User.findOne({user_name: req.body.user_name}).exec(async (err, user) => {
         if (err) {
           return res.json({error: err});
         }
-        const sameUser = await ((user._id).toString() == (req.user._id).toString());
-        if (user && !sameUser) {
+        if (user && ((user._id).toString() != (req.user._id).toString())) {
           return res.status(403).json({message: 'Username already in use'});
         }
-        User.findOneAndUpdate({_id: req.user._id}, {$set: {
-            user_name: req.body.user_name,
-            fname: req.body.fname,
-            sname: req.body.sname,
-            location: req.body.location,
-            image: req.body.image,
-            gender: req.body.gender,
-            sexuality: sexuality,
-            bio: req.body.bio,
-            playlist: req.body.playlist,
-            favouriteSong: req.body.favouriteSong,
-            dob: req.body.dob || new Date(),
-            complete: true}}).exec((err, usr) => {
+        const parameters = {complete: true};
+        if (req.body.user_name != '') {parameters.user_name = req.body.user_name;}
+        if (req.body.fname != '') {parameters.fname = req.body.fname;}
+        if (req.body.sname != '') {parameters.sname = req.body.sname;}
+        if (req.body.location != '') {parameters.location = req.body.location;}
+        if (req.body.gender != '') {parameters.gender = req.body.gender;}
+        if (req.body.image != '' && req.body.image != null) {parameters.image = req.body.image;}
+        if (req.body.sexuality != '') {
+          if (req.body.sexuality == 'Everyone') {
+            parameters.sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
+          } else {
+            parameters.sexuality = [req.body.sexuality];
+          }
+        }
+        if (req.body.bio != '') {parameters.bio = req.body.bio;}
+        if (req.body.playlist != '') {parameters.playlist = req.body.playlist;}
+        if (req.body.favouriteSong != '') {parameters.favouriteSong = req.body.favouriteSong;}
+        if (req.body.dob != '') {parameters.dob = req.body.dob;}
+        User.findOneAndUpdate({_id: req.user._id}, {$set: parameters}, {returnNewDocument: true}).exec((err, usr) => {
             if (err) {
               return res.json({error: err});
             }
             if (!usr) {
-              return res.status(404).json({message: 'User does not exist'});
+              return res.status(404).json({message: 'User Does Not Exist'});
             } else {
-              return res.status(200).json({message: 'Successfully Updated!'});
+              return res.status(200).json({message: 'Successful Update!'});
             }
           });
         });
@@ -173,7 +176,7 @@ module.exports = {
             fname: user.fname,
             sname: user.sname,
             location: user.location,
-            bio: user.bio,
+            bio: user.bio.substring(0, 80) + "...",
             image: user.image,
             score: Math.round(score * 100) || 0
           });
@@ -204,7 +207,7 @@ module.exports = {
       usr1.genres.forEach((value, key, map) => {
         usr1Score.push(value);
         if (usr2.genres.has(key)) {
-          usr2Score.push(value);
+          usr2Score.push(usr2.genres.get(key));
         } else {
           usr2Score.push(0);
         }
@@ -247,20 +250,21 @@ module.exports = {
     return new Promise((resolve, reject) => {
       let overlap = [];
       let artists = [];
-      if (usr1._id == usr2._id) {
+      if (usr1._id.toString() == usr2._id.toString()) {
         resolve({overlappingArtists: [], artists: Array.from(usr1.artists.values())})
+      } else {
+        usr1.artists.forEach((value, key, map) => {
+          if (usr2.artists.has(key)) {
+            overlap.push(value);
+          }
+        });
+        usr2.artists.forEach((value, key, map) => {
+          if (!usr1.artists.has(key)) {
+            artists.push(value);
+          }
+        })
+        resolve({overlappingArtists: overlap, artists: artists});
       }
-      usr1.artists.forEach((value, key, map) => {
-        if (usr2.artists.has(key)) {
-          overlap.push(value);
-        }
-      });
-      usr2.artists.forEach((value, key, map) => {
-        if (!usr1.artists.has(key)) {
-          artists.push(value);
-        }
-      })
-      resolve({overlappingArtists: overlap, artists: artists});
     });
   }
  

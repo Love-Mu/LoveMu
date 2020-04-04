@@ -1,4 +1,6 @@
 import { Artist } from './Artist';
+import { Track } from './Track';
+import { Image } from './Image';
 
 export class User {
   _id: number;
@@ -24,4 +26,7 @@ export class User {
 
 class Playlist {
   href: string;
+  external_urls: {
+    spotify: string;
+  }
 }

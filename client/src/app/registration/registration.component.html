@@ -1,5 +1,5 @@
-<h2>Registration</h2>
-
+<div class = "background">
+  <h2>Registration</h2>
   <div class = "regDiv">
     <form class = "registration" [formGroup]="registrationForm" (ngSubmit)="onSubmit(registrationForm.value)">
       <mat-card class = "registrationCard">
@@ -71,10 +71,10 @@
           <br>
           <mat-form-field>
             <mat-select formControlName="gender" placeholder="Gender">
-                <mat-option value="Female">Female</mat-option>
-                <mat-option value="Male">Male</mat-option>
-                <mat-option value="Rather Not Say">Rather Not Say</mat-option>
-                <mat-option value="Other">Other</mat-option>
+              <mat-option value="Female">Female</mat-option>
+              <mat-option value="Male">Male</mat-option>
+              <mat-option value="Rather Not Say">Rather Not Say</mat-option>
+              <mat-option value="Other">Other</mat-option>
             </mat-select>
             <mat-error *ngIf="gender.hasError('required')">Gender is Required</mat-error>
           </mat-form-field>&nbsp;
@@ -100,7 +100,8 @@
             <mat-error *ngIf="bio.hasError('required')">Bio is Required</mat-error>
           </mat-form-field>
           <br>
-          <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button>
+          <img src = "temp/{{filePath}}" width="20%"><br>
+          <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button><p>{{message}}</p>
           <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;"  (click)="onClick()" />
 
         </mat-card-content>
@@ -111,3 +112,4 @@
       </mat-card>
     </form>
   </div>
+</div>

@@ -2,7 +2,9 @@
   <mat-card class = "userCard" [routerLink]="[user._id]" *ngFor="let user of users">
     <mat-card-content>
       <div class = "userInfo">
-        <h3>{{user.fname}} {{user.sname}} </h3>
+        <span class = "vertical">
+           {{user.fname}} {{user.sname}}
+        </span>
       </div>
       <br>
       <div class = "userDiv">
@@ -13,7 +15,9 @@
       {{user.location}}
       <br><br>
       <div class = "userBio">
-        <h3> {{user.bio}}</h3>
+         <span class = "vertical">
+           {{user.bio}}
+        </span>
       </div>
     </mat-card-content>
   </mat-card>
