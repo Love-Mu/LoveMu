@@ -1,41 +1,76 @@
 .container{
   align-content: center;
-  width: 100%;
-  height: 100%;
 }
 
 .profile{
-  text-align: center;
-  width: 48%;
-  min-height: 100vh;
-  float: left;
   display: block;
+  float: left;
+  min-height: 150vh;
+  height: fit-content;
+  width: 46%;
+  margin: 2%;
+}
+
+.mainProfile{
+  display: inline-block;
+  text-align: center;
   font-family: 'Gotu', sans-serif;
-  margin: 1%;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.spotifyWidget{
+  display: inline-block;
+  text-align: center;
+  min-height: 45vh;
+  width: 100%;
+  margin-top: 5vh;
+  background-color: #131719;
 }
 
 .music{
-  width: 48%;
-  min-height: 100vh;
-  max-height: 140vh;
   float: left;
-  margin: 1%;
-  overflow-y: scroll;
   font-family: 'Gotu', sans-serif;
-
+  min-height: 150vh;
+  width: 46%;
+  margin: 2%;
 }
 
+.topArtists, .overlappingArtists{
+  overflow-y: auto;
+  min-height: 72.5vh;
+  max-height: 72.5vh;
+}
+
+.overlappingArtists{
+  margin-bottom: 5%;
+}
+
+.topCurrent{
+  overflow-y: scroll;
+  min-height: 150vh;
+  max-height: 150vh;
+}
+
+.title{
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+}
 
 @media screen and (max-width: 800px) {
   .profile, .music{
     width: 100%;
-    margin-left: 0%;
-    margin-right: 0%;
-    margin-bottom: 1%;
+    margin: 0%;
   }
+  .profile{
+    margin-bottom: 5vh;
+    margin-top: 2.5vh;
+  }
+
 }
 
-.userImage{
+.userImage, .updateImage{
   width:200px;
   height:200px;
   border-radius: 5%;
@@ -60,7 +95,8 @@
 }
 
 .basicInfo{
-  font-size: 4vh;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 .section {
@@ -71,9 +107,8 @@
 
 }
 
-
 i{
- font-size: 100%;
+  font-size: 100%;
 }
 
 .artistImage{
@@ -83,6 +118,32 @@ i{
   padding: 10px;
 }
 
-.playlist{
-  padding: 10px;
+
+.artistLink{
+  color: #FF4081;
+  text-decoration: none;
+}
+
+
+button{
+  margin: 2%;
+}
+
+.updateDiv{
+  display: block;
+  text-align: center;
+}
+
+.updateForm{
+  display: inline-block;
+  margin: 2%;
+  min-width: 60%;
+}
+
+.updateCard{
+  margin: 2%;
+}
+
+.mat-form-field{
+  max-width: 45%;
 }

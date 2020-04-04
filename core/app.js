@@ -6,20 +6,20 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const cors = require('cors');
-const socket_io = require('socket.io');
+const io = require('socket.io');
 const compression = require('compression');
-
 const profileRouter = require('./routes/profile');
 const spotifyRouter = require('./routes/spotify');
 const authRouter = require('./routes/authentication');
 const messageRouter = require('./routes/message');
-const uploadRouter = require('./routes/upload')
+const uploadRouter = require('./routes/upload');
 const sockets = require('./config/sockets');
+const people = [];
 
 const app = express();
+app.io = io();
 
-const io = socket_io();
-app.io = io;
+sockets(app.io, people);
 
 mongoose.Promise = global.Promise;
 
@@ -52,25 +52,5 @@ app.use('/spotify', spotifyRouter);
 app.use('/profiles', profileRouter);
 app.use('/messages', messageRouter);
 app.use('/upload', uploadRouter);
-/*io.engine.generateId = (req) => {
-  return "custom:id:" + req.user._id;
-}*/
-/*io.engine.generateId = function (req) {
-  return req.user._id;
-}*/
-var people={};
-app.io.on('connection', (socket) => {
-  people[socket.handshake.query.id]=socket.id;
-  
-  console.log('A User Connected with ID: ' + socket.handshake.query.id);
-
-  socket.on('disconnect', () => {
-      console.log('A User Disconnected');
-  });
-
-  socket.on('dm', function(data) {
-    io.to(people[data.recipient]).emit('message', data);
-  });
-});
 
 module.exports = app;

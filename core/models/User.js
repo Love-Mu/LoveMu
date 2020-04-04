@@ -16,6 +16,14 @@ const userSchema = new Schema({
     default: "",
     unique: true
   },
+  access_token: {
+    type: String,
+    default: ""
+  },
+  refresh_token: {
+    type: String,
+    default: ""
+  },
   artists: {
     type: Map,
     default: new Map()
@@ -80,7 +88,9 @@ userSchema.methods.hashPassword = function(password) {
 };
 
 userSchema.methods.comparePassword = function(password) {
-  return bcrypt.compareSync(password, this.password);
+  return new Promise((resolve, reject) => {
+    resolve(bcrypt.compareSync(password, this.password));
+  });
 };
 
 module.exports = mongoose.model('User', userSchema);

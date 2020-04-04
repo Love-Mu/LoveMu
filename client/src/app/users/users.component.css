@@ -5,11 +5,10 @@
   align-items: center;
   align-content: flex-start;
   flex-wrap: wrap;
-  height: 100%;
-  width: 100%;
 }
 
 .userCard{
+  padding: 0;
   max-width: 300px;
   margin: 2.5%;
   text-align: center;
@@ -23,7 +22,7 @@
 .userDiv{
   display: inline-block;
   width: 30%;
-  height: 30%;
+  height: 100px;
 }
 
 .userImage{
@@ -33,14 +32,22 @@
   border-radius: 50%;
 }
 
-
-.userInfo, .userBio{
-  width: 100%;
-  background-color: cadetblue;
+.userInfo{
+  height: 40px;
+  line-height: 40px;
+  background-color: #6c919e;
 }
 
-h3{
+.vertical{
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
   color: white;
   font-family: 'Gotu', sans-serif;
 }
 
+.userBio{
+  background-color: #6f94a0;
+  height: 80px;
+  line-height: 80px;
+}

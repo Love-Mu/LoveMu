@@ -1,18 +1,40 @@
+/*.background{
+  background-image: url("https://cdn.discordapp.com/attachments/695278740745224222/695662058565271662/image5_2.png");
+  background-size: cover;
+  height: 93vh;
+}
+
+@media screen and (max-width: 400px){
+  .background{
+    background-image: url("https://cdn.discordapp.com/attachments/695278740745224222/695654832899358780/image2.png");
+  }
+
+}
+*/
+.background{
+  background-image: url("/assets/record_bground.jpg");
+  background-size: cover;
+  min-height: 100%;
+  position: relative;
+  text-align: center;
+  line-height: 93vh;
+}
+
 .welcome{
-  width: 40%;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+  background-color: white;
   font-family: 'Gotu', sans-serif;
-  padding: 5%;
+  opacity: 0.95;
+  margin: 2%;
 }
 
-.sub{
-  font-size: 5vh;
+.name{
+  font-size: 3em;
 }
 
-.head{
-  font-size: 10vh;
-}
-
-.login{
-  float: right;
-  text-align: left;
+.logo{
+  max-width: 40vh;
+  max-height: 40vh;
 }

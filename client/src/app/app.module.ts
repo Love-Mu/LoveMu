@@ -31,11 +31,15 @@ import {LoginComponent} from './login/login.component';
 import {RegistrationComponent} from './registration/registration.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {ProfileComponent} from './profile/profile.component';
-import { MessageTestComponent } from './message-test/message-test.component';
+//import { MessageTestComponent } from './message-test/message-test.component';
 import { MessageComponent } from './message/message.component';
+import {HomeComponent} from './home/home.component';
 import {AuthInterceptor} from './authInterceptor';
 import { GoogleRegistrationComponent } from './google-registration/google-registration.component';
 import { FileListComponent } from './file-list/file-list.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MessaginglayoutstuffComponent } from './messaginglayoutstuff/messaginglayoutstuff.component';
+
 
 const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}};
 
@@ -47,10 +51,12 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     RegistrationComponent,
     ProfileComponent,
     NavbarComponent,
-    MessageTestComponent,
+//    MessageTestComponent,
     MessageComponent,
     GoogleRegistrationComponent,
-    FileListComponent
+    FileListComponent,
+    HomeComponent,
+    MessaginglayoutstuffComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -62,6 +68,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     MatDividerModule,
     MatToolbarModule,
     MatGridListModule,
+    MatAutocompleteModule,
     MatSidenavModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -76,7 +83,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     RouterTestingModule,
     SocketIoModule.forRoot(config),
     ScrollingModule,
-    MatProgressBarModule
+    MatProgressBarModule,
   ],
   providers: [
     CookieService,

@@ -32,19 +32,39 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 h2{
-  color: cadetblue;
+  color: white;
   text-align: center;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Gotu', sans-serif !important;
   font-size: 25px !important;
 }
 
 h3{
-  color: cadetblue;
+  color: white;
   text-align: center;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Gotu', sans-serif !important;
   font-size: 15px !important;
 }
 
 span{
   text-align: center;
+}
+
+/* Scroll bar changes */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #542361 !important;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #542361 !important;
 }
