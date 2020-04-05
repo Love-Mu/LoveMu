@@ -36,16 +36,6 @@ export class MessageComponent implements OnInit {
     this.socketMessages();
   }
 
-  onlineContains(id): boolean {
-    this.online.forEach(pId => {
-      if (pId == id) {
-        return true;
-      }
-      else return false;
-    });
-    return false;
-  }
-
   socketMessages() {
     // When a new message is recieved, whether it we our own sent back to us or another persons, its put into the respective chatroom in the array
     this.messageService.onNewMessage().subscribe(data => {
@@ -69,8 +59,6 @@ export class MessageComponent implements OnInit {
     // Removing Id from online list if they go offline
     this.messageService.onGoneOffline().subscribe(data => {
       this.online = this.online.filter(id => id !== data.id);
-      console.log("removed ", data.id, " from online");
-      console.log(this.online);
     });
     
     // Adding Id to online if they come online.
@@ -78,7 +66,6 @@ export class MessageComponent implements OnInit {
       let id = this.online.filter(x => x.includes(data.id));
       if (id == undefined || id.length == 0) {
         this.online.push(data.id);
-        console.log(data.id, "is online");
       }
     });
 
@@ -86,7 +73,6 @@ export class MessageComponent implements OnInit {
       data.forEach(e => {
         this.online.push(e.id);
       });
-      console.log(this.online);
     });
   }
 
