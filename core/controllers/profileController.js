@@ -24,7 +24,7 @@ module.exports = {
       }
       if (users.length > 1) {
         similarityGeneratorAll(curr, users).then((result) => {
-          return new Promise(async (resolve, reject) => {
+          return new Promise((resolve, reject) => {
             const sortedArray = result.sort((a, b) => (a.score >= b.score) ? -1 : 1)
             resolve(sortedArray);
           });

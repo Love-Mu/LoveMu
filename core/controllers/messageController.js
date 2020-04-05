@@ -45,12 +45,25 @@ module.exports = {
         });
     },
     retrieve: (req, res) => {
-        Chatroom.findOne({$or:[{ members: [req.user._id, req.params.id] },{ members: [req.params.id, req.user._id] }]}).limit(10).exec((err, chatroom) => {
+        Chatroom.findOne({$or:[{ members: [req.user._id, req.params.id] },{ members: [req.params.id, req.user._id] }]}).exec((err, chatroom) => {
             if (err) {
                 throw err;
                 return res.status(500).json(err);
             } else if (chatroom != undefined) {
-                Message.find().where('_id').in(chatroom.messages).exec((err, messages) => {
+                Message.find().where('_id').in(chatroom.messages).sort({created_at: -1}).limit(10).exec((err, messages) => {
+                    return res.status(200).json(messages);
+                });
+            }
+        });
+    },
+    retrieveNext: (req, res) => {
+        Chatroom.findOne({$or:[{ members: [req.user._id, req.params.id] },{ members: [req.params.id, req.user._id] }]}).exec((err, chatroom) => {
+            if (err) {
+                throw err;
+                return res.status(500).json(err);
+            } else if (chatroom != undefined) {
+                Message.find().where('_id').in(chatroom.messages).sort({created_at: -1}).skip(parseInt(req.params.pos)).limit(10).exec((err, messages) => {
+                    console.log(messages);
                     return res.status(200).json(messages);
                 });
             }

@@ -9,7 +9,6 @@ const Authentication = require('../controllers/authController');
 
 const router = express.Router();
 
-
 router.post('/register', registrationValidationRules(), validate, Authentication.register);
 
 router.post('/login', Authentication.login);

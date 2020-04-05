@@ -10,6 +10,7 @@
         <div *ngIf="activeUser" class="headRight-sub">
           <h3>{{activeUser.fname}} {{activeUser.sname}}</h3>
           <small>{{activeUser.bio}}</small>
+          <button (click)="getNextMessages(activeUser._id)">Get more messages</button>
         </div>
       </div>
     </div>
@@ -52,7 +53,7 @@
                   </div>
               </li>
           </div>
-      </ul>
+        </ul>
       </div>
   
       <div class="right-section">

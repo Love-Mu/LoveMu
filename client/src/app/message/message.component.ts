@@ -84,8 +84,17 @@ export class MessageComponent implements OnInit {
 
   getMessages(id) {
     this.messageService.getMessages(id).subscribe(messages => {
+        messages.reverse();
         this.messages = messages;
         this.activeChatroom.messages = messages;
+    })
+  }
+
+  getNextMessages(id) {
+    this.messageService.getNextMessages(id, this.activeChatroom.messages.length).subscribe(messages => {
+      messages.forEach(msg => {
+        this.activeChatroom.messages.unshift(msg);
+      });
     })
   }
 
@@ -133,5 +142,7 @@ export class MessageComponent implements OnInit {
     userData.sender = this.user._id;
     userData.recipient = this.activeUser._id;
     this.messageService.sendMessage(userData);
+    this.messageForm.clear;
+    this.messageForm.body = '';
   } 
 }

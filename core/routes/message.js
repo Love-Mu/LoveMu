@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get('/retrieve/:id', passport.authenticate('jwt', {session: false}), MessageController.retrieve);
 
-//router.get('/retrieveAll', passport.authenticate('jwt', {session: false}), MessageController.retrieveAll);
+router.get('/retrieveNext/:id/:pos', passport.authenticate('jwt', {session: false}), MessageController.retrieveNext);
 
 router.post('/send', passport.authenticate('jwt', {session: false}), MessageController.send);
 
