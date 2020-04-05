@@ -186,10 +186,7 @@
           </mat-select>
         </mat-form-field>&nbsp;
         <mat-form-field>
-          <input type="text" matInput placeholder="Search" [matAutocomplete]="auto" formControlName="q" (keyup)="search(profileForm.value.q, 'track')">
-          <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let result of searchResults" value={{result.name}}>{{result.name}}</mat-option>
-          </mat-autocomplete>
+          <input type="text" matInput placeholder="Search" formControlName="q" (keyup)="search(profileForm.value.q, 'track')">
         </mat-form-field>
         <br>
 

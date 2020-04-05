@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 describe('Authentication', () => {
     describe('Registration', () => {
         let usr;
-        beforeEach((done) => { //Before each test empty the database
+        beforeEach((done) => { //Before each test empty the database and reset usr
             User.remove({}, (err) => { 
                 usr = {
                     email: 'test@user.com',
@@ -177,10 +177,10 @@ describe('Authentication', () => {
                 user_name: "TestUser"
             }) 
             usr1.hashPassword("TestPass").then((password) => {
-                usr1.password = password;
+                usr1.password = password;            
                 User.remove({}, (err) => {
-                    usr1.save((err, usr1) => {
-                        done();
+                usr1.save((err, usr1) => {
+                    done();
                     });           
                 }); 
             })
@@ -195,7 +195,6 @@ describe('Authentication', () => {
             .post('/auth/login')
             .send(usr)
             .end((err, res) => {
-                console.log(res.body);
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');

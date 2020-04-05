@@ -45,12 +45,25 @@ module.exports = {
         });
     },
     retrieve: (req, res) => {
-        Chatroom.findOne({$or:[{ members: [req.user._id, req.params.id] },{ members: [req.params.id, req.user._id] }]}).limit(10).exec((err, chatroom) => {
+        Chatroom.findOne({$or:[{ members: [req.user._id, req.params.id] },{ members: [req.params.id, req.user._id] }]}).exec((err, chatroom) => {
             if (err) {
                 throw err;
                 return res.status(500).json(err);
             } else if (chatroom != undefined) {
-                Message.find().where('_id').in(chatroom.messages).exec((err, messages) => {
+                Message.find().where('_id').in(chatroom.messages).sort({created_at: -1}).limit(10).exec((err, messages) => {
+                    return res.status(200).json(messages);
+                });
+            }
+        });
+    },
+    retrieveNext: (req, res) => {
+        Chatroom.findOne({$or:[{ members: [req.user._id, req.params.id] },{ members: [req.params.id, req.user._id] }]}).exec((err, chatroom) => {
+            if (err) {
+                throw err;
+                return res.status(500).json(err);
+            } else if (chatroom != undefined) {
+                Message.find().where('_id').in(chatroom.messages).sort({created_at: -1}).skip(parseInt(req.params.pos)).limit(10).exec((err, messages) => {
+                    console.log(messages);
                     return res.status(200).json(messages);
                 });
             }
@@ -83,45 +96,3 @@ module.exports = {
         });
     }
 };
-
-    /*chatroom: async (req, res) => {
-        Chatroom.find({members: { "$in" : [req.user._id] }}).exec(async (err, chatroom) => {
-            if (err) {
-                throw err;
-                return res.status(500).json(err);
-            } else {
-                const rooms = await generateRooms(chatroom);
-                console.log("Rooms Sent:", rooms);
-                return res.status(200).json(rooms);
-            }
-        });
-    }
-};
-
-
-function generateRooms(chatroom) {
-    let roomPromise = new Promise(function (resolve, reject) {
-        if (chatroom == null) {
-            reject({msg: "Chatroom is Null"});
-        }
-        let rooms = [];
-        console.log("Chatroom Length:", chatroom.length);
-        chatroom.forEach((element) => {
-            console.log("Element:", element);
-            let id = element.messages.pop();
-            console.log("Message Object ID:", id);
-            Message.findOne({_id: id}).exec((err, message) => {
-                if (err) {
-                    reject(err);
-                }
-                if (!message) {
-                    reject({msg: "No messages found"});
-                }
-                rooms.push({"_id": element._id, "members": element.members, "message": message});
-                console.log("Rooms Inside Loop", rooms);
-           });
-        });
-        resolve(rooms);
-    });
-    console.log("Room Promise", roomPromise);
-    return roomPromise;*/

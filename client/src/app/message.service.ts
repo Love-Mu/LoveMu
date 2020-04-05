@@ -75,4 +75,8 @@ export class MessageService {
   getMessages(id): Observable<Message[]> {
     return this.http.get<Message[]>('https://lovemu.compsoc.ie/messages/retrieve/'+id);
   }
+
+  getNextMessages(id, pos): Observable<Message[]> {
+    return this.http.get<Message[]>('https://lovemu.compsoc.ie/messages/retrieveNext/'+id+'/'+pos);
+  }
 }
