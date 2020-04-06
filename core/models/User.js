@@ -78,6 +78,14 @@ const userSchema = new Schema({
   complete: {
     type: Boolean,
     default: false
+  },
+  blocked: {
+    type: Array,
+    default: ""
+  },
+  blockedArtists: {
+    type: Map,
+    default: new Map()
   }
 });
 

@@ -117,8 +117,7 @@ module.exports = {
         json: true,
       };
 
-      mapArtists(authOptionsArtists).then((mapArtists) => {
-        console.log(mapArtists);
+      mapArtists(authOptionsArtists, user.blockedArtists).then((mapArtists) => {
         User.updateOne({_id: user._id}, {$set: {artists: mapArtists}}).exec((err, user) => {
           if (err) {
             console.log(err);
@@ -203,18 +202,22 @@ function mapGenres(authOptions) {
   });
 }
 
-function mapArtists(authOptions) {
+function mapArtists(authOptions, blocked) {
   return new Promise((resolve, reject) => {
-    request(authOptions, async (err, response, body) => {
+    request(authOptions, (err, response, body) => {
       if (err) {
         reject(err);
       }
       if (response.statusCode !== 200) {
         reject({message: 'Unauthorized Request'});
       }
-      const items = await body.items;
+      const items = body.items;
       if (items != null) {
-        const artistMap = new Map(items.map(i => [i.id.toString(), i]));
+        const artistMap = new Map(
+          items
+          .filter(i => !blocked.has(i.id.toString()))
+          .map(i => [i.id.toString(), i])
+        );
         resolve(artistMap);
       } else {
         resolve(new Map());
@@ -231,8 +234,12 @@ function mapArtists(authOptions) {
         if (response.statusCode !== 200) {
           reject({message: 'Unauthorized Request'});
         }
-        const playlists = await body.items;
-        resolve(playlists);
+        const playlists = body.items;
+        if (playlists != null) {
+          resolve(playlists);
+        } else {
+          resolve([]);
+        }
       });
     });
   }

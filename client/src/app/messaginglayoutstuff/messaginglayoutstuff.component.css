@@ -41,8 +41,12 @@
   border-radius: 50%;
 }
 
-.person{
+.person, .activePerson{
   margin: 2%;
+}
+
+.activePerson{
+  background-color: #542361;
 }
 
 .person:hover{

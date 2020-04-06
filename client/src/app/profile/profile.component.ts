@@ -51,7 +51,8 @@ export class ProfileComponent implements OnInit {
       dob: '',
       playlist: '',
       favouriteSong: '',
-      q: ''
+      q: '',
+      blocked: ''
     });
   }
 
@@ -63,6 +64,10 @@ export class ProfileComponent implements OnInit {
           this.ngOnInit();
       });
     }
+  }
+
+  blockUser() {
+    this.userService.blockUser(this.route.snapshot.paramMap.get('id'));
   }
 
   getFormData(): void {

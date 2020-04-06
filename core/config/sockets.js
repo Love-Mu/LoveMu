@@ -30,10 +30,11 @@ module.exports = function (io, people) {
     socket.on('dm', function(data) {
       let sender = people.filter(e => e.id == data.sender);
       let recipient = people.filter(e => e.id == data.recipient);
-      if (sender != undefined) {
+      
+      if (sender && sender.length) {
         io.to(sender[0].sid).emit('message', data);
       }
-      if (recipient != undefined) {
+      if (recipient && recipient.length) {
         io.to(recipient[0].sid).emit('message', data);
       }
       

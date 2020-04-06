@@ -15,6 +15,9 @@
         <div *ngIf = "user && this.isCurrentUser">
           <button (click)="editUser = true" class = "editButton" mat-raised-button>Edit Profile</button>
         </div>
+        <div *ngIf = "user && !this.isCurrentUser">
+          <button (click)="blockUser()" class = "editButton" mat-raised-button>Block User</button>
+        </div>
         <!-- User image -->
         <img src = {{user.image}} class = "userImage">
         <br><br>

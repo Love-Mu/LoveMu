@@ -63,7 +63,6 @@ module.exports = {
                 return res.status(500).json(err);
             } else if (chatroom != undefined) {
                 Message.find().where('_id').in(chatroom.messages).sort({created_at: -1}).skip(parseInt(req.params.pos)).limit(10).exec((err, messages) => {
-                    console.log(messages);
                     return res.status(200).json(messages);
                 });
             }

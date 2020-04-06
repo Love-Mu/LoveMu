@@ -23,4 +23,16 @@ export class UsersService {
     if (id != null) return id;
     else return '';
   }
+
+  blockUser(id) {
+    this.http.get('https://lovemu.compsoc.ie/profiles/block/' + id).subscribe(() => {
+      console.log("user blocked");
+    });
+  }
+
+  unblockUser(id) {
+    this.http.get('https://lovemu.compsoc.ie/profiles/unblock/' + id).subscribe(() => {
+      console.log("user unblocked");
+    });
+  }
 }

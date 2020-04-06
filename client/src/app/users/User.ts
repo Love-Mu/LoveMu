@@ -22,6 +22,7 @@ export class User {
   favouriteSong: string;
   playlist: string;
   playlists: Array<Playlist>;
+  blocked: Array<number>;
 }
 
 class Playlist {

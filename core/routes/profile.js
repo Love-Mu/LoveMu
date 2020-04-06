@@ -11,4 +11,8 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), Profile.getPr
 
 router.put('/:id', passport.authenticate('jwt', {session: false}), Profile.updateProfile);
 
+router.get('/block/:id', passport.authenticate('jwt', {session: false}), Profile.block);
+
+router.get('/unblock/:id', passport.authenticate('jwt', {session: false}), Profile.unblock);
+
 module.exports = router;
