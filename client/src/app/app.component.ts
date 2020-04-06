@@ -13,7 +13,7 @@ import { SpotifyService } from './spotify.service';
 export class AppComponent {
   title = 'LoveMu';
 
-  constructor (private location: Location, private messageService: MessageService, private authService: AuthenticationService, private spotifyService: SpotifyService) { }
+  constructor (private location: Location, private authService: AuthenticationService, private spotifyService: SpotifyService) { }
 
   ngOnInit() {
     this.authService.isAuthenticated();

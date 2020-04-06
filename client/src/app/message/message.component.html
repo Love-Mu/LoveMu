@@ -1,25 +1,93 @@
-<h2> Messages </h2>
-
-<form [formGroup]="messageForm" (ngSubmit)="onSubmit(messageForm.value)">
-    <mat-card class = "messageCard">
-      <mat-card-content>
-        <mat-form-field>
-          <input matInput placeholder="Body" formControlName="body">
-        </mat-form-field>
-      </mat-card-content>
-      <mat-card-footer>
-        <button type="submit" mat-raised-button>Send Message</button>
-      </mat-card-footer>
-    </mat-card>
-  </form>
 
 <div class = "container">
-  <mat-card class = "messageCard">
-    <mat-card-content>
-      <div *ngFor="let message of messages" class = "userInfo">
-        <h3>{{message.sender}}</h3><br>
-        <h3>{{message.body}}</h3><br>
+
+  <!-- Search box -->
+  <div class = "findPeople">
+    <div class = "search"> Search Box </div>
+    <br>
+
+    <!-- List of people at left of screen-->
+    <div class = "people" >
+      <!-- Card shown if user has had convo with person before and if clicked, changes which messages are shown-->
+      <div *ngFor="let convo of chatrooms">
+        <mat-card  *ngIf="convo.user != undefined && activeUser != undefined" (click)="changeActive(convo)" [ngClass] = "{'person': convo.user._id != activeUser._id, 'activePerson': convo.user._id == activeUser._id}">
+          <mat-card-content>
+            <div class = "img">
+              <div *ngIf="online.includes(convo.user._id)">
+                <i class="fa fa-circle"></i>
+              </div>
+              <img class = "userImage" src = "{{convo.user.image}}">
+              <span class = "name"> {{convo.user.fname}} {{convo.user.sname}} </span>
+            </div>
+            <br>
+            <!-- shows the most recent message sent and the time/date it was sent-->
+            <div class = "recentMsg">
+              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == convo.user._id">{{convo.user.fname}}: </span>
+              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == user._id"> {{user.fname}}: </span>
+              {{convo.messages[convo.messages.length - 1].body}}
+              <br>
+              <span class = "time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card  *ngIf="convo.user != undefined && activeUser == undefined" (click)="changeActive(convo)" class = "person">
+          <mat-card-content>
+            <div class = "img">
+              <div *ngIf="online.includes(convo.user._id)">
+                <i class="fa fa-circle"></i>
+              </div>
+              <img class = "userImage" src = "{{convo.user.image}}">
+              <span class = "name"> {{convo.user.fname}} {{convo.user.sname}} </span>
+            </div>
+            <br>
+            <!-- shows the most recent message sent and the time/date it was sent-->
+            <div class = "recentMsg">
+              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == convo.user._id">{{convo.user.fname}}: </span>
+              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == user._id"> {{user.fname}}: </span>
+              {{convo.messages[convo.messages.length - 1].body}}
+              <br>
+              <span class = "time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </div>
+
+  <!-- messages with activeUser at right of screen -->
+  <div class = "messaging">
+    <div class = "messages">
+      <!-- shows each users message -->
+      <div *ngFor="let msg of messages">
+        <div class = "msgDiv">
+          <!-- If message is sent by user-->
+          <div *ngIf = "user._id == msg.sender">
+            <div class = "currentUser">
+              {{msg.body}}
+              <img class = "userImage" src = "{{user.image}}">
+            </div>
+          </div>
+
+          <!-- If message is sent by person user is talking to -->
+          <div *ngIf = "activeUser._id == msg.sender">
+            <div class = "otherUser">
+              {{msg.body}}
+              <img class = "userImage" src = "{{activeUser.image}}">
+            </div>
+          </div>
+
+        </div>
+        <br><br><br>
+      </div>
+    </div>
+
+    <!-- Send message box -->
+    <div class = "typeMessage">
+      <form [formGroup]="messageForm" (ngSubmit)="onSubmit(messageForm.value)">
+        <input matInput placeholder="Type here.." formControlName="body" class = "msgInput">
+        <button type="submit"><i class="fa fa-send"></i></button>
+      </form>
+    </div>
+  </div>
 </div>

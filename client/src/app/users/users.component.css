@@ -5,38 +5,49 @@
   align-items: center;
   align-content: flex-start;
   flex-wrap: wrap;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
 }
 
 .userCard{
+  padding: 0;
+  max-width: 300px;
   margin: 2.5%;
   text-align: center;
 }
-
+/* Makes web page responsive so that cards will go to next line*/
 .container .userCard{
-  flex: 1 0 300px;
+  flex: 1 0 250px;
 }
 
+/*Contains image*/
 .userDiv{
   display: inline-block;
-  height: auto;
   width: 30%;
+  height: 100px;
 }
 
 .userImage{
-  width:100%;
-  height:100%;
-  border-radius: 100%;
+  width:100px;
+  height:100px;
+  object-fit:cover;
+  border-radius: 50%;
 }
 
-
-.userInfo, .userBio{
-  width: 100%;
-  background-color: cadetblue;
+.userInfo{
+  height: 40px;
+  line-height: 40px;
+  background-color: #6c919e;
 }
 
-h3{
+.vertical{
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
   color: white;
+  font-family: 'Gotu', sans-serif;
+}
+
+.userBio{
+  background-color: #6f94a0;
+  height: 80px;
+  line-height: 80px;
 }

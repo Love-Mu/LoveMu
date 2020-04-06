@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const moment = require('moment');
 const Schema = mongoose.Schema;
 
 // Define User model here
@@ -10,21 +9,32 @@ const userSchema = new Schema({
     unique: true, 
   },
   password: {
-    type: String,
-    trim: true,
-  },
-  artists: {
-    type: Array,
-    default: []
-  },
-  genres: {
-    type: Map,
-    default: new Map()
+    type: String
   },
   user_name: {
     type: String, 
     default: "",
     unique: true
+  },
+  access_token: {
+    type: String,
+    default: ""
+  },
+  refresh_token: {
+    type: String,
+    default: ""
+  },
+  artists: {
+    type: Map,
+    default: new Map()
+  },
+  genres: {
+    type: Map,
+    default: new Map()
+  },
+  playlists: {
+    type: [],
+    default: []
   },
   fname: {
     type: String, 
@@ -57,23 +67,38 @@ const userSchema = new Schema({
     type: String, 
     default: ""
   },
+  playlist: {
+    type: String,
+    default: ""
+  },
+  favouriteSong: {
+    type: String,
+    default: ""
+  },
   complete: {
     type: Boolean,
     default: false
+  },
+  blocked: {
+    type: Array,
+    default: ""
+  },
+  blockedArtists: {
+    type: Map,
+    default: new Map()
   }
 });
 
-userSchema.virtual('Age').get(function () {
-  bDay = this.dob;
-  return moment().diff(bDay, 'years').toString();
-})
-
 userSchema.methods.hashPassword = function(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  return new Promise((resolve, reject) => {
+    resolve(bcrypt.hashSync(password, bcrypt.genSaltSync(8), null));
+  });
 };
 
 userSchema.methods.comparePassword = function(password) {
-  return bcrypt.compareSync(password, this.password);
+  return new Promise((resolve, reject) => {
+    resolve(bcrypt.compareSync(password, this.password));
+  });
 };
 
 module.exports = mongoose.model('User', userSchema);

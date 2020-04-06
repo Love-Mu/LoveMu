@@ -1,0 +1,149 @@
+<div class="main-section">
+  <div class="head-section">
+    <div class="headLeft-section">
+      <div class="headLeft-sub">
+        <input type="text" name="search" placeholder="Search...">
+        <button> <i class="fa fa-search"></i> </button>
+      </div>
+    </div>
+    <div class="headRight-section">
+      <div class="headRight-sub">
+        <h3>Lajy Ion</h3>
+        <small>Lorem ipsum dolor sit amet...</small>
+      </div>
+    </div>
+  </div>
+  <div class="body-section">
+    <div class="left-section mCustomScrollbar" data-mcs-theme="minimal-dark">
+      <ul>
+        <li *ngFor="let chatroom of chatrooms">
+          <!--(click)="setSelectedUser(chatroom.user)-->
+          <div (click)="setSelectedUser(chatroom.user)" class="chatList">
+            <div class="img">
+              <i class="fa fa-circle"></i>
+              <img src="{{chatroom.user.image}}">
+            </div>
+            <div class="desc">
+              <small class="time">{{chatroom.message.created_at}}</small>
+              <h5>{{chatroom.user.fname}} {{chatroom.user.sname}}</h5>
+              <small>{{chatroom.message.body}}</small>
+            </div>
+          </div>
+        <!--<li *ngFor="let convo of convos">
+          <div (click)="setSelectedUser(convo)" class="chatList">
+            <div class="img">
+              <i class="fa fa-circle"></i>
+              <img src="{{convo.user.image}}">
+            </div>
+            <div class="desc">
+              <small class="time">{{convo.messages[convo.messages.length - 1].created_at}}</small>
+              <h5>{{convo.user.fname}} {{convo.user.sname}}</h5>
+              <small>{{convo.messages[0].body}}</small>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="chatList">
+            <div class="img">
+              <i class="fa fa-circle"></i>
+              <img src="https://www.nicesnippets.com/demo/man02.png">
+            </div>
+            <div class="desc">
+              <small class="time">3 day</small>
+              <h5>Joi Chak</h5>
+              <small>Lorem ipsum dolor sit amet...</small>
+            </div>
+          </div>
+        </li>
+        <li class="active">
+          <div class="chatList">
+            <div class="img">
+              <img src="https://www.nicesnippets.com/demo/man03.png">
+            </div>
+            <div class="desc">
+              <small class="time">4 day</small>
+              <h5>Lajy Ion</h5>
+              <small>Lorem ipsum dolor sit amet...</small>
+            </div>
+          </div>
+        </li>-->
+      </ul>
+    </div>
+
+    <div class="right-section">
+      <div class="message mCustomScrollbar" data-mcs-theme="minimal-dark">
+        <ul>
+          <li>
+            <div class="msg-left">
+              <div class="msg-left-sub">
+                <img src="">
+                <div class="msg-desc">
+                  
+                </div>
+                <small>05:25 am</small>
+              </div>
+            </div>
+          </li>
+          <li *ngFor="let message of messages" class="msg-right">
+            <div class="msg-left-sub">
+              <img src="https://www.nicesnippets.com/demo/man04.png">
+              <div class="msg-desc">
+                {{message.body}}
+              </div>
+              <small>05:25 am</small>
+            </div>
+          </li>
+          <!--<li class="msg-day"><small>Wednesday</small></li>
+          <li class="msg-left">
+            <div class="msg-left-sub">
+              <img src="https://www.nicesnippets.com/demo/man03.png">
+              <div class="msg-desc">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit
+              </div>
+              <small>05:25 am</small>
+            </div>
+          </li>
+          <li class="msg-right">
+            <div class="msg-left-sub">
+              <img src="https://www.nicesnippets.com/demo/man04.png">
+              <div class="msg-desc">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.
+              </div>
+              <small>05:25 am</small>
+            </div>
+          </li>
+          <li class="msg-left">
+            <div class="msg-left-sub">
+              <img src="https://www.nicesnippets.com/demo/man03.png">
+              <div class="msg-desc">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit
+              </div>
+              <small>05:25 am</small>
+            </div>
+          </li>
+          <li class="msg-right">
+            <div class="msg-left-sub">
+              <img src="https://www.nicesnippets.com/demo/man04.png">
+              <div class="msg-desc">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.
+              </div>
+              <small>05:25 am</small>
+            </div>
+          </li>-->
+        </ul>
+      </div>
+      <div class="right-section-bottom">
+        <form [formGroup]="messageForm" (ngSubmit)="onSubmit(messageForm.value)">
+          <div class="upload-btn">
+              <button class="btn"><i class="fa fa-photo"></i></button>
+              <input type="file" name="myfile" />
+          </div>
+          <input matInput placeholder="Body" formControlName="body">
+          <button type="submit" class="btn-send"><i class="fa fa-send"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

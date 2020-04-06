@@ -1,12 +1,12 @@
 .toolbar{
-  height: auto;
+  height: 7vh;
   background-color: #542361;
 }
 
 a{
   margin-left: 2%;
   margin-right: 2%;
-  font-size: 50%;
+  font-size: 1.5vh;
   color: white;
 }
 

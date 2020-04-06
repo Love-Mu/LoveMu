@@ -1,0 +1,132 @@
+.findPeople{
+  float: left;
+  height: 93vh;
+  width: 30%;
+  border-right: 1px solid #969696;
+  background-color: white;
+  text-align: center;
+  font-family: 'Gotu', sans-serif;
+}
+
+.messaging{
+  float: left;
+  text-align: center;
+  width: 70%;
+  height: 93vh;
+  background-color: #eeeeee;
+}
+
+.search{
+  display: inline-block;
+  text-align: center;
+  border: 1px solid #7b7b7b;
+  margin: 1%;
+  width: 90%;
+  height: 5vh;
+}
+
+.people{
+  display: inline-block;
+  text-align: left;
+  width: 90%;
+  height: 86.5vh;
+  overflow-y: auto;
+
+}
+
+.userImage{
+  width: 40px;
+  height: 40px;
+  object-fit:cover;
+  border-radius: 50%;
+}
+
+.person, .activePerson{
+  margin: 2%;
+}
+
+.activePerson{
+  background-color: #542361;
+}
+
+.person:hover{
+  background-color: #ebeeff;
+}
+
+.msgDiv{
+  width: 100%;
+}
+
+.otherUser, .currentUser{
+  width: fit-content;
+  max-width: 80%;
+  margin: 1%;
+  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+  color: #e7e7e7;
+}
+
+.otherUser{
+  float: left;
+  background-color: #5b7a85;
+  padding-left: 1%;
+  padding-right: 0.5%;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.currentUser{
+  float: right;
+  background-color: #87898f;
+  padding-left: 0.5%;
+  padding-right: 1%;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.messages{
+  display: inline-block;
+  height: 80vh;
+  overflow-y: auto;
+  margin: 2%;
+  width: 95%;
+  background-color: #eeeeee;
+}
+
+.typeMessage{
+  display: inline-block;
+  text-align: center;
+  height: 6vh;
+  width: 90%;
+}
+
+
+
+.img i{
+  position: absolute;
+  font-size: 10px;
+  color: #27b866;
+  border:1px solid #fff;
+  border-radius: 50%;
+  left: 10px;
+  margin-bottom: 2px;
+  margin-right: 5px;
+}
+
+.time{
+  font-size: 0.8em;
+}
+
+.recentMsg{
+  font-size: 0.8em;
+}
+
+.msgInput{
+  width: 80%;
+}
+
+.name{
+  font-family: 'Gotu', sans serif;
+}

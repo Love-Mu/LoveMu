@@ -1,0 +1,56 @@
+<!--
+<div class = "container">
+  <div class = "findPeople">
+    <div class = "search"> Search Box </div>
+    <br>
+
+    <div class = "people" *ngFor="let convo of chatrooms" > -->
+      <!-- Card shown if user has had convo with person before and if clicked, changes which messages are shown-->
+<!--
+      <mat-card *ngIf="convo.user != undefined" (click)="changeActive(convo)" [ngclass] = "{'person': convo.user._id != activeUser._id, 'activePerson: convo.user._id == activeUser._id}">
+        <mat-card-content>
+          <img class = "userImage" src = "{{convo.user.image}}"> {{convo.user.fname}} {{convo.user.sname}}
+          <br>
+          -->
+          <!-- shows the most recent message sent and the time/date it was sent-->
+<!--
+          <div class="desc">
+            <small class="time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</small>
+            <h5>{{convo.user.fname}} {{convo.user.sname}}</h5>
+            <small>{{convo.messages[convo.messages.length - 1].body}}</small>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </div>
+  <div class = "messaging">
+    <div class = "messages">
+      <div class = "otherUser"> Hey how are you? What is up??? </div>
+      <br><br>
+      <div class = "currentUser"> The sky bro.</div>
+      <br><br>
+      <div class = "otherUser"> No fucking way bro why u gotta be so sarcastic bro? bro. fuck you bro. hahahhaha. u think ur so funny bro. well bro. we'll see about that</div>
+      <br><br>
+      <div class = "currentUser"> No fucking way bro why u gotta be so sarcastic bro? bro. fuck you bro. hahahhaha. u think ur so funny bro. well bro. we'll see about that</div>
+      <br><br>
+      <div class = "otherUser"> No fucking way bro why u gotta be so sarcastic bro? bro. fuck you bro. hahahhaha. u think ur so funny bro. well bro. we'll see about that</div>
+      <br><br>
+      <div class = "currentUser"> No fucking way bro why u gotta be so sarcastic bro? bro. fuck you bro. hahahhaha. u think ur so funny bro. well bro. we'll see about that</div>
+      <br><br>
+      <div class = "otherUser"> No fucking way bro why u gotta be so sarcastic bro? bro. fuck you bro. hahahhaha. u think ur so funny bro. well bro. we'll see about that</div>
+      <br><br>
+      <div class = "currentUser"> No fucking way bro why u gotta be so sarcastic bro? bro. fuck you bro. hahahhaha. u think ur so funny bro. well bro. we'll see about that</div>
+      <br><br>
+      <div class = "otherUser"> No fucking way bro why u gotta be so sarcastic bro? bro. fuck you bro. hahahhaha. u think ur so funny bro. well bro. we'll see about that</div>
+      <br><br>
+      <div class = "currentUser"> No fucking way bro why u gotta be so sarcastic bro? bro. fuck you bro. hahahhaha. u think ur so funny bro. well bro. we'll see about that</div>
+      <br><br>
+    </div>
+    <div class = "typeMessage">
+      Type message here.........
+    </div>
+  </div>
+</div>
+
+-->

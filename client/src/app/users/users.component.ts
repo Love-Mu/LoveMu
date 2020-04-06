@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { UsersService } from '../users.service';
 import { User } from './User';
 
@@ -12,7 +11,7 @@ export class UsersComponent implements OnInit {
   users: User[];
   breakpoint;
 
-  constructor(private userService: UsersService, private socket: Socket) { }
+  constructor(private userService: UsersService) { }
 
   ngOnInit() {
     this.getUsers();
@@ -25,7 +24,10 @@ export class UsersComponent implements OnInit {
 
   getUsers(): void {
     this.userService.getUsers().subscribe(
-      users => this.users = users,
+      users => {
+        this.users = users;//.sort((a, b) => (a.score >= b.score) ? -1 : 1);
+        console.log(this.users);
+      },
       error => console.log(error)
     );
   }
