@@ -30,8 +30,6 @@ const httpsServer = https.createServer(credentials, app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-const io = app.io;
-
 app.io.attach(httpsServer);
 
 httpServer.listen(80);

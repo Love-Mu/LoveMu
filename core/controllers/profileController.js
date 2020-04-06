@@ -86,7 +86,6 @@ module.exports = {
             playlist: user.playlist || '',
             playlists: user.playlists || [],
             favouriteSong: user.favouriteSong || '',
-            image: user.image,
             score: Math.round(values[2].score) || 0,
             blocked: user.blocked,
             blockedArtists: user.blockedArtists
