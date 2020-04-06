@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../users/User';
 import { UsersService } from '../users.service';
@@ -10,7 +10,8 @@ import { Message } from '../message/Message';
 @Component({
   selector: 'app-message',
   templateUrl: './message.component.html',
-  styleUrls: ['./message.component.css']
+  styleUrls: ['./message.component.css'],
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MessageComponent implements OnInit {
   activeUser: User;
@@ -21,7 +22,7 @@ export class MessageComponent implements OnInit {
   messages: Message[] = [];
   online: String[] = [];
 
-  constructor(private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute) {
+  constructor(private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute, private cdRef: ChangeDetectorRef) {
     this.messageForm = this.formBuilder.group({
       recipient: '',
       body: ''
@@ -52,7 +53,9 @@ export class MessageComponent implements OnInit {
       if (chatroom == null || chatroom == undefined) {
         this.getInitChatrooms();
       } else {
-        chatroom.messages.push(msg);
+        let messages = [...chatroom.messages];
+        messages.push(msg);
+        chatroom.messages = [...messages];
       }
     });
 
@@ -80,6 +83,7 @@ export class MessageComponent implements OnInit {
     this.activeChatroom = chatroom;
     this.activeUser = chatroom.user;
     this.getMessages(this.activeUser._id);
+    console.log(this.activeChatroom);
   }
 
   getMessages(id) {

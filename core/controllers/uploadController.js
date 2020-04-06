@@ -58,7 +58,6 @@ exports.update = (req,res) =>{
       fs.unlinkSync('./uploads/' + req.body.oldFile);
     }
   }
-  
   //now transfer new file and delete from temp
   fs.copy('./public/temp/'+req.user.id+'/'+req.body.newFile, './public/'+req.body.newFile, err =>{
     if (err) return console.error(err);

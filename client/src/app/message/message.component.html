@@ -1,6 +1,4 @@
-
 <div class = "container">
-
   <!-- Search box -->
   <div class = "findPeople">
     <div class = "search"> Search Box </div>
@@ -19,7 +17,7 @@
               <img class = "userImage" src = "{{convo.user.image}}">
               <span class = "name"> {{convo.user.fname}} {{convo.user.sname}} </span>
             </div>
-            <br>
+            
             <!-- shows the most recent message sent and the time/date it was sent-->
             <div class = "recentMsg">
               <span *ngIf = "convo.messages[convo.messages.length - 1].sender == convo.user._id">{{convo.user.fname}}: </span>
@@ -55,32 +53,53 @@
     </div>
   </div>
 
-  <!-- messages with activeUser at right of screen -->
   <div class = "messaging">
-    <div class = "messages">
+    <cdk-virtual-scroll-viewport class = "messages" autosize>
       <!-- shows each users message -->
-      <div *ngFor="let msg of messages">
+      <div *cdkVirtualFor="let msg of messages">
         <div class = "msgDiv">
           <!-- If message is sent by user-->
           <div *ngIf = "user._id == msg.sender">
-            <div class = "currentUser">
-              {{msg.body}}
-              <img class = "userImage" src = "{{user.image}}">
-            </div>
+            <img class = "imageRight" src = {{user.image}}>
+            <div class = "messageRightDiv"> {{msg.body}}</div>
+            <br>
           </div>
 
           <!-- If message is sent by person user is talking to -->
           <div *ngIf = "activeUser._id == msg.sender">
-            <div class = "otherUser">
-              {{msg.body}}
-              <img class = "userImage" src = "{{activeUser.image}}">
-            </div>
+            <img class = "imageLeft" src = {{activeUser.image}}>
+            <div class = "messageLeftDiv"> {{msg.body}}</div>
+            <br>
           </div>
-
         </div>
         <br><br><br>
       </div>
-    </div>
+    </cdk-virtual-scroll-viewport>
+
+  <!-- messages with activeUser at right of screen -->
+  <!--<div class = "messaging">
+    <div class = "messages">
+       shows each users message
+      <div *ngFor="let msg of messages">
+        <div class = "msgDiv">
+           If message is sent by user
+          <div *ngIf = "user._id == msg.sender">
+            <img class = "imageRight" src = {{user.image}}>
+            <div class = "messageRightDiv"> {{msg.body}}</div>
+            <br>
+          </div>
+
+          If message is sent by person user is talking to
+          <div *ngIf = "activeUser._id == msg.sender">
+            <img class = "imageLeft" src = {{activeUser.image}}>
+            <div class = "messageLeftDiv"> {{msg.body}}</div>
+            <br>
+          </div>
+        </div>
+        <br><br><br>
+      </div>
+    </div>-->
+  <!-- messages with activeUser at right of screen -->
 
     <!-- Send message box -->
     <div class = "typeMessage">

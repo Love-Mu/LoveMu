@@ -39,7 +39,7 @@ import { GoogleRegistrationComponent } from './google-registration/google-regist
 import { FileListComponent } from './file-list/file-list.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MessaginglayoutstuffComponent } from './messaginglayoutstuff/messaginglayoutstuff.component';
-
+import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
 
 const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}};
 
@@ -84,6 +84,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     SocketIoModule.forRoot(config),
     ScrollingModule,
     MatProgressBarModule,
+    ExperimentalScrollingModule
   ],
   providers: [
     CookieService,

@@ -8,6 +8,7 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../app');
 let should = chai.should();
+const fs = require('fs-extra');
 
 chai.use(chaiHttp);
 
@@ -238,21 +239,17 @@ describe('Authentication', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/google/callback', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
 });
 
-describe('Messaging', () => {
+/*describe('Messaging', () => {
     var authorisedUser = chai.request.agent(server);
     let token;
     describe('/retrieve/:id', () => {
@@ -275,12 +272,20 @@ describe('Messaging', () => {
                 recipient: usr1._id,
                 body: "Good and yourself?"
             })
-            usr1.password = usr1.hashPassword("TestPass1");
-            usr2.password = usr2.hashPassword("TestPass2");
-            User.remove({}, (err) => {
-                usr1.save();
-                usr2.save();  
-            });
+            usr1.hashPassword("TestPass").then((password) => {
+                usr1.password = password;            
+                usr2.hashPassword("TestPass").then((password) => {
+                    usr2.password = password;            
+                    User.remove({}, (err) => {
+                        usr1.save((err, usr1) => {
+                            console.log("User1 saved");
+                        });  
+                        usr2.save((err, usr2) => {
+                            console.log("User2 saved");
+                        });           
+                    }); 
+                })
+            })
             Message.remove({}, (err) =>{
                 msg1.save();
                 msg2.save();
@@ -400,91 +405,112 @@ describe('Messaging', () => {
             });            
         });
     });
-});
+});*/
 
 describe('Upload', () => {
     describe('/upload', () => {
-        before((done) => { 
+        beforeEach((done) => { //clear the test temp uploads folder
+            if( fs.existsSync('./public/temp/testCookie') ) {
+                fs.readdirSync('./public/temp/testCookie').forEach(function(file,index){
+                    var nextPath = './public/temp/testCookie' + "/" + file;
+                    fs.unlinkSync(nextPath);
+                });
+                fs.rmdirSync('./public/temp/testCookie');    
+            }
             done();
         });
-        it('it should', (done) => {
-            done();
+        it('it should upload a file, and store it in the file system', (done) => {
+            chai.request(server)
+            .post('/upload/upload')
+            .set('Cookie', 'fileCookie=testCookie')
+            .attach('file', fs.readFileSync('./testImage.jpg'),'testImage.jpg')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('filename');
+                res.body.should.have.property('cookie');
+                res.body.cookie.should.eql("testCookie");
+                fs.pathExists("./public/temp/testCookie/"+res.body.filename, (err, exists) =>{
+                    exists.should.be.true;
+                    done();
+                })
+                
+            });
+        });
+        it('it should not upload a file that is not an image', (done) => {
+            chai.request(server)
+            .post('upload/upload')
+            .set('Cookie', 'fileCookie=testCookie')
+            .attach('file', fs.readFileSync('./testText.txt'), 'testText.txt')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.message.should.eql('File is not an image');
+                fs.pathExists("./public/temp/testCookie/", (err, exists) =>{
+                    exists.should.be.false;
+                    done();
+                })
+            });
         });
     });
     describe('/save', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/reupload', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/update', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
 });
 
+/*
 describe('Spotify', () => {
     describe('/reqAccess', () => {
         before((done) => { 
             done();
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/reqCallback', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/retrieveDetails', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/refreshAccess', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/storeToken', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/search', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
 });
 
@@ -493,42 +519,32 @@ describe('Profile', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/:id', () => {
         describe('GET', () => {
             before((done) => { 
                 done();            
             });
-            it('it should', (done) => {
-                done();
-            });
+            it('it should');
         });
         describe('PUT', () => {
             before((done) => { 
                 done();            
             });
-            it('it should', (done) => {
-                done();
-            });
+            it('it should');
         });
     });
     describe('/block/:id', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
     describe('/unblock/:id', () => {
         before((done) => { 
             done();            
         });
-        it('it should', (done) => {
-            done();
-        });
+        it('it should');
     });
-});
+});*/

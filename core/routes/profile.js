@@ -15,4 +15,6 @@ router.get('/block/:id', passport.authenticate('jwt', {session: false}), Profile
 
 router.get('/unblock/:id', passport.authenticate('jwt', {session: false}), Profile.unblock);
 
+router.post('/removeArtist', passport.authenticate('jwt', {session: false}), Profile.removeArtist);
+
 module.exports = router;
