@@ -12,7 +12,7 @@ let should = chai.should();
 chai.use(chaiHttp);
 
 describe('Authentication', () => {
-    describe('Registration', () => {
+    describe('/register', () => {
         let usr;
         beforeEach((done) => { //Before each test empty the database and reset usr
             User.remove({}, (err) => { 
@@ -38,7 +38,6 @@ describe('Authentication', () => {
             .post('/auth/register')
             .send(usr)
             .end((err, res) => {
-                console.log(res.body);
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');
@@ -170,7 +169,7 @@ describe('Authentication', () => {
         });
         
     });
-    describe('Login', () => {
+    describe('/login', () => {
         before((done) => { //Before tests empty the database then add one user
             let usr1 = new User ({
                 email: "test@user.com",
@@ -235,9 +234,25 @@ describe('Authentication', () => {
             });
         });             
     });
+    describe('/google', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/google/callback', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
 });
 
-/*describe('Messaging', () => {
+describe('Messaging', () => {
     var authorisedUser = chai.request.agent(server);
     let token;
     describe('/retrieve/:id', () => {
@@ -385,4 +400,135 @@ describe('Authentication', () => {
             });            
         });
     });
-});*/
+});
+
+describe('Upload', () => {
+    describe('/upload', () => {
+        before((done) => { 
+            done();
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/save', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/reupload', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/update', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+});
+
+describe('Spotify', () => {
+    describe('/reqAccess', () => {
+        before((done) => { 
+            done();
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/reqCallback', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/retrieveDetails', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/refreshAccess', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/storeToken', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/search', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+});
+
+describe('Profile', () => {
+    describe('/', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/:id', () => {
+        describe('GET', () => {
+            before((done) => { 
+                done();            
+            });
+            it('it should', (done) => {
+                done();
+            });
+        });
+        describe('PUT', () => {
+            before((done) => { 
+                done();            
+            });
+            it('it should', (done) => {
+                done();
+            });
+        });
+    });
+    describe('/block/:id', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+    describe('/unblock/:id', () => {
+        before((done) => { 
+            done();            
+        });
+        it('it should', (done) => {
+            done();
+        });
+    });
+});

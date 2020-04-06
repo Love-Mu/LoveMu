@@ -20,7 +20,7 @@ module.exports = {
     }
     User.find(filters).select('-password').exec((err, users) => {
       if (!users) { 
-        return res.json({message: 'No Users Found'});
+        return res.status(200).json({message: 'No Users Found'});
       }
       if (users.length > 1) {
         similarityGeneratorAll(curr, users).then((result) => {
@@ -30,9 +30,13 @@ module.exports = {
           });
         }).then((sorted) => {
           res.json(sorted);
+        }).catch((err) => {
+          console.log(err);
+          res.status(500).json({error: err});
         });
       } else {
         similarityGeneratorUser(curr, users).then((result) => {
+          console.log(usrs.image);
           res.json([{
             _id: users._id,
             user_name: users.user_name,
@@ -49,6 +53,9 @@ module.exports = {
             score: Math.round(result.score) || 0,
             blocked: users.blocked
           }]);
+        }).catch((err) => {
+          console.log(err);
+          res.status(500).json({error: err});
         });
       }
     });
@@ -83,6 +90,7 @@ module.exports = {
             bio: user.bio,
             artists: values[2].artists,
             overlappingArtists: values[2].overlappingArtists,
+            image: user.image,
             playlist: user.playlist || '',
             playlists: user.playlists || [],
             favouriteSong: user.favouriteSong || '',
