@@ -1,24 +1,24 @@
-<h2> Dashboard </h2>
-
 <div class = "container">
   <mat-card class = "userCard" [routerLink]="[user._id]" *ngFor="let user of users">
     <mat-card-content>
       <div class = "userInfo">
-        <h3>{{user.fname}} {{user.sname}} </h3>
+        <span class = "vertical">
+           {{user.fname}} {{user.sname}}
+        </span>
       </div>
       <br>
       <div class = "userDiv">
         <img src = {{user.image}} class = "userImage">
       </div>
-
       <br>
+      <i class="material-icons">location_on</i>
       {{user.location}}
       <br><br>
       <div class = "userBio">
-        <h3> {{user.bio}}</h3>
+         <span class = "vertical">
+           {{user.bio}}
+        </span>
       </div>
     </mat-card-content>
-
   </mat-card>
-
 </div>

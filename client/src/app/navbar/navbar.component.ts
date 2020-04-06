@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { AuthenticationService } from "../authentication.service";
 import { Observable } from "rxjs";
 import { UsersService } from '../users.service'
@@ -10,6 +10,7 @@ import { User } from '../users/User';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  @Input() update = new EventEmitter();
   userID: String;
   usrAuthed: boolean;
 
@@ -19,6 +20,10 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.userID = this.userService.getCurrentUser();
     this.usrAuthed = this.authService.isAuthenticated();
+  }
+
+  updateProfile() {
+    this.update.emit(this.userID);
   }
 
 }

@@ -1,20 +1,24 @@
-<h2> Welcome back to LoveMu! </h2>
-<h3> Login </h3>
-<div class = "loginDiv">
-<form [formGroup]="loginForm" class = "loginForm" (ngSubmit)="onSubmit(loginForm.value)">
-  <mat-card class = "loginCard">
-    <mat-card-content>
-      <mat-form-field>
-        <input matInput type="email" placeholder="Email Address" formControlName="email">
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input matInput type="password" placeholder="Password" formControlName="password">
-      </mat-form-field>
-    </mat-card-content>
-    <mat-card-footer>
-      <button type="submit" mat-raised-button>Login</button>
-    </mat-card-footer>
-  </mat-card>
-</form>
+<div class = "background">
+  <h2> Welcome Back to LoveMu! </h2>
+  <h3> Login </h3>
+  <div class = "loginDiv">
+    <form [formGroup]="loginForm" class = "loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+      <mat-card class = "loginCard">
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput type="email" placeholder="Email Address or Username" formControlName="email">
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput type="password" placeholder="Password" formControlName="password">
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-footer>
+          <button type="submit" mat-raised-button>Login</button>
+          <a href="https://lovemu.compsoc.ie/auth/google"><img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"></a>
+        </mat-card-footer>
+      </mat-card>
+    </form>
+  </div>
 </div>
+

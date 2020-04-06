@@ -1,0 +1,84 @@
+.findPeople{
+  float: left;
+  height: 93vh;
+  width: 30%;
+  border-right: 1px solid black;
+  background-color: white;
+  text-align: center;
+  font-family: 'Gotu', sans-serif;
+}
+
+.messaging{
+  float: left;
+  text-align: center;
+  width: 70%;
+  height: 93vh;
+  background-color: white;
+}
+
+.search{
+  display: inline-block;
+  text-align: center;
+  border: 1px solid #7b7b7b;
+  margin: 1%;
+  width: 90%;
+  height: 5vh;
+}
+
+.people{
+  display: inline-block;
+  text-align: left;
+  width: 90%;
+  height: 86.5vh;
+  overflow-y: auto;
+
+}
+
+.userImage{
+  width: 40px;
+  height: 40px;
+  object-fit:cover;
+  border-radius: 50%;
+}
+
+.person{
+  margin: 2%;
+}
+
+.person:hover{
+  background-color: #ebeeff;
+}
+
+.otherUser, .currentUser{
+  width: fit-content;
+  max-width: 80%;
+  margin: 2%;
+  border-radius: 5%;
+  padding: 2%;
+}
+
+.otherUser{
+  float: left;
+  background-color: #367277;
+}
+
+.currentUser{
+  float: right;
+  background-color: #74767b;
+}
+
+.messages{
+  display: inline-block;
+  height: 80vh;
+  overflow-y: auto;
+  margin: 2%;
+  width: 95%;
+}
+
+.typeMessage{
+  display: inline-block;
+  text-align: center;
+  height: 6vh;
+  border: 1px solid #5c5c5c;
+  width: 90%;
+}

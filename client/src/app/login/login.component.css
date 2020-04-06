@@ -1,4 +1,9 @@
-input[type="email"] { text-transform: lowercase; }
+.background {
+  background-image: url("/assets/record_bground.jpg");
+  background-size: cover;
+  min-height: 93vh;
+  position: relative;
+}
 
 .loginDiv{
   text-align: center;
@@ -11,7 +16,6 @@ input[type="email"] { text-transform: lowercase; }
 
 .loginCard{
   background-color: white;
-  border-radius: 5%;
 }
 
 button{

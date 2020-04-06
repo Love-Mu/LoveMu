@@ -1,21 +1,149 @@
-profileDiv {
-    text-align: center;
-    display: block;
-}
- 
-profile{
-    width: 40%;
-    height: 40%;
-    display: inline-block;
+.container{
+  align-content: center;
 }
 
-.spotify{
-    background-color: #1DB954;
-    color: white;
-    border-radius: 5%;
+.profile{
+  display: block;
+  float: left;
+  min-height: 150vh;
+  height: fit-content;
+  width: 46%;
+  margin: 2%;
 }
-.spotifyimg{
-width: 2%;
-height: 2%;
+
+.mainProfile{
+  display: inline-block;
+  text-align: center;
+  font-family: 'Gotu', sans-serif;
+  min-height: 100vh;
+  width: 100%;
 }
-  
+
+.spotifyWidget{
+  display: inline-block;
+  text-align: center;
+  min-height: 45vh;
+  width: 100%;
+  margin-top: 5vh;
+  background-color: #131719;
+}
+
+.music{
+  float: left;
+  font-family: 'Gotu', sans-serif;
+  min-height: 150vh;
+  width: 46%;
+  margin: 2%;
+}
+
+.topArtists, .overlappingArtists{
+  overflow-y: auto;
+  min-height: 72.5vh;
+  max-height: 72.5vh;
+}
+
+.overlappingArtists{
+  margin-bottom: 5%;
+}
+
+.topCurrent{
+  overflow-y: scroll;
+  min-height: 150vh;
+  max-height: 150vh;
+}
+
+.title{
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+@media screen and (max-width: 800px) {
+  .profile, .music{
+    width: 100%;
+    margin: 0%;
+  }
+  .profile{
+    margin-bottom: 5vh;
+    margin-top: 2.5vh;
+  }
+
+}
+
+.userImage, .updateImage{
+  width:200px;
+  height:200px;
+  border-radius: 5%;
+  object-fit:cover;
+}
+
+
+.info{
+  display: inline-block;
+  text-align: left;
+  padding: 2%;
+  margin: 2%;
+  width: fit-content;
+}
+
+.bio{
+  display: inline-block;
+  text-align: left;
+  padding: 2%;
+  width: fit-content;
+
+}
+
+.basicInfo{
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  margin-bottom: 5%;
+
+}
+
+i{
+  font-size: 100%;
+}
+
+.artistImage{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+
+.artistLink{
+  color: #FF4081;
+  text-decoration: none;
+}
+
+
+button{
+  margin: 2%;
+}
+
+.updateDiv{
+  display: block;
+  text-align: center;
+}
+
+.updateForm{
+  display: inline-block;
+  margin: 2%;
+  min-width: 60%;
+}
+
+.updateCard{
+  margin: 2%;
+}
+
+.mat-form-field{
+  max-width: 45%;
+}

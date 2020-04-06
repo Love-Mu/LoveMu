@@ -12,12 +12,12 @@ passport.use(new LocalStrategy({
   passwordField: 'password',
 }, (email, pass, done) => {
   // Search for a user here that matches email
-  User.findOne({email: email}).exec(async (err, user) => {
+  User.findOne({$or: [{email: email}, {user_name: email}]}).exec(async (err, user) => {
     if (err) {
       return done(err);
     }
     if (!user) {
-      return done(null, false, {message: 'Email not linked to account'});
+      return done(null, false, {message: 'Email or Username not linked to account'});
     }
     const passwordMatch = await user.comparePassword(pass);
     if (!passwordMatch) {
@@ -37,7 +37,7 @@ passport.use(new GoogleStrategy({
     if (err) {
       return done(err);
     }
-    if (user && user.complete) {
+    if (user) {
       return done(null, user);
     }
     else {
@@ -46,6 +46,11 @@ passport.use(new GoogleStrategy({
       usr.fname = profile.name.givenName;
       usr.sname = profile.name.familyName;
       usr.image = profile.photos[0].value;
+      usr.artists = new Map();
+      usr.genres = new Map();
+      usr.playlists = [];
+      usr.playlist = '';
+      usr.favouriteSong = '';
       usr.sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
       usr.gender = 'Rather Not Say';
       usr.save(); 
@@ -58,16 +63,13 @@ passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.SECRET,
   passReqToCallback: true
-}, function async (req, jwtPayload, done) {
+}, function (req, jwtPayload, done) {
   User.findOne({_id: jwtPayload.id}).exec((err, user) => {
     if (err) {
       return done(err);
     }
     if (!user) {
       return done(null, false, {message: 'User Not Associated With Account'});
-    }
-    if (!user.complete) {
-      return done(null, false, {message: 'User Is Not Verified'});
     }
     return done(null, user);
   });

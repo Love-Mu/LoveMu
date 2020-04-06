@@ -1,4 +1,6 @@
 import { Artist } from './Artist';
+import { Track } from './Track';
+import { Image } from './Image';
 
 export class User {
   _id: number;
@@ -12,6 +14,19 @@ export class User {
   image: string;
   gender: string;
   sexuality: string;
+  age: string;
   bio: string;
-  top: Array<Artist>;
+  artists: Array<Artist>;
+  overlappingArtists: Array<Artist>;
+  score: number;
+  favouriteSong: string;
+  playlist: string;
+  playlists: Array<Playlist>;
+}
+
+class Playlist {
+  href: string;
+  external_urls: {
+    spotify: string;
+  }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
 import { Router } from '@angular/router';
+import { DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -18,9 +19,6 @@ export class LoginComponent implements OnInit {
     });
   }
   ngOnInit() {
-    this.loginForm.get('email').valueChanges.subscribe((event) => {
-      this.loginForm.get('email').setValue(event.toLowerCase(), {emitEvent: false});
-    });
   }
 
   onSubmit(userData) {

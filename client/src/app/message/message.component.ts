@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 import { User } from '../users/User';
-import { Message } from './Message';
 import { UsersService } from '../users.service';
 import { MessageService } from '../message.service';
-import { AuthenticationService } from '../authentication.service';
 import { FormBuilder } from '@angular/forms';
+import { Chatroom } from './Chatroom'
+import { Message } from '../message/Message';
 
 @Component({
   selector: 'app-message',
@@ -14,47 +13,136 @@ import { FormBuilder } from '@angular/forms';
   styleUrls: ['./message.component.css']
 })
 export class MessageComponent implements OnInit {
+  activeUser: User;
+  activeChatroom: Chatroom;
   user: User;
-  currentUser: User;
-  messages: Message[];
   messageForm;
-  
-  constructor(private formBuilder: FormBuilder, private cookieService: CookieService, private route: ActivatedRoute, private messageService: MessageService, private userService: UsersService, private authService: AuthenticationService) {
+  chatrooms: Chatroom[] = [];
+  messages: Message[] = [];
+  online: String[] = [];
+
+  constructor(private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute) {
     this.messageForm = this.formBuilder.group({
-      recipient: this.route.snapshot.paramMap.get('id'),
-      sender: '',
+      recipient: '',
       body: ''
     });
   }
 
   ngOnInit(): void {
     this.getUser();
-    this.getMessages();
+    let id = this.route.snapshot.paramMap.get('id');
+    if (id != null) this.getActiveUser(id);
+    
+    this.socketMessages();
   }
 
-  getMessages(): void {
-    let id = this.route.snapshot.paramMap.get('id');
-    this.messageService.getMessages(id.toString()).subscribe(messages => this.messages = messages);
+  socketMessages() {
+    // When a new message is recieved, whether it we our own sent back to us or another persons, its put into the respective chatroom in the array
     this.messageService.onNewMessage().subscribe(data => {
-      this.messages.unshift(data);
+      let chatroom = this.chatrooms.find(x => x._id == data.chatroomId);
+      let msg = {
+        _id: data._id, 
+        sender: data.sender, 
+        recipient: data.recipient, 
+        body: data.body, 
+        created_at: data.created_at
+      };
+    
+      // Checking if existing chatroom exists to push to, otherwise getting the chatroom by reiniting the chatroom array.
+      if (chatroom == null || chatroom == undefined) {
+        this.getInitChatrooms();
+      } else {
+        chatroom.messages.push(msg);
+      }
+    });
+
+    // Removing Id from online list if they go offline
+    this.messageService.onGoneOffline().subscribe(data => {
+      this.online = this.online.filter(id => id !== data.id);
+    });
+    
+    // Adding Id to online if they come online.
+    this.messageService.onGoneOnline().subscribe(data => {
+      let id = this.online.filter(x => x.includes(data.id));
+      if (id == undefined || id.length == 0) {
+        this.online.push(data.id);
+      }
+    });
+
+    this.messageService.getInitOnline().subscribe(data => {
+      data.forEach(e => {
+        this.online.push(e.id);
+      });
+    });
+  }
+
+  changeActive(chatroom): void {
+    this.activeChatroom = chatroom;
+    this.activeUser = chatroom.user;
+    this.getMessages(this.activeUser._id);
+  }
+
+  getMessages(id) {
+    this.messageService.getMessages(id).subscribe(messages => {
+        messages.reverse();
+        this.messages = messages;
+        this.activeChatroom.messages = messages;
+    })
+  }
+
+  getNextMessages(id) {
+    this.messageService.getNextMessages(id, this.activeChatroom.messages.length).subscribe(messages => {
+      messages.forEach(msg => {
+        this.activeChatroom.messages.unshift(msg);
+      });
+    })
+  }
+
+  checkActiveClass(id): boolean {
+    if (id == this.route.snapshot.paramMap.get('id')) {
+      return true;
+    } else if (this.activeUser != null && this.activeUser._id.toString() == id) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  getInitChatrooms() {
+    this.messageService.getInitChatrooms().subscribe(chatrooms => {
+      this.chatrooms = chatrooms;
+      this.chatrooms.forEach((e) => {
+        e.members.forEach((m) => {
+          if (m != this.user._id.toString()) {
+            this.userService.getUser(m.toString()).subscribe(user => {
+              e.user = user;
+            });
+          }
+        });
+      });
+    });
+  }
+
+  getActiveUser(id): void {
+    this.userService.getUser(id.toString()).subscribe((user) => {
+      this.activeUser = user;
+      this.getMessages(user._id);
     });
   }
 
   getUser(): void {
-    let id = this.route.snapshot.paramMap.get('id');
-    let currentId = this.userService.getCurrentUser();
+    let id = this.userService.getCurrentUser();
+    this.userService.getUser(id.toString()).subscribe((user) => {
+      this.user = user;
+      this.getInitChatrooms();
+    });
+  } 
 
-    this.userService.getUser(id.toString()).subscribe(user => this.user = user);
-    this.userService.getUser(currentId.toString()).subscribe(user => this.currentUser = user);
-  }
-  
   onSubmit(userData) {
-    userData.sender = this.currentUser._id;
-    if (userData.body) {
-      this.messages.unshift(userData);
-      this.messageService.sendMessage(userData);
-      this.messageForm.reset();
-    }
-  }
-
+    userData.sender = this.user._id;
+    userData.recipient = this.activeUser._id;
+    this.messageService.sendMessage(userData);
+    this.messageForm.clear;
+    this.messageForm.body = '';
+  } 
 }

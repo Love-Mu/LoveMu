@@ -1,26 +1,35 @@
-<h2>Registration</h2>
-
+<div class = "background">
+  <h2>Registration</h2>
   <div class = "regDiv">
-    <p>{{msg}}</p>
     <form class = "registration" [formGroup]="registrationForm" (ngSubmit)="onSubmit(registrationForm.value)">
       <mat-card class = "registrationCard">
         <mat-card-content>
           <mat-form-field>
             <input matInput placeholder="Email Address" formControlName="email">
+            <mat-error *ngIf="email.hasError('required')">Email is Required</mat-error>
+            <mat-error *ngIf="email.hasError('email')">Email is Invalid</mat-error>
           </mat-form-field> &nbsp;
           <mat-form-field>
             <input type="password" matInput placeholder="Password" formControlName="password">
+            <mat-error *ngIf="password.hasError('required')">Password is Required</mat-error>
+            <mat-error *ngIf="password.hasError('minlength')">Password Must Have 5 Characters</mat-error>
+            <mat-error *ngIf="password.hasError('maxlength')">Password Must Be Less Than 40 Characters</mat-error>
           </mat-form-field>
           <br>
           <mat-form-field>
             <input matInput placeholder="Username" formControlName="user_name">
+            <mat-error *ngIf="user_name.hasError('required')">Username is Required</mat-error>
+            <mat-error *ngIf="user_name.hasError('minlength')">Username Must Have 5 Characters</mat-error>
+            <mat-error *ngIf="user_name.hasError('maxlength')">Username Must Have Less Than 20 Characters</mat-error>
           </mat-form-field>&nbsp;
           <mat-form-field>
             <input matInput placeholder="First Name" formControlName="fname">
+            <mat-error *ngIf="fname.hasError('required')">First Name is Required</mat-error>
           </mat-form-field>
           <br>
           <mat-form-field>
             <input matInput placeholder="Surname" formControlName="sname">
+            <mat-error *ngIf="sname.hasError('required')">Surname is Required</mat-error>
           </mat-form-field>&nbsp;
           <mat-form-field>
             <mat-select placeholder="County" formControlName="location">
@@ -57,15 +66,17 @@
               <mat-option value="Wexford">Wexford</mat-option>
               <mat-option value="Wicklow">Wicklow</mat-option>
             </mat-select>
+            <mat-error *ngIf="location.hasError('required')">Location is Required</mat-error>
           </mat-form-field>
           <br>
           <mat-form-field>
             <mat-select formControlName="gender" placeholder="Gender">
-                <mat-option value="Female">Female</mat-option>
-                <mat-option value="Male">Male</mat-option>
-                <mat-option value="Rather Not Say">Rather Not Say</mat-option>
-                <mat-option value="Other">Other</mat-option>
+              <mat-option value="Female">Female</mat-option>
+              <mat-option value="Male">Male</mat-option>
+              <mat-option value="Rather Not Say">Rather Not Say</mat-option>
+              <mat-option value="Other">Other</mat-option>
             </mat-select>
+            <mat-error *ngIf="gender.hasError('required')">Gender is Required</mat-error>
           </mat-form-field>&nbsp;
 
           <mat-form-field>
@@ -74,28 +85,31 @@
               <mat-option value="Female"> Women </mat-option>
               <mat-option value="Everyone"> Everyone </mat-option>
             </mat-select>
+            <mat-error *ngIf="sexuality.hasError('required')">Sexuality is Required</mat-error>
           </mat-form-field>
           <br>
-          <mat-form-field>
-            <input matInput placeholder="Image URL" formControlName="image">
-            <button type="button" md-button (click)="fileUpload.click()">Add a photo</button>
-            <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;" (click)="onClick()" />
-          </mat-form-field>
           <mat-form-field>
             <mat-label>Date of birth</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="dob">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="dob.hasError('required')">Date of Birth is Required</mat-error>
           </mat-form-field>
-          <br>
           <mat-form-field class = "bio">
             <textarea matInput placeholder="Bio" formControlName="bio"></textarea>
+            <mat-error *ngIf="bio.hasError('required')">Bio is Required</mat-error>
           </mat-form-field>
+          <br>
+          <img src = "temp/{{filePath}}" width="20%"><br>
+          <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button><p>{{message}}</p>
+          <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;"  (click)="onClick()" />
+
         </mat-card-content>
         <mat-card-footer>
-          <button type="submit" mat-raised-button>Register</button>
+          <button type="submit" mat-raised-button>Register</button><br>
+          <a href="https://lovemu.compsoc.ie/auth/google"><img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"></a>
         </mat-card-footer>
       </mat-card>
     </form>
   </div>
-
+</div>

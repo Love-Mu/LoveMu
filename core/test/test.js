@@ -3,9 +3,7 @@ process.env.NODE_ENV = 'test';
 
 let mongoose = require("mongoose");
 let User = require('../models/User');
-const Message = require('../models/Message');
-
-//Require the dev-dependencies
+let Message = require('../models/Message');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../app');
@@ -15,26 +13,38 @@ chai.use(chaiHttp);
 
 describe('Authentication', () => {
     describe('Registration', () => {
-        beforeEach((done) => { //Before each test empty the database`
-            User.remove({}, (err) => {
+        let usr;
+        beforeEach((done) => { //Before each test empty the database and reset usr
+            User.remove({}, (err) => { 
+                usr = {
+                    email: 'test@user.com',
+                    password: "TestPassPass",
+                    user_name: "TestUser",
+                    fname: "Test",
+                    sname: "User",
+                    dob: "2000-01-01 00:00:00.00Z",
+                    location: "Galway",
+                    image: "default.png", 
+                    gender: "Rather Not Say",
+                    sexuality: "Men",
+                    bio: "Hello"
+                }
                 done();           
             });        
         });
 
-        let usr = {
-            email: 'test@user.com',
-            password: "TestPassPass",
-            user_name: "TestUser",
-        }
         it('it should POST a new user with the provided details', (done) => {
             chai.request(server)
             .post('/auth/register')
             .send(usr)
             .end((err, res) => {
+                console.log(res.body);
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');
                 res.body.message.should.eql("Successful Login!");
+                res.body.should.have.property('token');
+                res.body.should.have.property('id');
                 User.findOne({email:'test@user.com'}).exec((err,user) => {
                     user.user_name.should.not.be.empty;
                     done();
@@ -49,7 +59,7 @@ describe('Authentication', () => {
             .end((err, res) => {
                 res.should.have.status(422);
                 res.body.should.have.property('errors');
-                res.body.errors.should.deep.equal([ { email: 'Invalid value' } ]);
+                res.body.errors.should.have.deep.members([ { email: 'Invalid value' } ]);
                 User.find({}).exec((err,user) => {
                     user.should.be.empty;
                     done();
@@ -57,7 +67,6 @@ describe('Authentication', () => {
             });
         });
         it('it should not POST a bad password', (done) => {
-            usr.email = "test@user.com";
             usr.password = "Tes";
             chai.request(server)
             .post('/auth/register')
@@ -65,7 +74,34 @@ describe('Authentication', () => {
             .end((err, res) => {
                 res.should.have.status(422);
                 res.body.should.have.property('errors');
-                res.body.errors.should.deep.equal([ { password: 'Invalid value' } ]);
+                res.body.errors.should.have.deep.members([ { password: 'Invalid value' } ]);
+                User.find({}).exec((err,user) => {
+                    user.should.be.empty;
+                    done();
+                });    
+            });
+        });
+        it('it should not POST an incomplete form', (done) => {
+            usr.fname = "";
+            usr.sname  = "";
+            usr.dob = "";
+            usr.location = "";
+            usr.gender = "";
+            usr.sexuality = "";
+            chai.request(server)
+            .post('/auth/register')
+            .send(usr)
+            .end((err, res) => {
+                res.should.have.status(422);
+                res.body.should.have.property('errors');
+                res.body.errors.should.have.deep.members([ 
+                    {fname: 'Invalid value'}, 
+                    {sname: 'Invalid value'}, 
+                    {dob: 'Invalid value'}, 
+                    {location: 'Invalid value'},
+                    {gender: 'Invalid value'},
+                    {sexuality: 'Invalid value'},
+                ]);
                 User.find({}).exec((err,user) => {
                     user.should.be.empty;
                     done();
@@ -73,15 +109,19 @@ describe('Authentication', () => {
             });
         });
         it('it should not POST a used email', (done) => {
-            let usr1 = new User ({
-                email: 'test@user.com',
-                password: "TestPass",
-                user_name: "TestUser",
-            })
+            let usr1 = new User (usr);
             let usr2 = {
                 email: 'test@user.com',
                 password: "TestThePass",
-                user_name: "TestUser",
+                user_name: "TestUser2",
+                fname: "Test",
+                sname: "User",
+                dob: "2000-01-01 00:00:00.00Z",
+                location: "Galway",
+                image: "default.png",
+                gender: "Rather Not Say",
+                sexuality: "Men",
+                bio: "Hello"
             }
             usr1.save((err, usr1) => {
                 chai.request(server)
@@ -97,15 +137,19 @@ describe('Authentication', () => {
             });
         });
         it('it should not POST a used username', (done) => {
-            let usr1 = new User ({
-                email: 'test@user.com',
-                password: "TestPass",
-                user_name: "TestUser",
-            })
+            let usr1 = new User (usr);
             let usr2 = {
                 email: 'test2@user.com',
                 password: "TestThePass",
                 user_name: "TestUser",
+                fname: "Test",
+                sname: "User",
+                dob: "2000-01-01 00:00:00.00Z",
+                location: "Galway",
+                image: "default.png",
+                gender: "Rather Not Say",
+                sexuality: "Men",
+                bio: "Hello"
             }
             usr1.save((err, usr1) => {
                 chai.request(server)
@@ -124,6 +168,7 @@ describe('Authentication', () => {
                 });
             });
         });
+        
     });
     describe('Login', () => {
         before((done) => { //Before tests empty the database then add one user
@@ -131,12 +176,14 @@ describe('Authentication', () => {
                 email: "test@user.com",
                 user_name: "TestUser"
             }) 
-            usr1.password = usr1.hashPassword("TestPass");
-            User.remove({}, (err) => {
+            usr1.hashPassword("TestPass").then((password) => {
+                usr1.password = password;            
+                User.remove({}, (err) => {
                 usr1.save((err, usr1) => {
                     done();
-                });           
-            }); 
+                    });           
+                }); 
+            })
         });
         
         it('it should login an existing user', (done) => {
@@ -190,7 +237,7 @@ describe('Authentication', () => {
     });
 });
 
-describe('Messaging', () => {
+/*describe('Messaging', () => {
     var authorisedUser = chai.request.agent(server);
     let token;
     describe('/retrieve/:id', () => {
@@ -338,4 +385,4 @@ describe('Messaging', () => {
             });            
         });
     });
-});
+});*/
