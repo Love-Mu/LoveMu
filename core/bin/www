@@ -12,6 +12,7 @@ const debug = require('debug')('core:server');
  */
 var fs = require('fs');
 var http = require('http');
+
 var https = require('https');
 var privateKey  = fs.readFileSync('/etc/ssl/2017/star_compsoc_ie.key', 'utf8');
 var certificate = fs.readFileSync('/etc/ssl/2017/star_compsoc_ie.crt', 'utf8');
@@ -20,6 +21,9 @@ var credentials = {key: privateKey, cert: certificate};
 /**
  * Create HTTP server.
  */
+
+const httpServer = http.createServer(credentials, app);
+
 // Redirecting port 80 too 443
 const httpServer = http.createServer(function (req, res) {
   res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
@@ -27,11 +31,8 @@ const httpServer = http.createServer(function (req, res) {
 });
 const httpsServer = https.createServer(credentials, app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
 const io = app.io;
-
+httpServer.listen(80);
 app.io.attach(httpsServer);
 
 httpServer.listen(80);
