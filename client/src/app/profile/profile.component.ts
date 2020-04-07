@@ -18,8 +18,7 @@ import { Track } from '../users/Track';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
   @Input() update: EventEmitter<String>;

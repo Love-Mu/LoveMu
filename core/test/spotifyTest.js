@@ -150,14 +150,15 @@ describe.only('Spotify', () => {
             .set("Authorization", "Bearer " + token)
             .end((err,res) => {
                 res.should.have.status(200);
-                /*User.findOne({_id:userID}).exec((err,user) => {
+                User.findOne({_id:userID}).exec((err,user) => {
                     user.artists.should.not.be.empty;
                     user.artists.should.be.a('Map');
                     user.playlists.should.not.be.empty;
+                    user.playlists.should.be.a('array');
                     user.genres.should.not.be.empty;
+                    user.genres.should.be.a('Map');
                     done();
-                });*/
-                done();
+                });
             })
         });
     });
