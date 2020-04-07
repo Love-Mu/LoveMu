@@ -10,12 +10,14 @@ const User = require('../models/User');
 module.exports = {
   getProfiles: async (req, res, next) => {
     const curr = await req.user;
+    const id = curr.id;
     const sexuality = curr.sexuality;
-    // Find user based on this id and serve it
     const gender = curr.gender;
+    const blocked = curr.blocked;
+    console.log
     let filters = {
       _id: {
-        $ne: curr.id
+        $ne: curr._id,
       },
       gender: {
         $in: sexuality
@@ -23,11 +25,19 @@ module.exports = {
       sexuality: {
         $in: gender
       },
+      blocked: {
+        $nin: curr._id
+      }
     };
     if (req.body.location != null) {
       filters.location = req.body.location;
     }
     User.find(filters).select('-password').exec((err, users) => {
+      if (err) {
+        return res.status(500).json({
+          error: err
+        })
+      }
       if (!users) {
         return res.status(200).json({
           message: 'No Users Found'

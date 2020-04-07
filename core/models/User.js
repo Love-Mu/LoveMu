@@ -80,7 +80,7 @@ const userSchema = new Schema({
     default: false
   },
   blocked: {
-    type: Array,
+    type: [mongoose.Schema.Types.ObjectId],
     default: []
   },
   blockedArtists: {
