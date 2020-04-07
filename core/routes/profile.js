@@ -17,4 +17,6 @@ router.get('/unblock/:id', passport.authenticate('jwt', {session: false}), Profi
 
 router.post('/removeArtist', passport.authenticate('jwt', {session: false}), Profile.removeArtist);
 
+router.post('/addArtist', passport.authenticate('jwt', {session: false}), Profile.addArtist);
+
 module.exports = router;

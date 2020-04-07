@@ -198,6 +198,20 @@ module.exports = {
             return res.status(200).json({message: "Artist Removed"});
           })
         });
+      },
+      addArtist: (req, res, next) => {
+        if (req.body.artist == {} || req.body.artist == null) {
+          return res.status(400).json({error: "Artist Not Specified"})
+        }
+        const artists = req.user.artists;
+        artists.set(req.body.artist.id, req.body.artist);
+        User.findOneAndUpdate({_id: req.user.id}, {$set: {artists: artists}}).exec((err, user) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({error: err});
+          }
+          return res.status(200).json({message: "Artist Added"});
+        });
       }
     };
 
