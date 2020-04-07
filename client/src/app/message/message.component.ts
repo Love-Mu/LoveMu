@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../users/User';
 import { UsersService } from '../users.service';
@@ -6,6 +6,8 @@ import { MessageService } from '../message.service';
 import { FormBuilder } from '@angular/forms';
 import { Chatroom } from './Chatroom'
 import { Message } from '../message/Message';
+import { DOCUMENT } from '@angular/common'
+import { WINDOW } from "../window.service";
 
 @Component({
   selector: 'app-message',
@@ -21,7 +23,7 @@ export class MessageComponent implements OnInit {
   messages: Message[] = [];
   online: String[] = [];
 
-  constructor(private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute) {
+  constructor(@Inject(DOCUMENT) private document: Document, @Inject(WINDOW) private window: Window, private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute) {
     this.messageForm = this.formBuilder.group({
       recipient: '',
       body: ''
@@ -34,6 +36,17 @@ export class MessageComponent implements OnInit {
     if (id != null) this.getActiveUser(id);
     
     this.socketMessages();
+  }
+
+  @HostListener('scroll', ['$event'])
+  scrollHandler(event){
+    if (event.srcElement.scrollTop < 1) {
+      console.log(event.srcElement);
+      let bottom = event.srcElement.scrollHeight;
+      console.log(bottom);
+      this.getNextMessages(this.activeUser._id);
+      //event.srcElement.scrollTop = bottom - 800;
+    }
   }
 
   socketMessages() {
@@ -80,6 +93,7 @@ export class MessageComponent implements OnInit {
     this.activeChatroom = chatroom;
     this.activeUser = chatroom.user;
     this.getMessages(this.activeUser._id);
+    console.log(this.activeChatroom);
   }
 
   getMessages(id) {

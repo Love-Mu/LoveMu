@@ -20,7 +20,7 @@ module.exports = {
     }
     User.find(filters).select('-password').exec((err, users) => {
       if (!users) { 
-        return res.json({message: 'No Users Found'});
+        return res.status(200).json({message: 'No Users Found'});
       }
       if (users.length > 1) {
         similarityGeneratorAll(curr, users).then((result) => {
@@ -30,9 +30,13 @@ module.exports = {
           });
         }).then((sorted) => {
           res.json(sorted);
+        }).catch((err) => {
+          console.log(err);
+          res.status(500).json({error: err});
         });
       } else {
         similarityGeneratorUser(curr, users).then((result) => {
+          console.log(usrs.image);
           res.json([{
             _id: users._id,
             user_name: users.user_name,
@@ -49,6 +53,9 @@ module.exports = {
             score: Math.round(result.score) || 0,
             blocked: users.blocked
           }]);
+        }).catch((err) => {
+          console.log(err);
+          res.status(500).json({error: err});
         });
       }
     });
@@ -83,6 +90,7 @@ module.exports = {
             bio: user.bio,
             artists: values[2].artists,
             overlappingArtists: values[2].overlappingArtists,
+            image: user.image,
             playlist: user.playlist || '',
             playlists: user.playlists || [],
             favouriteSong: user.favouriteSong || '',
@@ -115,7 +123,7 @@ module.exports = {
         if (req.body.gender != '' && req.body.gender != null) {parameters.gender = req.body.gender;}
         if (req.body.blocked != '' && req.body.blocked != null) {parameters.blocked = req.body.blocked;}
         if (req.body.image != '' && req.body.image != null) {parameters.image = req.body.image;}
-        if (req.body.sexuality != '') {
+        if (req.body.sexuality != '' && req.body.sexuality != null) {
           if (req.body.sexuality == 'Everyone') {
             parameters.sexuality = ['Male', 'Female', 'Rather Not Say', 'Other'];
           } else {
@@ -126,9 +134,6 @@ module.exports = {
         if (req.body.playlist != '' && req.body.playlist != null) {parameters.playlist = req.body.playlist;}
         if (req.body.favouriteSong != '' && req.body.favouriteSong != null) {parameters.favouriteSong = req.body.favouriteSong;}
         if (req.body.dob != '' && req.body.dob != null) {parameters.dob = req.body.dob;}
-        if (req.body.blockedArtists != [] && req.body.blockedArtists != null)  {
-          parameters.blockedArtists = req.body.blockedArtists;
-        }
         User.findOneAndUpdate({_id: req.user._id}, {$set: parameters}, {returnNewDocument: true}).exec((err, usr) => {
             if (err) {
               console.log(err);
@@ -166,6 +171,32 @@ module.exports = {
           } else {
             return res.status(200).json({message: 'Successful, unblocked user ' + blockId});
           }
+        });
+      },
+      removeArtist: (req, res, next) => {
+        User.findOne({_id: req.user._id}).exec((err, user) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({error: err});
+          }
+          if (!user) {
+            return res.status(404).json({message: 'User Does Not Exist'});
+          }
+          const artists = user.artists;
+          const blockedArtists = user.blockedArtists;
+          if (req.body.artist) {
+            artists.delete(req.body.artist.id);
+            blockedArtists.set(req.body.artist.id, req.body.artist);
+          }
+          user.artists = artists;
+          user.blockedArtists = blockedArtists;
+          user.save((err, usr) => {
+            if (err) {
+              console.log(err);
+              return res.status(500).json({error: err});
+            }
+            return res.status(200).json({message: "Artist Removed"});
+          })
         });
       }
     };

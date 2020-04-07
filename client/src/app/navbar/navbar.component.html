@@ -10,6 +10,5 @@
     <a *ngIf = "!authService.isAuthenticated()" routerLink = "/login">Login</a>
     <a *ngIf = "authService.isAuthenticated()" (click)="updateProfile()" [routerLink] = "['/users/', userService.getCurrentUser()]">Edit Profile</a>
     <a routerLink = "/" (click) = "authService.logout()" *ngIf = "authService.isAuthenticated()">Logout</a>
-    <a routerLink = "/Messaginglayoutstuff"> MessagingLayout</a>
   </mat-toolbar>
 </ng-container>

@@ -47,6 +47,7 @@
 
 .activePerson{
   background-color: #542361;
+  color: #ebebeb;
 }
 
 .person:hover{
@@ -55,41 +56,14 @@
 
 .msgDiv{
   width: 100%;
-}
-
-.otherUser, .currentUser{
-  width: fit-content;
-  max-width: 80%;
-  margin: 1%;
-  padding-top: 0.5%;
-  padding-bottom: 0.5%;
-  color: #e7e7e7;
-}
-
-.otherUser{
-  float: left;
-  background-color: #5b7a85;
-  padding-left: 1%;
-  padding-right: 0.5%;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
-
-.currentUser{
-  float: right;
-  background-color: #87898f;
-  padding-left: 0.5%;
-  padding-right: 1%;
-  border-top-right-radius: 15px;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+  height: fit-content;
+  margin-bottom: 5%;
 }
 
 .messages{
   display: inline-block;
-  height: 80vh;
   overflow-y: auto;
+  height: 80vh;
   margin: 2%;
   width: 95%;
   background-color: #eeeeee;
@@ -129,4 +103,60 @@
 
 .name{
   font-family: 'Gotu', sans serif;
+}
+
+.messageRightDiv, .messageLeftDiv{
+  max-width: 80%;
+  color: #ebebeb;
+  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+  margin-bottom: 1px;
+}
+
+.messageRightDiv{
+  float: right;
+  text-align: left;
+  background-color: #87898f;
+  padding-right: 2%;
+  padding-left: 2%;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.imageRight{
+  float: right;
+  width: 40px;
+  height: 40px;
+  margin-left: 2px;
+  object-fit:cover;
+  border-radius: 50%;
+}
+
+
+.messageLeftDiv{
+  float: left;
+  text-align: right;
+  background-color: #5b7a85;
+  padding-left: 2%;
+  padding-right: 2%;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.imageLeft{
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin-right: 2px;
+  object-fit:cover;
+  border-radius: 50%;
+}
+
+@media screen and (max-width: 400px) {
+  .imageLeft, .imageRight{
+    width: 20px;
+    height: 20px;
+  }
 }

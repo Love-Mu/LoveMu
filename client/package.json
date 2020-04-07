@@ -13,6 +13,7 @@
   "dependencies": {
     "@angular/animations": "~9.0.0",
     "@angular/cdk": "^9.0.0",
+    "@angular/cdk-experimental": "^9.2.0",
     "@angular/common": "~9.0.0",
     "@angular/compiler": "~9.0.0",
     "@angular/core": "~9.0.0",
@@ -32,6 +33,7 @@
     "ngx-cookie-service": "^2.4.0",
     "ngx-socket-io": "^3.0.1",
     "rxjs": "~6.5.4",
+    "rxjs-compat": "^6.5.5",
     "socket.io-client": "^2.3.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

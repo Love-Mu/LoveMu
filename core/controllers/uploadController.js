@@ -1,5 +1,8 @@
+const express = require('express');
+const passport = require('passport');
+const multer  = require('multer');
 const fs = require('fs-extra');
-const User = require('../models/User');
+const path = require('path');
 
 var deleteFolderRecursive = function(curPath) {
   if( fs.existsSync(curPath) ) {
@@ -12,7 +15,6 @@ var deleteFolderRecursive = function(curPath) {
       }
     });
     fs.rmdirSync(curPath);
-    console.log("3 success!");
   }
 };
    
@@ -25,17 +27,18 @@ exports.upload = (req, res) => {
 
 exports.save = (req, res) =>{
   if(req.body.filename != null && req.body.filename != undefined && req.body.filename != "default.png"){
-    fs.copy('./public/temp/'+req.body.cookie+'/'+req.body.filename, './public/'+req.body.filename, err =>{
-      if (err) return console.error(err);
-      console.log('1 success!');
-      fs.copy('./public/temp/'+req.body.cookie+'/'+req.body.filename, './uploads/'+req.body.filename, err =>{
+    fs.exists('./public/temp/'+req.body.cookie+'/'+req.body.filename, (exists) => {
+      fs.copy('./public/temp/'+req.body.cookie+'/'+req.body.filename, './public/'+req.body.filename, (err) =>{
         if (err) return console.error(err);
-        console.log('2 success!');
-        deleteFolderRecursive('./public/temp/'+req.body.cookie);
+        fs.copy('./public/temp/'+req.body.cookie+'/'+req.body.filename, './uploads/'+req.body.filename, (err) =>{
+          if (err) return console.error(err);
+          deleteFolderRecursive('./public/temp/'+req.body.cookie);
+          return res.status(200).json({message:"done"});
+        });
       });
     });
+    
   }
-  return res.status(200).json({message: "done"});
 };
 
 exports.reupload = (req,res) =>{
@@ -58,14 +61,11 @@ exports.update = (req,res) =>{
       fs.unlinkSync('./uploads/' + req.body.oldFile);
     }
   }
-  
   //now transfer new file and delete from temp
   fs.copy('./public/temp/'+req.user.id+'/'+req.body.newFile, './public/'+req.body.newFile, err =>{
     if (err) return console.error(err);
-    console.log('1 success!');
     fs.copy('./public/temp/'+req.user.id+'/'+req.body.newFile, './uploads/'+req.body.newFile, err =>{
       if (err) return console.error(err);
-      console.log('2 success!');
       deleteFolderRecursive('./public/temp/'+req.user.id);
     });
   });
