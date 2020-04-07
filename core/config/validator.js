@@ -4,8 +4,8 @@ module.exports = {
   registrationValidationRules: () => {
     return [body('email').isEmail(), body('password').isLength({min: 5}), body('user_name').trim().isLength({min: 5, max:20}), body('gender').notEmpty(), body('sexuality').notEmpty(), body('dob').notEmpty(), body('fname').notEmpty(), body('sname').trim().notEmpty(), body('location').notEmpty().trim()];
   },
-  messageValidationRules: () => {
-    return [body('message').trim().escape().notEmpty()]
+  updateValidationRules: () => {
+    return [body('user_name').trim().isLength({min: 5, max: 20}), body('gender').notEmpty(), body('sexuality').notEmpty(), body('dob').notEmpty(),body('fname').notEmpty(), body('sname').trim().notEmpty(), body('location').notEmpty().trim()];
   },
   validate: (req, res, next) => {
     const errors = validationResult(req);
