@@ -60,7 +60,6 @@ exports.register = (req, res, next) => {
       if (age < 18) {
         return res.status(403).json({message: "User is Underage"});
       }
-      usr.age = age;
       usr.hashPassword(req.body.password).then((password) => {
         usr.password = password;
         usr.save((err) => {

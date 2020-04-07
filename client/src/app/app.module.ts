@@ -40,6 +40,7 @@ import { FileListComponent } from './file-list/file-list.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MessaginglayoutstuffComponent } from './messaginglayoutstuff/messaginglayoutstuff.component';
 import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
+import { WINDOW_PROVIDERS } from "./window.service";
 
 const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}};
 
@@ -90,7 +91,8 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     CookieService,
     MatNativeDateModule,
     MatDatepickerModule,
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    WINDOW_PROVIDERS
   ],
   bootstrap: [AppComponent]
 })

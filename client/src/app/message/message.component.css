@@ -47,6 +47,7 @@
 
 .activePerson{
   background-color: #542361;
+  color: #ebebeb;
 }
 
 .person:hover{
@@ -55,10 +56,13 @@
 
 .msgDiv{
   width: 100%;
+  height: fit-content;
+  margin-bottom: 5%;
 }
 
 .messages{
   display: inline-block;
+  overflow-y: auto;
   height: 80vh;
   margin: 2%;
   width: 95%;
@@ -123,7 +127,6 @@
 .imageRight{
   float: right;
   width: 40px;
-  max-width: 16%;
   height: 40px;
   margin-left: 2px;
   object-fit:cover;
@@ -149,4 +152,11 @@
   margin-right: 2px;
   object-fit:cover;
   border-radius: 50%;
+}
+
+@media screen and (max-width: 400px) {
+  .imageLeft, .imageRight{
+    width: 20px;
+    height: 20px;
+  }
 }

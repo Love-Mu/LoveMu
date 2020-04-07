@@ -118,11 +118,10 @@ module.exports = {
       };
 
       mapArtists(authOptionsArtists, user.blockedArtists).then((mapArtists) => {
-        User.updateOne({_id: user._id}, {$push: {artists: mapArtists}}).exec((err, user) => {
+        User.updateOne({_id: user._id}, {$set: {artists: new Map([...mapArtists, ...user.artists])}}).exec((err, user) => {
           if (err) {
             console.log(err);
             return res.status(500).json(err);
-            
           }
         });
       }).catch((error) => {
@@ -130,7 +129,7 @@ module.exports = {
         console.log(error);
       });
       mapGenres(authOptionsGenres).then((genres) => {
-        User.updateOne({_id: user._id} , {$push: {genres: genres}}).exec((err, user) => {
+        User.updateOne({_id: user._id} , {$set: {genres: new Map([...genres, ...user.genres])}}).exec((err, user) => {
             if (err) {
               console.log(err);
               return res.status(500).json(err);

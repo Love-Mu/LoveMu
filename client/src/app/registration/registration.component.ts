@@ -62,11 +62,12 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit(userData) {
     userData.image = this.image;
-    this.cookieService.delete("fileCookie");
     this.http.post('https://lovemu.compsoc.ie/auth/register', userData, {withCredentials: true}).subscribe((res) => {
-      this.http.post('https://lovemu.compsoc.ie/upload/save', {filename:this.image, cookie:this.cookie}).subscribe();
+      
       this.authService.setUserInfo(res['token'], res['id']);
       if (this.authService.isAuthenticated()) {
+        this.cookieService.delete("fileCookie");
+        this.http.post('https://lovemu.compsoc.ie/upload/save', {filename:this.image, cookie:this.cookie}).subscribe();
         window.location.href= 'https://lovemu.compsoc.ie/spotify/reqAccess';
       }
     });
