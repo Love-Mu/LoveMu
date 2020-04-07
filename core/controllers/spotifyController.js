@@ -40,7 +40,9 @@ module.exports = {
     request.post(authOptions, (err, response, body) => {
       if (!err && response.statusCode === 200) {
         const refresh_token = body.refresh_token;
-        res.redirect('https://lovemu.compsoc.ie/?' + querystring.stringify({spotify_token: refresh_token }));
+        res.redirect('https://lovemu.compsoc.ie/?' + querystring.stringify({
+          spotify_token: refresh_token
+        }));
       } else {
         throw (err);
       }
@@ -49,17 +51,31 @@ module.exports = {
 
   storeToken: (req, res, next) => {
     if (req.body.refresh_token == null) {
-      return res.status(403).json({error: "access_token or refresh_token not provided"});
+      return res.status(403).json({
+        error: "access_token or refresh_token not provided"
+      });
     }
     console.log(req.body.refresh_token);
-    User.findOneAndUpdate({_id: req.user._id}, {$set: {refresh_token: req.body.refresh_token}}).exec((error, user) => {
+    User.findOneAndUpdate({
+      _id: req.user._id
+    }, {
+      $set: {
+        refresh_token: req.body.refresh_token
+      }
+    }).exec((error, user) => {
       if (error) {
-        return res.json({error: err});
+        return res.json({
+          error: err
+        });
       }
       if (!user) {
-        return res.json({message: 'User not found'});
+        return res.json({
+          message: 'User not found'
+        });
       }
-      return res.status(200).json({message: 'Successfully Updated Tokens'});
+      return res.status(200).json({
+        message: 'Successfully Updated Tokens'
+      });
     });
   },
 
@@ -78,47 +94,75 @@ module.exports = {
     };
     request.post(authOptions, (error, response, body) => {
       if (!error) {
-        User.findOneAndUpdate({_id: req.user._id}, {$set: {access_token: body.access_token}}).exec((err, user) => {
-          if (err) {
-            res.json({error: err});
+        User.findOneAndUpdate({
+          _id: req.user._id
+        }, {
+          $set: {
+            access_token: body.access_token
           }
-          res.json({message: "Successful Refresh!"});
+        }).exec((err, user) => {
+          if (err) {
+            res.json({
+              error: err
+            });
+          }
+          res.json({
+            message: "Successful Refresh!"
+          });
         });
       }
     });
   },
 
   retrieveDetails: (req, res, next) => {
-    User.findOne({_id: req.user._id}).exec(async (err, user) => {
+    User.findOne({
+      _id: req.user._id
+    }).exec(async (err, user) => {
       if (err) {
-        return res.json({error: err});
+        return res.json({
+          error: err
+        });
       }
       if (!user) {
-        return res.json({message: 'User not found'});
+        return res.json({
+          message: 'User not found'
+        });
       }
       const authOptionsArtists = {
-        method:"get",
+        method: "get",
         url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
-        headers: {'Authorization': `Bearer ${user.access_token}`},
+        headers: {
+          'Authorization': `Bearer ${user.access_token}`
+        },
         json: true,
       };
-  
+
       const authOptionsGenres = {
-        method:"get",
+        method: "get",
         url: `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
-        headers: {'Authorization': `Bearer ${user.access_token}`},
+        headers: {
+          'Authorization': `Bearer ${user.access_token}`
+        },
         json: true,
       };
-  
+
       const authOptionsPlaylists = {
-        method:"get",
+        method: "get",
         url: `https://api.spotify.com/v1/me/playlists?limit=50`,
-        headers: {'Authorization': `Bearer ${user.access_token}`},
+        headers: {
+          'Authorization': `Bearer ${user.access_token}`
+        },
         json: true,
       };
 
       mapArtists(authOptionsArtists, user.blockedArtists).then((mapArtists) => {
-        User.updateOne({_id: user._id}, {$set: {artists: new Map([...mapArtists, ...user.artists])}}).exec((err, user) => {
+        User.updateOne({
+          _id: user._id
+        }, {
+          $set: {
+            artists: new Map([...mapArtists, ...user.artists])
+          }
+        }).exec((err, user) => {
           if (err) {
             console.log(err);
             return res.status(500).json(err);
@@ -129,18 +173,30 @@ module.exports = {
         console.log(error);
       });
       mapGenres(authOptionsGenres).then((genres) => {
-        User.updateOne({_id: user._id} , {$set: {genres: new Map([...genres, ...user.genres])}}).exec((err, user) => {
-            if (err) {
-              console.log(err);
-              return res.status(500).json(err);
-            }
-        }); 
-      }).catch((error) => { 
+        User.updateOne({
+          _id: user._id
+        }, {
+          $set: {
+            genres: new Map([...genres, ...user.genres])
+          }
+        }).exec((err, user) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json(err);
+          }
+        });
+      }).catch((error) => {
         console.log("Genre Error");
         console.log(error);
       });
       retrievePlaylists(authOptionsPlaylists).then((playlists) => {
-        User.updateOne({_id: user._id} , {$set: {playlists: playlists}}).exec((err, user) => {
+        User.updateOne({
+          _id: user._id
+        }, {
+          $set: {
+            playlists: playlists
+          }
+        }).exec((err, user) => {
           if (err) {
             console.log(err);
             return res.status(500).json(err);
@@ -156,19 +212,26 @@ module.exports = {
   search: (req, res, next) => {
     const query = req.body.query;
     const type = req.body.type;
-    const params = querystring.stringify({q: query, type: type});
+    const params = querystring.stringify({
+      q: query,
+      type: type
+    });
     console.log(params);
     const authOptions = {
-      method:"get",
+      method: "get",
       url: `https://api.spotify.com/v1/search/?${params}`,
-      headers: {'Authorization': `Bearer ${req.user.access_token}`},
+      headers: {
+        'Authorization': `Bearer ${req.user.access_token}`
+      },
       json: true,
     };
     searchSpotify(query, type, authOptions).then((results) => {
       res.status(200).json(results);
     }).catch((err) => {
       console.log(err);
-      res.status(500).json({error: err});
+      res.status(500).json({
+        error: err
+      });
     });
   }
 }
@@ -182,7 +245,9 @@ function mapGenres(authOptions) {
         reject(err);
       }
       if (response.statusCode !== 200) {
-        reject({message: 'Unauthorized Request'});
+        reject({
+          message: 'Unauthorized Request'
+        });
       }
       const items = await body.items;
       if (items != null) {
@@ -208,7 +273,9 @@ function mapArtists(authOptions, blocked) {
         reject(err);
       }
       if (response.statusCode !== 200) {
-        reject({message: 'Unauthorized Request'});
+        reject({
+          message: 'Unauthorized Request'
+        });
       }
       const items = body.items;
       if (items != null) {
@@ -221,43 +288,48 @@ function mapArtists(authOptions, blocked) {
       } else {
         resolve(new Map());
       }
-    })});
-  }
+    })
+  });
+}
 
-  function retrievePlaylists(authOptions) {
-    return new Promise((resolve, reject) => {
-      request(authOptions, async (err, response, body) => {
-        if (err) {
-          reject(err);
-        }
-        if (response.statusCode !== 200) {
-          reject({message: 'Unauthorized Request'});
-        }
-        const playlists = body.items;
-        if (playlists != null) {
-          resolve(playlists);
-        } else {
-          resolve([]);
-        }
-      });
+function retrievePlaylists(authOptions) {
+  return new Promise((resolve, reject) => {
+    request(authOptions, async (err, response, body) => {
+      if (err) {
+        reject(err);
+      }
+      if (response.statusCode !== 200) {
+        reject({
+          message: 'Unauthorized Request'
+        });
+      }
+      const playlists = body.items;
+      if (playlists != null) {
+        resolve(playlists);
+      } else {
+        resolve([]);
+      }
     });
-  }
+  });
+}
 
-  function searchSpotify(query, type, authOptions) {
-    return new Promise((resolve, reject) => {
-      request.get(authOptions, (err, res, body) => {
-        if (err) {
-          reject(err);
-        }
-        if (res.statusCode !== 200) {
-          reject({message: 'Unauthorized Request'})
-        }
-        if (type == 'track') {
-          resolve(body.tracks);
-        }
-        if (type == 'artist') {
-          resolve(body.artists);
-        }
-      });
+function searchSpotify(query, type, authOptions) {
+  return new Promise((resolve, reject) => {
+    request.get(authOptions, (err, res, body) => {
+      if (err) {
+        reject(err);
+      }
+      if (res.statusCode !== 200) {
+        reject({
+          message: 'Unauthorized Request'
+        })
+      }
+      if (type == 'track') {
+        resolve(body.tracks);
+      }
+      if (type == 'artist') {
+        resolve(body.artists);
+      }
     });
-  }
+  });
+}
