@@ -11,9 +11,9 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), Profile.getPr
 
 router.put('/:id', passport.authenticate('jwt', {session: false}), updateValidationRules(), validate, Profile.updateProfile);
 
-router.post('/block/:id', passport.authenticate('jwt', {session: false}), Profile.block);
+router.post('/:id/block', passport.authenticate('jwt', {session: false}), Profile.block);
 
-router.post('/unblock/:id', passport.authenticate('jwt', {session: false}), Profile.unblock);
+router.post('/:id/unblock', passport.authenticate('jwt', {session: false}), Profile.unblock);
 
 router.post('/removeArtist', passport.authenticate('jwt', {session: false}), Profile.removeArtist);
 
