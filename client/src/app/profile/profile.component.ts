@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder } from '@angular/forms';
@@ -19,16 +19,19 @@ import { Track } from '../users/Track';
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent implements OnInit {
   @Input() update: EventEmitter<String>;
   user: User;
   artists: Artist[];
+  blockedArtists: Artist[];
   public isCurrentUser: boolean;
   profileForm;
   playlistUrl: SafeResourceUrl;
   songUrl: SafeResourceUrl;
   public editUser: boolean;
+  public editingArtist: boolean;
   oldFile: string;
   newFile: string;
   filePath: string;
@@ -97,6 +100,7 @@ export class ProfileComponent implements OnInit {
   getUser(): void {
     let id = this.route.snapshot.paramMap.get('id');
     let currentId = this.userService.getCurrentUser();
+    if (id == null) id = currentId;
     this.userID = id.toString();
 
     if (currentId == id) {
@@ -105,6 +109,7 @@ export class ProfileComponent implements OnInit {
     this.userService.getUser(id.toString()).subscribe((user) => {
       this.user = user;
       this.artists = user.artists;
+      this.blockedArtists = user.blockedArtists;
       this.oldFile = user.image;
       this.newFile = user.image;
       this.filePath = user.image;
@@ -206,5 +211,23 @@ export class ProfileComponent implements OnInit {
         });
       });
     }
+  }
+
+  removeArtist(artist) {
+    this.http.post("https://lovemu.compsoc.ie/profiles/removeArtist", {artist: artist}).toPromise().then((res) => {
+      this.blockedArtists = res['blockedArtists'];
+      this.artists = res['artists'];
+    });
+  }
+
+  addArtist(artist) {
+    this.http.post("https://lovemu.compsoc.ie/profiles/addArtist", {artist: artist}).toPromise().then((res) => {
+      this.blockedArtists = res['blockedArtists'];
+      this.artists = res['artists'];
+    });
+  }
+
+  flipEditingArtist() {
+    this.editingArtist = !this.editingArtist;
   }
 }

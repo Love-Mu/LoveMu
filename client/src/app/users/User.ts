@@ -17,6 +17,7 @@ export class User {
   age: string;
   bio: string;
   artists: Array<Artist>;
+  blockedArtists: Array<Artist>;
   overlappingArtists: Array<Artist>;
   score: number;
   favouriteSong: string;

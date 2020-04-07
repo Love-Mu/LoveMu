@@ -10,6 +10,16 @@ a{
   color: white;
 }
 
+#title{
+  font-family: 'Gotu', sans-serif;
+  font-size: 3vh;
+}
+
+#mu{
+  font-family: 'Garamond';
+  font-size: 4vh;
+}
+
 .spacer {
   flex: 1 1 auto;
 }

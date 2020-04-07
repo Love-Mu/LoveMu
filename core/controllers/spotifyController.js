@@ -64,12 +64,12 @@ module.exports = {
       }
     }).exec((error, user) => {
       if (error) {
-        return res.json({
+        return res.status(500).json({
           error: err
         });
       }
       if (!user) {
-        return res.json({
+        return res.status(404).json({
           message: 'User not found'
         });
       }
@@ -102,11 +102,11 @@ module.exports = {
           }
         }).exec((err, user) => {
           if (err) {
-            res.json({
+            res.status(500).json({
               error: err
             });
           }
-          res.json({
+          res.status(200).json({
             message: "Successful Refresh!"
           });
         });

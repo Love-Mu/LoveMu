@@ -127,7 +127,7 @@ module.exports = {
           favouriteSong: user.favouriteSong || '',
           score: Math.round(values[2].score) || 0,
           blocked: user.blocked,
-          blockedArtists: user.blockedArtists
+          blockedArtists: Array.from(user.blockedArtists.values())
         });
       }).catch((err) => {
         console.log(err);
@@ -302,9 +302,7 @@ module.exports = {
       const blockedArtists = user.blockedArtists;
       artists.delete(req.body.artist.id);
       blockedArtists.set(req.body.artist.id, req.body.artist);
-      user.artists = artists;
-      user.blockedArtists = blockedArtists;
-      user.save((err, usr) => {
+      User.findOneAndUpdate({_id: req.user._id}, {$set: {artists: artists, blockedArtists: blockedArtists}}).exec((err, usr) => {
         if (err) {
           console.log(err);
           return res.status(500).json({
@@ -312,7 +310,9 @@ module.exports = {
           });
         }
         return res.status(200).json({
-          message: "Artist Removed"
+          message: 'Removed Artist',
+          artists: Array.from(artists.values()),
+          blockedArtists: Array.from(blockedArtists.values())
         });
       })
     });
@@ -324,12 +324,15 @@ module.exports = {
       })
     }
     const artists = req.user.artists;
+    const blockedArtists = req.user.blockedArtists;
     artists.set(req.body.artist.id, req.body.artist);
+    blockedArtists.delete(req.body.artist.id);
     User.findOneAndUpdate({
       _id: req.user.id
     }, {
       $set: {
-        artists: artists
+        artists: artists,
+        blockedArtists: blockedArtists
       }
     }).exec((err, user) => {
       if (err) {
@@ -339,7 +342,9 @@ module.exports = {
         });
       }
       return res.status(200).json({
-        message: "Artist Added"
+        message: "Artist Added",
+        artists: Array.from(artists.values()),
+        blockedArtists: Array.from(blockedArtists.values())
       });
     });
   }
