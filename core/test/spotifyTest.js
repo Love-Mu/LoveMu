@@ -163,9 +163,68 @@ describe.only('Spotify', () => {
         });
     });
     describe('/search', () => {
-        before((done) => { 
-            done();            
+        beforeEach((done) => { 
+            authorisedUser
+            .post('/spotify/storeToken')
+            .set("Authorization", "Bearer " + token)
+            .send({refresh_token:`${process.env.refToken}`})
+            .end((err,res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.message.should.eql('Successfully Updated Tokens');
+                User.findOne({_id:userID}).exec((err,user) => {
+                    user.refresh_token.should.not.be.empty;
+                    user.refresh_token.should.eql(`${process.env.refToken}`);
+                    authorisedUser
+                    .post('/spotify/refreshAccess')
+                    .set("Authorization", "Bearer " + token)
+                    .end((err,res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        res.body.message.should.eql("Successful Refresh!");
+                        User.findOne({_id:userID}).exec((err,user) => {
+                            user.access_token.should.not.be.empty;
+                            done();
+                        });
+                    })
+                });
+            })           
+        }); 
+        it('it should return results for searching for a track', (done) => {
+            authorisedUser
+            .post('/spotify/search')
+            .set("Authorization", "Bearer " + token)
+            .send({query:'bohemian rhapsody',type:'track'})
+            .end((err,res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('items');
+                res.body.items.should.be.a('array');
+                res.body.items.should.have.length.below(21);
+                res.body.should.have.property('href');
+                res.body.href.should.eql("https://api.spotify.com/v1/search?query=bohemian+rhapsody&type=track&offset=0&limit=20");
+                res.body.items[0].name.should.have.string("Bohemian Rhapsody");
+                done();
+            })
         });
-        it('it should return results for searching for a track');
+        it('it should return results for searching for an artist', (done) => {
+            authorisedUser
+            .post('/spotify/search')
+            .set("Authorization", "Bearer " + token)
+            .send({query:'queen',type:'artist'})
+            .end((err,res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('items');
+                res.body.items.should.be.a('array');
+                res.body.items.should.have.length.below(21);
+                res.body.should.have.property('href');
+                res.body.href.should.eql("https://api.spotify.com/v1/search?query=queen&type=artist&offset=0&limit=20");
+                res.body.items[0].name.should.have.string("Queen");
+                done();
+            })
+        });
     });
 });

@@ -1,4 +1,4 @@
-@import '../assets/scss/modules/_fonts.scss';
+@import 'https://lovemu.compsoc.ie/assets/scss/modules/_fonts.scss';
 
 .mainContent{
   display: flex;

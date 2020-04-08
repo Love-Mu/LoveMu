@@ -36,8 +36,10 @@ export class ProfileComponent implements OnInit {
   filePath: string;
   userID: string;
   message: string;
+  query: string;
   err: string;
-  searchResults: Array<Track>;
+  searchResults: Array<Artist>;
+  trackSearchResults: Array<Track>;
   @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
   files  = [];
 
@@ -54,7 +56,7 @@ export class ProfileComponent implements OnInit {
       dob: '',
       playlist: '',
       favouriteSong: '',
-      q: ''
+      query: ''
     });
   }
 
@@ -69,7 +71,11 @@ export class ProfileComponent implements OnInit {
   }
 
   blockUser() {
-    this.userService.blockUser(this.route.snapshot.paramMap.get('id'));
+    return this.http.post(`https://lovemu.compsoc.ie/profiles/${this.route.snapshot.paramMap.get('id')}/block`, {}).subscribe();
+  }
+
+  unblockUser() {
+    return this.http.post(`https://lovemu.compsoc.ie/profiles/${this.route.snapshot.paramMap.get('id')}/unblock`, {}).subscribe();
   }
 
   getFormData(): void {
@@ -104,6 +110,7 @@ export class ProfileComponent implements OnInit {
 
     if (currentId == id) {
       this.isCurrentUser = true;
+      this.http.post("https://lovemu.compsoc.ie/spotify/refreshAccess", {}).subscribe();
     }
     this.userService.getUser(id.toString()).subscribe((user) => {
       this.user = user;
@@ -210,10 +217,13 @@ export class ProfileComponent implements OnInit {
 
   search(query, type) {
     if (query != '') {
-      this.http.post("https://lovemu.compsoc.ie/spotify/refreshAccess", {}).toPromise().then(() => {
-        this.http.post("https://lovemu.compsoc.ie/spotify/search", {query: query, type: type}).subscribe((res) => {
+      this.http.post("https://lovemu.compsoc.ie/spotify/search", {query: query, type: type}).subscribe((res) => {
+        if (type == 'track') {
+          this.trackSearchResults = res['items'];
+        }
+        if (type == 'artist') {
           this.searchResults = res['items'];
-        });
+        }
       });
     }
   }

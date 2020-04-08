@@ -28,3 +28,8 @@ button{
   padding: 5%;
   height: fit-content;
 }
+
+#mu{
+  max-width: 1.2em;
+  max-height: 1.2em;
+}

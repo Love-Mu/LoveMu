@@ -212,7 +212,7 @@ describe('Authentication', () => {
                 res.should.have.status(403);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');
-                res.body.message.should.eql("Unsuccessful Login!");
+                res.body.message.should.eql("Incorrect Password");
                 done();
             });
         }); 
@@ -228,7 +228,7 @@ describe('Authentication', () => {
                 res.should.have.status(403);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message');
-                res.body.message.should.eql("Unsuccessful Login!");
+                res.body.message.should.eql("Username or Email Not Associated With an Account");
                 done();
             });
         });             

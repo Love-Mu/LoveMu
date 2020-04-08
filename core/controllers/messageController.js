@@ -1,9 +1,14 @@
+const {validationResult} = require('express-validator');
 const User = require('../models/User');
 const Message = require('../models/Message');
 const Chatroom = require('../models/Chatroom');
 
 module.exports = {
     send: (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(404).json(errors);
+        }
         let message = new Message({
             sender: req.user._id,
             recipient: req.body.recipient,
@@ -70,11 +75,12 @@ module.exports = {
     },
     chatroom: (req, res) => {
         Chatroom.find({members: { "$in" : [req.user._id] }}).exec(async (err, chatroom) => {
+            let rooms = [];
             if (err) {
                 throw err;
                 return res.status(500).json(err);
-            } else {
-                let rooms = [];
+            } else if (chatroom.length != 0) {
+                console.log(chatroom);
                 chatroom.forEach((element, index) => {
                     let message = "";
                     let messagePromise = new Promise(function (resolve, reject) {
@@ -83,14 +89,18 @@ module.exports = {
                                 reject(err);
                             }
                             message = msg;
+                            console.log(msg);
                             resolve();
                         });
                     });
                     messagePromise.then(() => {
+                        console.log(message);
                         rooms.push({"_id": element._id, "members": element.members, "messages": [message]});
                         if(index == chatroom.length - 1) return res.status(200).json(rooms);
                     })
                 });
+            } else {
+                return res.status(200).json(rooms);
             }
         });
     }
