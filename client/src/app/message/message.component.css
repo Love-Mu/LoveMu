@@ -57,6 +57,7 @@
   text-align: center;
   height: 93vh;
   background-color: #eeeeee;
+  overflow: hidden;
 }
 .openMessaging{
   width: 100%;
@@ -70,7 +71,7 @@
 .messages{
   display: inline-block;
   overflow-y: auto;
-  height: 75vh;
+  height: 70vh;
   margin: 2vh;
   width: 95%;
   background-color: #eeeeee;
@@ -78,7 +79,7 @@
 .typeMessage{
   display: inline-block;
   text-align: center;
-  height: 3vh;
+  height: 6vh;
   width: 90%;
 }
 .msgDiv{
@@ -117,8 +118,13 @@
 }
 .msgInput{
   width: 80%;
+  max-height:6vh;
 }
 
 .sendMsgIcon{
   max-width: 20%;
+  max-height: 6vh;
+}
+.container{
+  overflow: hidden;
 }
