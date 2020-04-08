@@ -15,7 +15,7 @@ exports.login = (req, res, next) => {
   }
   passport.authenticate('local', {session: false }, (err, user) => {
     if (err) {
-      return res.status(403).json({message: err});
+      return res.status(403).json(err);
     }
     if (!user) {
       return res.status(403).json({message: "Username or Email Not Associated With an Account"})

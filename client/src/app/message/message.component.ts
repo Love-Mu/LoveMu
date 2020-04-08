@@ -24,6 +24,7 @@ export class MessageComponent implements OnInit {
   online: String[] = [];
   public isMobileLayout = false;
   public isMenuOpen = true;
+  public chatroomEmpty = false;
 
   constructor(@Inject(DOCUMENT) private document: Document, @Inject(WINDOW) private window: Window, private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute) {
     this.messageForm = this.formBuilder.group({
@@ -39,7 +40,13 @@ export class MessageComponent implements OnInit {
 
     this.socketMessages();
 
-    window.onresize = () => this.isMobileLayout = window.innerWidth <= 700;
+    if (window.innerWidth <= 700) {
+      this.isMobileLayout = true;
+    }
+
+    window.onresize = () => {
+      this.isMobileLayout = window.innerWidth <= 700;
+    }
   }
 
   @HostListener('scroll', ['$event'])
@@ -94,6 +101,10 @@ export class MessageComponent implements OnInit {
     });
   }
 
+  changeMenu(){
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   changeActive(chatroom): void {
     this.activeChatroom = chatroom;
     this.activeUser = chatroom.user;
@@ -130,15 +141,19 @@ export class MessageComponent implements OnInit {
   getInitChatrooms() {
     this.messageService.getInitChatrooms().subscribe(chatrooms => {
       this.chatrooms = chatrooms;
-      this.chatrooms.forEach((e) => {
-        e.members.forEach((m) => {
-          if (m != this.user._id.toString()) {
-            this.userService.getUser(m.toString()).subscribe(user => {
-              e.user = user;
-            });
-          }
+      if (chatroom.length == 0) {
+        this.chatroomEmpty = true;
+      } else {
+        this.chatrooms.forEach((e) => {
+          e.members.forEach((m) => {
+            if (m != this.user._id.toString()) {
+              this.userService.getUser(m.toString()).subscribe(user => {
+                e.user = user;
+              });
+            }
+          });
         });
-      });
+      }
     });
   }
 
@@ -164,8 +179,4 @@ export class MessageComponent implements OnInit {
     this.messageForm.clear;
     this.messageForm.body = '';
   }
-
-  changeMenu(){
-    this.isMenuOpen = !this.isMenuOpen;
-}
 }

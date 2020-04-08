@@ -1,4 +1,4 @@
-<div class = "container">
+<div class = "container" *ngIf = "this.chatrooms != null && this.chatrooms != undefined">
   <!-- chatlist will have an ngif menu open -->
   <div *ngIf = "isMenuOpen" [ngClass] = "{'openChatlist': isMenuOpen, 'closedChatlist': !isMenuOpen}"  class = "chatList">
     <div style = "text-align: left">
@@ -16,6 +16,15 @@
               <img class = "userImage" src = "{{convo.user.image}}">
               <span class = "name"> {{convo.user.fname}} {{convo.user.sname}} </span>
             </div>
+
+            <!-- shows the most recent message sent and the time/date it was sent-->
+            <div class = "recentMsg" *ngIf = "!isMobileLayout">
+              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == convo.user._id">{{convo.user.fname}}: </span>
+              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == user._id"> {{user.fname}}: </span>
+              {{convo.messages[convo.messages.length - 1].body.substring(0, 30)}}
+              <br>
+              <span class = "time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</span>
+            </div>
           </mat-card-content>
         </mat-card>
 
@@ -27,6 +36,15 @@
               </div>
               <img class = "userImage" src = "{{convo.user.image}}">
               <span class = "name"> {{convo.user.fname}} {{convo.user.sname}} </span>
+            </div>
+
+            <!-- shows the most recent message sent and the time/date it was sent-->
+            <div class = "recentMsg" *ngIf = "!isMobileLayout">
+              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == convo.user._id">{{convo.user.fname}}: </span>
+              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == user._id"> {{user.fname}}: </span>
+              {{convo.messages[convo.messages.length - 1].body.substring(0, 60)}}
+              <br>
+              <span class = "time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</span>
             </div>
           </mat-card-content>
         </mat-card>
@@ -42,18 +60,17 @@
     <div (scroll)="scrollHandler($event)" class = "messages">
       <!--shows each users message-->
       <div *ngFor="let msg of messages">
-        <div class = "msgDiv">
-          <!--If message is sent by user-->
-          <div *ngIf = "user._id == msg.sender">
-            <div class = "messageRightDiv"> {{msg.body}}</div>
-          </div>
-
-          <!--If message is sent by person user is talking to-->
-          <div *ngIf = "activeUser._id == msg.sender">
-            <div class = "messageLeftDiv"> {{msg.body}}</div>
-          </div>
+        <!--If message is sent by user-->
+        <div *ngIf = "user._id == msg.sender" class = "msgDiv">
+          <img *ngIf = "!isMobileLayout" class = "imageRight" src = {{user.image}}>
+          <div class = "messageRightDiv"> {{msg.body}}</div>
         </div>
-        <br><br><br>
+
+        <!--If message is sent by person user is talking to-->
+        <div *ngIf = "activeUser._id == msg.sender" class = "msgDiv">
+          <img *ngIf = "!isMobileLayout" class = "imageLeft" src = {{activeUser.image}}>
+          <div class = "messageLeftDiv"> {{msg.body}}</div>
+        </div>
       </div>
     </div>
 
@@ -67,6 +84,6 @@
   </div>
 </div>
 
-
-
-
+<div *ngIf = "this.chatrooms == null" class = "noMessages">
+  <span> We're sorry, you have no messages. <br> To start a conversation, go to a users profile and click message!</span>
+</div>

@@ -9,6 +9,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatRadioModule} from '@angular/material/radio';
@@ -76,6 +77,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     MatSelectModule,
     MatInputModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatIconModule,
     MatNativeDateModule,
     MatSlideToggleModule,

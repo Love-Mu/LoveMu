@@ -13,7 +13,7 @@ router.get('/retrieve/:id', passport.authenticate('jwt', {session: false}), Mess
 
 router.get('/retrieveNext/:id/:pos', passport.authenticate('jwt', {session: false}), MessageController.retrieveNext);
 
-router.post('/send', passport.authenticate('jwt', {session: false}), MessageController.send);
+router.post('/send', passport.authenticate('jwt', {session: false}), messageValidationRules(), validate, MessageController.send);
 
 router.get('/chatroom', passport.authenticate('jwt', {session: false}), MessageController.chatroom);
 

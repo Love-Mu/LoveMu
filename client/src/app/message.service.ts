@@ -69,7 +69,9 @@ export class MessageService {
   }
 
   getInitChatrooms(): Observable<Chatroom[]> {
-    return this.http.get<Chatroom[]>('https://lovemu.compsoc.ie/messages/chatroom');
+    let chatroom = this.http.get<Chatroom[]>('https://lovemu.compsoc.ie/messages/chatroom');
+    console.log(chatroom);
+    return chatroom;
   }
 
   getMessages(id): Observable<Message[]> {

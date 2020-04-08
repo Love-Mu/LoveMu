@@ -21,7 +21,7 @@ passport.use(new LocalStrategy({
     }
     user.comparePassword(pass).then((passwordMatch) => {
       if (!passwordMatch) {
-        return done(null, false, {message: 'Wrong Password'});
+        return done({message: 'Incorrect Password'});
       }
       return done(null, user);
     }).catch((err) => {
