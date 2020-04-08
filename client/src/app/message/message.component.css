@@ -84,7 +84,7 @@
 .msgDiv{
   width: 100%;
   height: fit-content;
-  margin-bottom: 5px;
+  padding: 2px;
   clear: both;
 }
 .messageRightDiv, .messageLeftDiv{
@@ -92,7 +92,6 @@
   color: #ebebeb;
   padding-top: 0.5%;
   padding-bottom: 0.5%;
-  margin-bottom: 1px;
 }
 .messageRightDiv{
   float: right;
@@ -116,4 +115,10 @@
   border-bottom-right-radius: 4px;
   margin-left: 2%;
 }
+.msgInput{
+  width: 80%;
+}
 
+.sendMsgIcon{
+  max-width: 20%;
+}

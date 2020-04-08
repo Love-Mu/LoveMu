@@ -36,19 +36,6 @@ export class AuthenticationService {
     localStorage.setItem('id', id)
   }
 
-  public validate(email, password) {
-    this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
-      let token = res['token'];
-      let id = res['id'];
-      this.setUserInfo(token, id);
-      this.router.navigate(['/']);
-    }, (e) => {
-      if (e instanceof HttpErrorResponse) {
-        console.log(e.error.message);
-      }
-    });
-  }
-
   public googleValidate() {
     const url = window.location.href;
     const queryParams = url.substring(26);

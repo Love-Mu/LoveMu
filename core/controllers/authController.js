@@ -14,8 +14,11 @@ exports.login = (req, res, next) => {
     return res.status(404).json(errors);
   }
   passport.authenticate('local', {session: false }, (err, user) => {
-    if (err || !user) {
-      return res.status(403).json({message: 'Unsuccessful Login!'});
+    if (err) {
+      return res.status(403).json({message: err});
+    }
+    if (!user) {
+      return res.status(403).json({message: "Username or Email Not Associated With an Account"})
     }
     req.login(user, {session: false}, (err) => {
       if (err) {

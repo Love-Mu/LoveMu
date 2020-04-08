@@ -21,3 +21,10 @@
 button{
   margin: 5%;
 }
+
+.mat-error{
+  display: inline-block;
+  max-width: 80%;
+  padding: 5%;
+  height: fit-content;
+}

@@ -1,3 +1,5 @@
+@import '../assets/scss/modules/_fonts.scss';
+
 .mainContent{
   display: flex;
   height: auto;

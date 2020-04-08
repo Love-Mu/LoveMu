@@ -61,7 +61,7 @@
     <div class = "typeMessage">
       <form [formGroup]="messageForm" (ngSubmit)="onSubmit(messageForm.value)">
         <input matInput placeholder="Type here.." formControlName="body" class = "msgInput">
-        <button type="submit"><i class="fa fa-send"></i></button>
+        <button mat-icon-button type="submit" class ="sendMsgIcon"><mat-icon>send</mat-icon></button>
       </form>
     </div>
   </div>
