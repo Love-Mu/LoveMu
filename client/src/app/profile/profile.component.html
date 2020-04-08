@@ -147,7 +147,7 @@
   <form class = "updateForm" [formGroup]="profileForm" (ngSubmit)="onSubmit(profileForm.value)">
     <mat-card class = "updateCard">
       <mat-card-content>
-
+        <p>{{err}}</p>
         <mat-form-field>
           <input matInput placeholder="First Name" formControlName="fname">
         </mat-form-field>&nbsp;

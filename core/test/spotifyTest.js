@@ -166,6 +166,6 @@ describe.only('Spotify', () => {
         before((done) => { 
             done();            
         });
-        it('it should');
+        it('it should return results for searching for a track');
     });
 });

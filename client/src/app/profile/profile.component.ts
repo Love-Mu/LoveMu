@@ -36,6 +36,7 @@ export class ProfileComponent implements OnInit {
   filePath: string;
   userID: string;
   message: string;
+  err: string;
   searchResults: Array<Track>;
   @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
   files  = [];
@@ -53,8 +54,7 @@ export class ProfileComponent implements OnInit {
       dob: '',
       playlist: '',
       favouriteSong: '',
-      q: '',
-      blocked: ''
+      q: ''
     });
   }
 
@@ -130,7 +130,7 @@ export class ProfileComponent implements OnInit {
       userData.image = this.newFile;
     }
     this.checkFormData(userData);
-    this.http.put('https://lovemu.compsoc.ie/profiles/' + this.userService.getCurrentUser(), userData).toPromise().then((res) => {
+    this.http.put('https://lovemu.compsoc.ie/profiles/' + this.userService.getCurrentUser(), userData).toPromise().then(res => {
       this.user = res['user'];
       console.log(this.user);
       this.editUser = false;
@@ -141,7 +141,12 @@ export class ProfileComponent implements OnInit {
       } else {
         this.ngOnInit();
       }
-    });
+    }, err => {
+      if (err instanceof HttpErrorResponse) {
+        
+      }
+    }
+    );
 
   }
 

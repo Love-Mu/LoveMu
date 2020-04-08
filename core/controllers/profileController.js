@@ -18,6 +18,7 @@ module.exports = {
     let filters = {
       _id: {
         $ne: curr._id,
+        $nin: curr.blocked
       },
       gender: {
         $in: sexuality
@@ -26,7 +27,7 @@ module.exports = {
         $in: gender
       },
       blocked: {
-        $nin: curr._id
+        $ne: curr._id
       }
     };
     if (req.body.location != null) {
