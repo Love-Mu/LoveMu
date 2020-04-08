@@ -1,12 +1,11 @@
 <div class = "container">
-  <!-- Search box -->
-  <div class = "findPeople">
-    <div class = "search"> Search Box </div>
-    <br>
+  <!-- chatlist will have an ngif menu open -->
+  <div *ngIf = "isMenuOpen" [ngClass] = "{'openChatlist': isMenuOpen, 'closedChatlist': !isMenuOpen}"  class = "chatList">
+    <div style = "text-align: left">
+      <button mat-icon-button class = "closeMenuButton" (click) = "changeMenu()"> <mat-icon>close</mat-icon> </button>
+    </div>
 
-    <!-- List of people at left of screen-->
-    <div class = "people" >
-      <!-- Card shown if user has had convo with person before and if clicked, changes which messages are shown-->
+    <div class = "mobileChatlist">
       <div *ngFor="let convo of chatrooms">
         <mat-card  *ngIf="convo.user != undefined && activeUser != undefined" (click)="changeActive(convo)" [ngClass] = "{'person': convo.user._id != activeUser._id, 'activePerson': convo.user._id == activeUser._id}">
           <mat-card-content>
@@ -16,15 +15,6 @@
               </div>
               <img class = "userImage" src = "{{convo.user.image}}">
               <span class = "name"> {{convo.user.fname}} {{convo.user.sname}} </span>
-            </div>
-
-            <!-- shows the most recent message sent and the time/date it was sent-->
-            <div class = "recentMsg">
-              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == convo.user._id">{{convo.user.fname}}: </span>
-              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == user._id"> {{user.fname}}: </span>
-              {{convo.messages[convo.messages.length - 1].body}}
-              <br>
-              <span class = "time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</span>
             </div>
           </mat-card-content>
         </mat-card>
@@ -38,65 +28,34 @@
               <img class = "userImage" src = "{{convo.user.image}}">
               <span class = "name"> {{convo.user.fname}} {{convo.user.sname}} </span>
             </div>
-            <!-- shows the most recent message sent and the time/date it was sent-->
-            <div class = "recentMsg">
-              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == convo.user._id">{{convo.user.fname}}: </span>
-              <span *ngIf = "convo.messages[convo.messages.length - 1].sender == user._id"> {{user.fname}}: </span>
-              {{convo.messages[convo.messages.length - 1].body}}
-              <br>
-              <span class = "time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</span>
-            </div>
           </mat-card-content>
         </mat-card>
       </div>
     </div>
-  </div>
+  </div> <!-- end of chatlist -->
 
-  <div class = "messaging">
+  <!--messaging -->
+  <div [ngClass] = "{'openMessaging': !isMenuOpen, 'closedMessaging': isMenuOpen}">
+    <div style = "text-align: left">
+      <button mat-icon-button class = "openMenuButton" (click) = "changeMenu()"><mat-icon>people</mat-icon></button>
+    </div>
     <div (scroll)="scrollHandler($event)" class = "messages">
-       <!--shows each users message-->
+      <!--shows each users message-->
       <div *ngFor="let msg of messages">
         <div class = "msgDiv">
-           <!--If message is sent by user-->
+          <!--If message is sent by user-->
           <div *ngIf = "user._id == msg.sender">
-            <img class = "imageRight" src = {{user.image}}>
             <div class = "messageRightDiv"> {{msg.body}}</div>
           </div>
 
           <!--If message is sent by person user is talking to-->
           <div *ngIf = "activeUser._id == msg.sender">
-            <img class = "imageLeft" src = {{activeUser.image}}>
             <div class = "messageLeftDiv"> {{msg.body}}</div>
           </div>
         </div>
         <br><br><br>
       </div>
     </div>
-
-  <!-- messages with activeUser at right of screen -->
-  <!--<div class = "messaging">
-    <div class = "messages">
-       shows each users message
-      <div *ngFor="let msg of messages">
-        <div class = "msgDiv">
-           If message is sent by user
-          <div *ngIf = "user._id == msg.sender">
-            <img class = "imageRight" src = {{user.image}}>
-            <div class = "messageRightDiv"> {{msg.body}}</div>
-            <br>
-          </div>
-
-          If message is sent by person user is talking to
-          <div *ngIf = "activeUser._id == msg.sender">
-            <img class = "imageLeft" src = {{activeUser.image}}>
-            <div class = "messageLeftDiv"> {{msg.body}}</div>
-            <br>
-          </div>
-        </div>
-        <br><br><br>
-      </div>
-    </div>-->
-  <!-- messages with activeUser at right of screen -->
 
     <!-- Send message box -->
     <div class = "typeMessage">
@@ -107,3 +66,7 @@
     </div>
   </div>
 </div>
+
+
+
+

@@ -147,7 +147,6 @@
   <form class = "updateForm" [formGroup]="profileForm" (ngSubmit)="onSubmit(profileForm.value)">
     <mat-card class = "updateCard">
       <mat-card-content>
-        <p>{{err}}</p>
         <mat-form-field>
           <input matInput placeholder="First Name" formControlName="fname">
         </mat-form-field>&nbsp;
@@ -225,6 +224,7 @@
         <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;"  (click)="onClick()" />
       </mat-card-content>
       <mat-card-footer>
+        <mat-error>{{err}}</mat-error>
         <button class = "updateButton" type="submit" mat-raised-button>Change</button>
       </mat-card-footer>
     </mat-card>

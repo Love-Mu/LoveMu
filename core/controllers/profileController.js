@@ -394,7 +394,7 @@ function similarityGeneratorAll(currUser, users) {
           fname: user.fname,
           sname: user.sname,
           location: user.location,
-          bio: user.bio.substring(0, 80) + "...",
+          bio: user.bio,
           image: user.image,
           score: Math.round(score * 100) || 0
         });

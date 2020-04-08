@@ -11,6 +11,7 @@ import { DomSanitizer} from '@angular/platform-browser';
 })
 export class LoginComponent implements OnInit {
   loginForm;
+  err: string;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthenticationService, private router : Router) {
     this.loginForm = this.formBuilder.group({

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse   } from '@angular/common/http';
 import { UsersService } from './users.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -37,11 +37,15 @@ export class AuthenticationService {
   }
 
   public validate(email, password) {
-    return this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
+    this.http.post('https://lovemu.compsoc.ie/auth/login', {email, password}).subscribe((res) => {
       let token = res['token'];
       let id = res['id'];
       this.setUserInfo(token, id);
       this.router.navigate(['/']);
+    }, (e) => {
+      if (e instanceof HttpErrorResponse) {
+        console.log(e.error.message);
+      }
     });
   }
 

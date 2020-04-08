@@ -129,6 +129,7 @@ export class ProfileComponent implements OnInit {
     if(this.newFile != this.oldFile){
       userData.image = this.newFile;
     }
+    this.err = '';
     this.checkFormData(userData);
     this.http.put('https://lovemu.compsoc.ie/profiles/' + this.userService.getCurrentUser(), userData).toPromise().then(res => {
       this.user = res['user'];
@@ -141,9 +142,9 @@ export class ProfileComponent implements OnInit {
       } else {
         this.ngOnInit();
       }
-    }, err => {
-      if (err instanceof HttpErrorResponse) {
-        
+    }, e => {
+      if (e instanceof HttpErrorResponse) {
+        this.err = e.error.message
       }
     }
     );

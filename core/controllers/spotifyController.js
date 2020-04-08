@@ -173,9 +173,10 @@ module.exports = {
             message: 'Successfully Retrieved Details'
           });
         });
-      }).catch((err) => res.status(500).json({
-        error: err
-      }));
+      }).catch((err) => {
+        console.log(err);
+        res.status(500).json({error: err});
+      });
     });
   },
 
