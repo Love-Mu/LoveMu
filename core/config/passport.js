@@ -17,13 +17,16 @@ passport.use(new LocalStrategy({
       return done(err);
     }
     if (!user) {
-      return done(null, false, {message: 'Email or Username not linked to account'});
+      return done(null, false, {message: 'Email or Username not Linked to Account'});
     }
-    const passwordMatch = await user.comparePassword(pass);
-    if (!passwordMatch) {
-      return done(null, false, {message: 'Wrong Password'});
-    }
-    return done(null, user);
+    user.comparePassword(pass).then((passwordMatch) => {
+      if (!passwordMatch) {
+        return done(null, false, {message: 'Wrong Password'});
+      }
+      return done(null, user);
+    }).catch((err) => {
+      return done(null, false, {err: err});
+    });
   });
 }));
 

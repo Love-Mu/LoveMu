@@ -22,6 +22,8 @@ export class MessageComponent implements OnInit {
   chatrooms: Chatroom[] = [];
   messages: Message[] = [];
   online: String[] = [];
+  public isMobileLayout = false;
+  public isMenuOpen = true;
 
   constructor(@Inject(DOCUMENT) private document: Document, @Inject(WINDOW) private window: Window, private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute) {
     this.messageForm = this.formBuilder.group({
@@ -34,8 +36,10 @@ export class MessageComponent implements OnInit {
     this.getUser();
     let id = this.route.snapshot.paramMap.get('id');
     if (id != null) this.getActiveUser(id);
-    
+
     this.socketMessages();
+
+    window.onresize = () => this.isMobileLayout = window.innerWidth <= 700;
   }
 
   @HostListener('scroll', ['$event'])
@@ -55,13 +59,13 @@ export class MessageComponent implements OnInit {
     this.messageService.onNewMessage().subscribe(data => {
       let chatroom = this.chatrooms.find(x => x._id == data.chatroomId);
       let msg = {
-        _id: data._id, 
-        sender: data.sender, 
-        recipient: data.recipient, 
-        body: data.body, 
+        _id: data._id,
+        sender: data.sender,
+        recipient: data.recipient,
+        body: data.body,
         created_at: data.created_at
       };
-    
+
       // Checking if existing chatroom exists to push to, otherwise getting the chatroom by reiniting the chatroom array.
       if (chatroom == null || chatroom == undefined) {
         this.getInitChatrooms();
@@ -74,7 +78,7 @@ export class MessageComponent implements OnInit {
     this.messageService.onGoneOffline().subscribe(data => {
       this.online = this.online.filter(id => id !== data.id);
     });
-    
+
     // Adding Id to online if they come online.
     this.messageService.onGoneOnline().subscribe(data => {
       let id = this.online.filter(x => x.includes(data.id));
@@ -151,7 +155,7 @@ export class MessageComponent implements OnInit {
       this.user = user;
       this.getInitChatrooms();
     });
-  } 
+  }
 
   onSubmit(userData) {
     userData.sender = this.user._id;
@@ -159,5 +163,9 @@ export class MessageComponent implements OnInit {
     this.messageService.sendMessage(userData);
     this.messageForm.clear;
     this.messageForm.body = '';
-  } 
+  }
+
+  changeMenu(){
+    this.isMenuOpen = !this.isMenuOpen;
+}
 }

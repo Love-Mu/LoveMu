@@ -9,20 +9,27 @@ const User = require('../models/User');
 
 // Need to write validation functions to parse and validate user data
 exports.login = (req, res, next) => {
-    passport.authenticate('local', {session: false }, (err, user) => {
-      if (err || !user) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(404).json(errors);
+  }
+  passport.authenticate('local', {session: false }, (err, user) => {
+    if (err) {
+      return res.status(403).json({message: err});
+    }
+    if (!user) {
+      return res.status(403).json({message: "Username or Email Not Associated With an Account"})
+    }
+    req.login(user, {session: false}, (err) => {
+      if (err) {
         return res.status(403).json({message: 'Unsuccessful Login!'});
       }
-      req.login(user, {session: false}, (err) => {
-        if (err) {
-          return res.status(403).json({message: 'Unsuccessful Login!'});
-        }
-        const token = jwt.sign({id: user.id}, process.env.SECRET);
-        let id = user.id;
-        return res.status(200).json({message: 'Successful Login!', token, id});
-      });
-    })(req, res);
-  };
+      const token = jwt.sign({id: user.id}, process.env.SECRET);
+      let id = user.id;
+      return res.status(200).json({message: 'Successful Login!', token, id});
+    });
+  })(req, res);
+};
 exports.register = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

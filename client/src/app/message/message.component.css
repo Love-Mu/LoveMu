@@ -1,84 +1,44 @@
-.findPeople{
+.openChatlist, .closeChatlist{
   float: left;
   height: 93vh;
-  width: 30%;
-  border-right: 1px solid #969696;
   background-color: white;
   text-align: center;
   font-family: 'Gotu', sans-serif;
 }
-
-.messaging{
-  float: left;
-  text-align: center;
-  width: 70%;
-  height: 93vh;
-  background-color: #eeeeee;
+.openChatlist{
+  width: 40%;
 }
-
-.search{
-  display: inline-block;
-  text-align: center;
-  border: 1px solid #7b7b7b;
-  margin: 1%;
-  width: 90%;
-  height: 5vh;
+.closeChatlist{
+  width: 0%;
+  overflow-x: hidden;
 }
-
-.people{
+.closeMenuButton{
+  height: 10vh;
+}
+.mobileChatlist{
+  height: 82vh;
   display: inline-block;
   text-align: left;
-  width: 90%;
-  height: 86.5vh;
   overflow-y: auto;
-
+  width: 100%;
 }
-
 .userImage{
   width: 40px;
   height: 40px;
   object-fit:cover;
   border-radius: 50%;
 }
-
 .person, .activePerson{
-  margin: 2%;
+  width: 90%;
+  margin: 5%;
 }
-
 .activePerson{
   background-color: #542361;
   color: #ebebeb;
 }
-
 .person:hover{
   background-color: #ebeeff;
 }
-
-.msgDiv{
-  width: 100%;
-  height: fit-content;
-  margin-bottom: 5px;
-  clear: both;
-}
-
-.messages{
-  display: inline-block;
-  overflow-y: auto;
-  height: 80vh;
-  margin: 2%;
-  width: 95%;
-  background-color: #eeeeee;
-}
-
-.typeMessage{
-  display: inline-block;
-  text-align: center;
-  height: 6vh;
-  width: 90%;
-}
-
-
-
 .img i{
   position: absolute;
   font-size: 10px;
@@ -89,31 +49,50 @@
   margin-bottom: 2px;
   margin-right: 5px;
 }
-
-.time{
-  font-size: 0.8em;
-}
-
-.recentMsg{
-  font-size: 0.8em;
-}
-
-.msgInput{
-  width: 80%;
-}
-
 .name{
   font-family: 'Gotu', sans serif;
 }
-
+.openMessaging, .closedMessaging{
+  float: left;
+  text-align: center;
+  height: 93vh;
+  background-color: #eeeeee;
+}
+.openMessaging{
+  width: 100%;
+}
+.closedMessaging{
+  width: 60%;
+}
+.openMenuButton{
+  width: 10vh;
+}
+.messages{
+  display: inline-block;
+  overflow-y: auto;
+  height: 75vh;
+  margin: 2vh;
+  width: 95%;
+  background-color: #eeeeee;
+}
+.typeMessage{
+  display: inline-block;
+  text-align: center;
+  height: 3vh;
+  width: 90%;
+}
+.msgDiv{
+  width: 100%;
+  height: fit-content;
+  padding: 2px;
+  clear: both;
+}
 .messageRightDiv, .messageLeftDiv{
   max-width: 80%;
   color: #ebebeb;
   padding-top: 0.5%;
   padding-bottom: 0.5%;
-  margin-bottom: 1px;
 }
-
 .messageRightDiv{
   float: right;
   text-align: left;
@@ -123,18 +102,8 @@
   border-top-right-radius: 15px;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
+  margin-right: 2%;
 }
-
-.imageRight{
-  float: right;
-  width: 40px;
-  height: 40px;
-  margin-left: 2px;
-  object-fit:cover;
-  border-radius: 50%;
-}
-
-
 .messageLeftDiv{
   float: left;
   text-align: right;
@@ -144,20 +113,12 @@
   border-top-left-radius: 15px;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
+  margin-left: 2%;
+}
+.msgInput{
+  width: 80%;
 }
 
-.imageLeft{
-  float: left;
-  width: 40px;
-  height: 40px;
-  margin-right: 2px;
-  object-fit:cover;
-  border-radius: 50%;
-}
-
-@media screen and (max-width: 400px) {
-  .imageLeft, .imageRight{
-    width: 20px;
-    height: 20px;
-  }
+.sendMsgIcon{
+  max-width: 20%;
 }

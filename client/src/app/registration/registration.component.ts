@@ -23,6 +23,7 @@ export class RegistrationComponent implements OnInit {
   image: string = "default.png";
   filePath: string = "default.png";
   message: string = "";
+  err: string;
   @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
   files  = [];
 
@@ -62,13 +63,16 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit(userData) {
     userData.image = this.image;
-    this.http.post('https://lovemu.compsoc.ie/auth/register', userData, {withCredentials: true}).subscribe((res) => {
-      
+    this.http.post('https://lovemu.compsoc.ie/auth/register', userData, {withCredentials: true}).subscribe(res => {      
       this.authService.setUserInfo(res['token'], res['id']);
       if (this.authService.isAuthenticated()) {
         this.cookieService.delete("fileCookie");
         this.http.post('https://lovemu.compsoc.ie/upload/save', {filename:this.image, cookie:this.cookie}).subscribe();
         window.location.href= 'https://lovemu.compsoc.ie/spotify/reqAccess';
+      }
+    }, e => {
+      if (e instanceof HttpErrorResponse) {
+        this.err = e.error.message
       }
     });
   }

@@ -96,7 +96,11 @@ userSchema.methods.hashPassword = function(password) {
 };
 
 userSchema.methods.comparePassword = function(password) {
+
   return new Promise((resolve, reject) => {
+    if (!password || !this.password) {
+      reject('Password not Presented');
+    }
     resolve(bcrypt.compareSync(password, this.password));
   });
 };
