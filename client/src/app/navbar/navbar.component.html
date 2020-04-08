@@ -1,14 +1,14 @@
 <ng-container>
   <mat-toolbar class = "toolbar">
     <span>
-      <a routerLink = "/">LoveMu</a>
+      <a routerLink = "/"><span id='title'>Love<span id='mu'>μ</span></span></a>
     </span>
     <span class = "spacer"> </span>
     <a *ngIf = "authService.isAuthenticated()" routerLink = "/users">Dashboard</a>
     <a routerLink = "/message" *ngIf = "authService.isAuthenticated()">Messaging</a>
     <a *ngIf = "!authService.isAuthenticated()" routerLink = "/register" >Register</a>
     <a *ngIf = "!authService.isAuthenticated()" routerLink = "/login">Login</a>
-    <a *ngIf = "authService.isAuthenticated()" (click)="updateProfile()" [routerLink] = "['/users/', userService.getCurrentUser()]">Edit Profile</a>
+    <a *ngIf = "authService.isAuthenticated()" routerLink = "/myprofile">My Profile</a>
     <a routerLink = "/" (click) = "authService.logout()" *ngIf = "authService.isAuthenticated()">Logout</a>
   </mat-toolbar>
 </ng-container>

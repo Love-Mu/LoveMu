@@ -10,9 +10,10 @@ import { User } from '../users/User';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  @Input() update = new EventEmitter();
+  //@Input() update = new EventEmitter();
   userID: String;
   usrAuthed: boolean;
+  ProfileComponentObject;
 
   constructor(public userService: UsersService, public authService: AuthenticationService) {
   }
@@ -23,7 +24,7 @@ export class NavbarComponent implements OnInit {
   }
 
   updateProfile() {
-    this.update.emit(this.userID);
+    //this.update.emit(this.userID);
   }
 
 }

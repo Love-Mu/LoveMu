@@ -15,6 +15,7 @@ var deleteFolderRecursive = function(curPath) {
       }
     });
     fs.rmdirSync(curPath);
+    console.log("removed "+curPath);
   }
 };
    
@@ -67,7 +68,8 @@ exports.update = (req,res) =>{
     fs.copy('./public/temp/'+req.user.id+'/'+req.body.newFile, './uploads/'+req.body.newFile, err =>{
       if (err) return console.error(err);
       deleteFolderRecursive('./public/temp/'+req.user.id);
+      return res.status(200).json({message: "done"});
     });
   });
-  return res.status(200).json({message: "done"});
+  
 };

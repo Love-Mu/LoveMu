@@ -64,12 +64,12 @@ module.exports = {
       }
     }).exec((error, user) => {
       if (error) {
-        return res.json({
+        return res.status(500).json({
           error: err
         });
       }
       if (!user) {
-        return res.json({
+        return res.status(404).json({
           message: 'User not found'
         });
       }
@@ -102,11 +102,11 @@ module.exports = {
           }
         }).exec((err, user) => {
           if (err) {
-            res.json({
+            res.status(500).json({
               error: err
             });
           }
-          res.json({
+          res.status(200).json({
             message: "Successful Refresh!"
           });
         });
@@ -155,57 +155,27 @@ module.exports = {
         json: true,
       };
 
-      mapArtists(authOptionsArtists, user.blockedArtists).then((mapArtists) => {
+      Promise.all([mapArtists(authOptionsArtists, user.blockedArtists), mapGenres(authOptionsGenres), retrievePlaylists(authOptionsPlaylists)]).then((values) => {
         User.updateOne({
           _id: user._id
         }, {
           $set: {
-            artists: new Map([...mapArtists, ...user.artists])
+            artists: new Map([...values[0], ...user.artists]),
+            genres: new Map([...values[1], ...user.genres]),
+            playlists: values[2]
           }
         }).exec((err, user) => {
           if (err) {
             console.log(err);
             return res.status(500).json(err);
           }
+          return res.status(200).json({
+            message: 'Successfully Retrieved Details'
+          });
         });
-      }).catch((error) => {
-        console.log("Artist Error");
-        console.log(error);
-      });
-      mapGenres(authOptionsGenres).then((genres) => {
-        User.updateOne({
-          _id: user._id
-        }, {
-          $set: {
-            genres: new Map([...genres, ...user.genres])
-          }
-        }).exec((err, user) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).json(err);
-          }
-        });
-      }).catch((error) => {
-        console.log("Genre Error");
-        console.log(error);
-      });
-      retrievePlaylists(authOptionsPlaylists).then((playlists) => {
-        User.updateOne({
-          _id: user._id
-        }, {
-          $set: {
-            playlists: playlists
-          }
-        }).exec((err, user) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).json(err);
-          }
-        });
-      }).catch((error) => {
-        console.log("Playlist Error");
-        console.log(error);
-      });
+      }).catch((err) => res.status(500).json({
+        error: err
+      }));
     });
   },
 
@@ -245,9 +215,7 @@ function mapGenres(authOptions) {
         reject(err);
       }
       if (response.statusCode !== 200) {
-        reject({
-          message: 'Unauthorized Request'
-        });
+        reject('Unauthorized Request');
       }
       const items = await body.items;
       if (items != null) {
@@ -273,9 +241,7 @@ function mapArtists(authOptions, blocked) {
         reject(err);
       }
       if (response.statusCode !== 200) {
-        reject({
-          message: 'Unauthorized Request'
-        });
+        reject('Unauthorized Request');
       }
       const items = body.items;
       if (items != null) {
@@ -299,9 +265,7 @@ function retrievePlaylists(authOptions) {
         reject(err);
       }
       if (response.statusCode !== 200) {
-        reject({
-          message: 'Unauthorized Request'
-        });
+        reject('Unauthorized Request');
       }
       const playlists = body.items;
       if (playlists != null) {
@@ -320,9 +284,7 @@ function searchSpotify(query, type, authOptions) {
         reject(err);
       }
       if (res.statusCode !== 200) {
-        reject({
-          message: 'Unauthorized Request'
-        })
+        reject('Unauthorized Request')
       }
       if (type == 'track') {
         resolve(body.tracks);

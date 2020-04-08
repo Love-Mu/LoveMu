@@ -40,6 +40,7 @@ export class MessageComponent implements OnInit {
 
   @HostListener('scroll', ['$event'])
   scrollHandler(event){
+    console.log(event.srcElement.scrollHeight);
     if (event.srcElement.scrollTop < 1) {
       console.log(event.srcElement);
       let bottom = event.srcElement.scrollHeight;

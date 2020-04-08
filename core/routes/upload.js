@@ -16,6 +16,7 @@ var storage1 = multer.diskStorage({
 })
 var storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
+    console.log(req.user.id);
     let path = './public/temp/'+req.user.id+'/';
     fs.mkdirsSync(path);
     cb(null, path);

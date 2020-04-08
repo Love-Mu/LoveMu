@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
   { path: '', component: HomeComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService]},
+  { path: 'myprofile', component: ProfileComponent, canActivate: [AuthGuardService]},
   { path: 'users/:id', component: ProfileComponent, canActivate: [AuthGuardService]},
   { path: 'logout', component: LogoutComponent, canActivate: [AuthGuardService]},
   //{ path: 'messageTest', component: MessageTestComponent, canActivate: [AuthGuardService] },

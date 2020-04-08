@@ -118,12 +118,11 @@ i{
   padding: 10px;
 }
 
-
 .artistLink{
   color: #FF4081;
   text-decoration: none;
+  max-width: 80%;
 }
-
 
 button{
   margin: 2%;
@@ -146,4 +145,8 @@ button{
 
 .mat-form-field{
   max-width: 45%;
+}
+
+.removeArtistButton, .addArtistButton{
+  float: right;
 }

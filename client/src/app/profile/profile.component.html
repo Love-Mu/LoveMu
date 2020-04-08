@@ -90,6 +90,7 @@
       <div class = "title">
         Top Artists!
       </div>
+
       <div>
         <div *ngFor = "let artist of user.artists">
           <a class = "artistLink" href={{artist.external_urls.spotify}}>
@@ -106,15 +107,36 @@
       <div class = "title">
         Top Artists!
       </div>
-      <div>
-        <div *ngFor = "let artist of artists">
+      <button mat-icon-button *ngIf = "user && this.isCurrentUser" (click)="flipEditingArtist()"><mat-icon>edit</mat-icon></button><br>
+
+      <div *ngIf = "editingArtist">
+        <div *ngFor = "let artist of blockedArtists">
           <a class = "artistLink" href={{artist.external_urls.spotify}}>
-            <img class = "artistImage" src = "{{artist.images[0].url}}">
+            <img class = "artistImage" *ngIf = "artist.images[0] == null" src = "default.png">
+            <img class = "artistImage" *ngIf = "artist.images[0] != null" src = "{{artist.images[0].url}}">
             {{artist.name}}
           </a>
+          <div class = "addArtistButton">
+
+            <button mat-icon-button *ngIf = "user && this.isCurrentUser && editingArtist" (click)="addArtist(artist)"><mat-icon>add_circle_outline</mat-icon></button>
+          </div>
+          <br>
           <mat-divider></mat-divider>
         </div>
       </div>
+
+      <div *ngFor = "let artist of artists">
+          <a class = "artistLink" href={{artist.external_urls.spotify}}>
+            <img class = "artistImage" *ngIf = "artist.images[0] == null" src = "default.png">
+            <img class = "artistImage" *ngIf = "artist.images[0] != null" src = "{{artist.images[0].url}}">
+            {{artist.name}}
+          </a>
+          <div class = "removeArtistButton">
+            <button mat-icon-button *ngIf = "user && this.isCurrentUser && editingArtist" (click)="removeArtist(artist)"><mat-icon>clear</mat-icon></button>
+          </div>
+          <br>
+          <mat-divider></mat-divider>
+        </div>
     </mat-card>
   </div>
 
@@ -125,7 +147,7 @@
   <form class = "updateForm" [formGroup]="profileForm" (ngSubmit)="onSubmit(profileForm.value)">
     <mat-card class = "updateCard">
       <mat-card-content>
-
+        <p>{{err}}</p>
         <mat-form-field>
           <input matInput placeholder="First Name" formControlName="fname">
         </mat-form-field>&nbsp;

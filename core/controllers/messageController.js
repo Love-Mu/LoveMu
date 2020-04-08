@@ -50,7 +50,7 @@ module.exports = {
                 throw err;
                 return res.status(500).json(err);
             } else if (chatroom != undefined) {
-                Message.find().where('_id').in(chatroom.messages).sort({created_at: -1}).limit(10).exec((err, messages) => {
+                Message.find().where('_id').in(chatroom.messages).sort({created_at: -1}).limit(15).exec((err, messages) => {
                     return res.status(200).json(messages);
                 });
             }

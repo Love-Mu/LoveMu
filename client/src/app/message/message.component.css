@@ -57,7 +57,8 @@
 .msgDiv{
   width: 100%;
   height: fit-content;
-  margin-bottom: 5%;
+  margin-bottom: 5px;
+  clear: both;
 }
 
 .messages{
