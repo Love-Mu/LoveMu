@@ -37,12 +37,11 @@ module.exports = {
           error: err
         })
       }
-      if (!users) {
+      if (users.length == 0) {
         return res.status(200).json({
           message: 'No Users Found'
         });
       }
-      console.log("Users:", users);
       if (users.length > 1) {
         similarityGeneratorAll(curr, users).then((result) => {
           return new Promise((resolve, reject) => {
@@ -58,7 +57,13 @@ module.exports = {
           });
         });
       } else {
-        res.status(200).json(users);
+        res.status(200).json([{
+          _id: users[0]._id,
+          fname: users[0].fname,
+          sname: users[0].sname,
+          bio: users[0].bio,
+          image: users[0].image
+        }]);
       }
     });
   },

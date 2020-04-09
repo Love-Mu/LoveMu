@@ -75,6 +75,7 @@ const config: SocketIoConfig = { url: 'https://lovemu.compsoc.ie/', options: {}}
     MatAutocompleteModule,
     MatSidenavModule,
     MatFormFieldModule,
+    MatExpansionModule,
     MatSelectModule,
     MatInputModule,
     MatButtonModule,

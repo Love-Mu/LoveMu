@@ -10,7 +10,7 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-describe.only('Profile', () => {
+describe('Profile', () => {
     let authorisedUser = chai.request.agent(server);
     let userID;
     let token;
@@ -99,13 +99,11 @@ describe.only('Profile', () => {
         it('it should not return users that have blocked currUser', (done) => {
             User.update({user_name:"MaleMale"},{blocked: [userID]}).exec((err,user) =>{
                 User.update({_id:userID},{sexuality:"Male"}).exec((err,user1) =>{
-                    console.log(userID);
                     authorisedUser
                     .get('/profiles/')
                     .set("Authorization", "Bearer " + token)
                     .end((err, res) => {
                         res.should.have.status(200);
-                        console.log(res.body);
                         res.body.should.be.a('array');
                         res.body.should.have.length(1);
                         res.body[0].should.have.property('sname').that.does.not.eql("Male");
@@ -114,38 +112,155 @@ describe.only('Profile', () => {
                 });
             });
         });
-        it('it should return a message if no users match');
-    });
-    describe('/:id', () => {
-        describe('GET', () => {
-            it('it should get current users profile info when req userID', (done) => {
+        it('it should return a message if no users match',(done) => {
+            User.update({_id:userID},{sexuality:"Other"}).exec((err,user) =>{
                 authorisedUser
-                .get('/profiles/'+userID)
+                .get('/profiles/')
                 .set("Authorization", "Bearer " + token)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.message.should.eql("No Users Found");
                     done();
-                })
+                });
+            });
+        });
+    });
+    describe('/:id', () => {
+        describe('GET', () => {
+            it('it should get current users profile info when req userID', (done) => {
+                User.update({_id:userID},{sexuality:"Male"}).exec((err,user) =>{
+                    authorisedUser
+                    .get('/profiles/'+userID)
+                    .set("Authorization", "Bearer " + token)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('email').that.eqls("test@user.com");
+                        res.body.should.have.property('user_name').that.eqls("TestUser");
+                        res.body.should.have.property('fname').that.eqls("Test");
+                        res.body.should.have.property('sname').that.eqls("User");
+                        res.body.should.have.property('location').that.eqls("Galway");
+                        res.body.should.have.property('image').that.eqls("default.png");
+                        res.body.should.have.property('gender').that.eqls("Male");
+                        res.body.should.have.property('sexuality').that.eqls("Men");
+                        res.body.should.have.property('bio').that.eqls("Hello");
+                        done();
+                    });
+                });
+            });
+            it('it should get other users profile info when req otherUserID', (done) => {
+                User.findOne({user_name: 'MaleMale'}).exec((err,user) =>{
+                    otherID = user._id;
+                    authorisedUser
+                    .get('/profiles/'+otherID)
+                    .set("Authorization", "Bearer " + token)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('email').that.eqls("male@male.com");
+                        res.body.should.have.property('user_name').that.eqls("MaleMale");
+                        res.body.should.have.property('fname').that.eqls("Male");
+                        res.body.should.have.property('sname').that.eqls("Male");
+                        res.body.should.have.property('location').that.eqls("Galway");
+                        res.body.should.have.property('image').that.eqls("default.png");
+                        res.body.should.have.property('gender').that.eqls("Male");
+                        res.body.should.have.property('sexuality').that.eqls("Men");
+                        res.body.should.have.property('bio').that.eqls("Hello");
+                        done();
+                    });
+                }); 
             });
         });
         describe('PUT', () => {
-            before((done) => { 
-                done();            
+            it('it should update the current users profile with new info', (done) =>{
+                authorisedUser
+                .put('/profiles/'+userID)
+                .set("Authorization", "Bearer " + token)
+                .send({
+                    user_name: "TestUser",
+                    fname: "Testing",
+                    sname: "User",
+                    dob: "2000-01-01 00:00:00.00Z",
+                    location: "Ireland",
+                    image: "default.png",
+                    gender: "Male",
+                    sexuality: "Everyone",
+                    bio: "Hello there",
+                    blocked: [],
+                    playlist: "",
+                    favouriteSong: ""
+                })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').that.eqls("Successful Update!");
+                    User.findOne({_id:userID}).exec((err,user) => {
+                        user.should.have.property('email').that.eqls("test@user.com");
+                        user.should.have.property('user_name').that.eqls("TestUser");
+                        user.should.have.property('fname').that.eqls("Testing");
+                        user.should.have.property('sname').that.eqls("User");
+                        user.should.have.property('location').that.eqls("Ireland");
+                        user.should.have.property('image').that.eqls("default.png");
+                        user.should.have.property('gender').that.eqls("Male");
+                        user.should.have.property('sexuality').that.is.a('array').that.has.members(["Male","Female","Rather Not Say", "Other"]);
+                        user.should.have.property('bio').that.eqls("Hello there");
+                        done();
+                    });
+                });
             });
-            it('it should');
         });
     });
-    describe('/block/:id', () => {
-        before((done) => { 
-            done();            
+    describe('/:id/block', () => {
+        it('it should add user to blocked list',(done)=>{
+            User.findOne({user_name: 'MaleMale'}).exec((err,user) =>{
+                otherID = user._id;
+                authorisedUser
+                .post('/profiles/'+otherID+'/block')
+                .set("Authorization", "Bearer " + token)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.message.should.eql("Successfully Blocked User")
+                    User.findOne({_id:userID}).exec((err,user) => {
+                        user.should.have.property('blocked');
+                        user.blocked.should.contain(otherID);
+                        done();
+                    });
+                });
+            }); 
         });
-        it('it should');
     });
-    describe('/unblock/:id', () => {
-        before((done) => { 
-            done();            
+    describe('/:id/unblock', () => {
+        it('it should remove blocked user from the array', (done)=>{
+            User.findOne({user_name: 'MaleMale'}).exec((err,user) =>{
+                otherID = user._id;
+                User.findOne({_id:userID}).exec((err,user) => { //ensure user blocked before unblocking
+                    user.should.have.property('blocked');
+                    user.blocked.should.contain(otherID);
+                    authorisedUser
+                    .post('/profiles/'+otherID+'/unblock')
+                    .set("Authorization", "Bearer " + token)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        res.body.message.should.eql("Successfully Unblocked User")
+                        User.findOne({_id:userID}).exec((err,user) => {
+                            user.should.have.property('blocked');
+                            user.blocked.should.not.contain(otherID);
+                            done();
+                        });
+                    });
+                });    
+            });
         });
-        it('it should');
     });
+    after((done) =>{
+        User.remove({}, (err) =>{
+            done();
+        })
+    })
 });
