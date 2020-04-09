@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'dark.scss';
 
 html, body { height: ol 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
@@ -61,12 +62,12 @@ span{
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #542361 !important;
+  background: var(--navbar-background-color) !important;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #542361 !important;
+  background: var(--navbar-background-color) !important;
 }
 
 /* Loading animation */
@@ -113,4 +114,8 @@ select:-webkit-autofill:focus {
   -webkit-text-fill-color: var(--font-color);
   -webkit-box-shadow: 0 0 0px 0px transparent inset;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark {
+  @include 'dark.scss'
 }
