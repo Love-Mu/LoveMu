@@ -307,31 +307,31 @@ module.exports = {
     }
     const artists = req.user.artists;
     const blockedArtists = req.user.blockedArtists;
-    if (!artists.has(req.body.artist.id)) {
-      artists.set(req.body.artist.id, req.body.artist);
-      blockedArtists.delete(req.body.artist.id);
-      User.findOneAndUpdate({
-        _id: req.user.id
-      }, {
-        $set: {
-          artists: artists,
-          blockedArtists: blockedArtists
-        }
-      }).exec((err, user) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).json({
-            error: err
-          });
-        }
-        return res.status(200).json({
-          message: "Artist Added",
-          artists: Array.from(artists.values()),
-          blockedArtists: Array.from(blockedArtists.values())
-        });
-      });
+    if (artists.has(req.body.artist.id)) {
+      return res.status(500).json({message: "Artist Already Present"});
     }
-    return res.status(500).json({message: "Artist Already Present"});
+    artists.set(req.body.artist.id, req.body.artist);
+    blockedArtists.delete(req.body.artist.id);
+    User.findOneAndUpdate({
+      _id: req.user.id
+    }, {
+      $set: {
+        artists: artists,
+        blockedArtists: blockedArtists
+      }
+    }).exec((err, user) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          error: err
+        });
+      }
+      return res.status(200).json({
+        message: "Artist Added",
+        artists: Array.from(artists.values()),
+        blockedArtists: Array.from(blockedArtists.values())
+      });
+    });
   }
 };
 
