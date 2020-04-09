@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 
-export const darkThemeGreen = {
+export const darkTheme = {
   'background-color': '#1C1D21',
-  'accent-color': '#70B77E',
+  'navbar-background-color': '#428081',
+  'accent-color': '#196466',
   'font': 'Roboto Medium',
-  'font-color': 'Black'
+  'font-transparency': 0.95,
+  'font-color': 'White',
+  'card-background': '#39393B'
 }
 
-export const lightTheme = {}
+export const lightTheme = {
+  'background-color': '#ebeeff',
+  'navbar-background-color': '#473f53'
+}
 
 @Injectable({
   providedIn: 'root'
