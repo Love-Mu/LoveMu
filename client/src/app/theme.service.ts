@@ -8,7 +8,8 @@ export const darkTheme = {
   'font-transparency': 0.95,
   'font-color': 'white',
   'card-background-color': '#39393B',
-  'card-text-color': 'white'
+  'card-text-color': 'white',
+  'hover-color': '#87898f'
 }
 
 export const lightTheme = {
@@ -17,7 +18,8 @@ export const lightTheme = {
   'accent-color': '#6f94a0',
   'font-color': 'black',
   'card-background-color': 'white',
-  'card-text-color': 'black'
+  'card-text-color': 'black',
+  'hover-color': '#ebeeff'
 }
 
 @Injectable({

@@ -21,7 +21,8 @@
             <div class = "recentMsg" *ngIf = "!isMobileLayout">
               <span *ngIf = "convo.messages[convo.messages.length - 1].sender == convo.user._id">{{convo.user.fname}}: </span>
               <span *ngIf = "convo.messages[convo.messages.length - 1].sender == user._id"> {{user.fname}}: </span>
-              {{convo.messages[convo.messages.length - 1].body.substring(0, 30)}}
+              {{convo.messages[convo.messages.length - 1].body.substring(0, 90)}}
+              <span *ngIf = "convo.messages[convo.messages.length - 1].body.length > 90">...</span>
               <br>
               <span class = "time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</span>
             </div>
@@ -42,7 +43,8 @@
             <div class = "recentMsg" *ngIf = "!isMobileLayout">
               <span *ngIf = "convo.messages[convo.messages.length - 1].sender == convo.user._id">{{convo.user.fname}}: </span>
               <span *ngIf = "convo.messages[convo.messages.length - 1].sender == user._id"> {{user.fname}}: </span>
-              {{convo.messages[convo.messages.length - 1].body.substring(0, 60)}}
+              {{convo.messages[convo.messages.length - 1].body.substring(0, 90)}}
+              <span *ngIf = "convo.messages[convo.messages.length - 1].body.length > 90">...</span>
               <br>
               <span class = "time">{{convo.messages[convo.messages.length - 1].created_at | date:'short'}}</span>
             </div>

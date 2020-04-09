@@ -33,11 +33,11 @@
   margin: 5%;
 }
 .activePerson{
-  background-color: #542361;
+  background-color: var(--navbar-background-color);
   color: #ebebeb;
 }
 .person:hover{
-  background-color: #ebeeff;
+  background-color: var(--hover-color);
 }
 .img i{
   position: absolute;

@@ -121,11 +121,11 @@ export class ProfileComponent implements OnInit {
       this.newFile = user.image;
       this.filePath = user.image;
       console.log(user);
-      if (this.user.favouriteSong != null || this.user.favouriteSong != '') {
-        this.user.favouriteSong = `https://open.spotify.com/embed/track/${this.user.favouriteSong.substring(34, this.user.favouriteSong.length)}`;
+      if (this.user.favouriteSong != null && this.user.favouriteSong != '') {
+        this.user.favouriteSong = `https://open.spotify.com/embed/track/${this.user.favouriteSong.substring(31, this.user.favouriteSong.length)}`;
         this.songUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.user.favouriteSong);
       }
-      if (this.user.playlist != null || this.user.favouriteSong != '') {
+      if (this.user.playlist != null && this.user.favouriteSong != '') {
         this.user.playlist = `https://open.spotify.com/embed/playlist/${this.user.playlist.substring(34, this.user.playlist.length)}`;
         this.playlistUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.user.playlist);
       }

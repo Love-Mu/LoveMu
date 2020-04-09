@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../users.service';
+import { SpotifyService } from '../spotify.service';
 import { User } from './User';
 
 @Component({
@@ -11,11 +12,12 @@ export class UsersComponent implements OnInit {
   users: User[];
   breakpoint;
 
-  constructor(private userService: UsersService) { }
+  constructor(private userService: UsersService, private spotifyService: SpotifyService) { }
 
   ngOnInit() {
     this.getUsers();
     this.breakpoint = (window.innerWidth <= 480) ? 1 : 6;
+    this.spotifyService.refreshSpotify();
   }
 
   onResize(event) {

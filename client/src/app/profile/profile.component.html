@@ -57,31 +57,18 @@
       </mat-card-content>
     </mat-card>
     <br>
-
-    <!-- Second card in profile div: spotify widget -->
-    <mat-card class = "spotifyWidget">
-      <div class="playlist">
-          <iframe *ngIf="playlistUrl != undefined"[src]=playlistUrl width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-      </div>
-    </mat-card>
+    <!-- Spotify widget -->
+    <iframe class = "playlistWidget" *ngIf="playlistUrl != undefined"[src]=playlistUrl frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   </div> <!-- End of profile div -->
 
   <!-- this second div will contain music info and will either be to right or underneath profile div -->
   <div class = "music">
-    <mat-card class = "faveSongCard">
-      <span class = "title">Favourite song!</span><br>
-      <!--
-      <iframe *ngIf="favouriteSong != undefined"[src]=favouriteSong width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-   -->
-    </mat-card>
-
-
-    <!-- card that displays artists that overlap with current user and user of profile they're viewing -->
+      <iframe class = "faveSong" *ngIf="songUrl != undefined"[src]=songUrl frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <!-- card that displays artists that users have in common -->
     <mat-card class = "overlappingArtists" *ngIf = "(user && !this.isCurrentUser) && (user.overlappingArtists.length != 0)">
       <div class = "title">
         Artists you have in common!
       </div>
-      <div>
         <div *ngFor = "let artist of user.overlappingArtists">
           <a class = "artistLink" href={{artist.external_urls.spotify}}>
             <img class = "artistImage" src = "{{artist.images[0].url}}">
@@ -89,28 +76,10 @@
           </a>
           <mat-divider></mat-divider>
         </div>
-      </div>
     </mat-card>
 
     <!-- Card that displays a users top/favourite artists -->
-    <mat-card class = "topArtists" *ngIf = "(user && !this.isCurrentUser) && (user.overlappingArtists.length != 0)">
-      <div class = "title">
-        Top Artists!
-      </div>
-
-      <div>
-        <div *ngFor = "let artist of user.artists">
-          <a class = "artistLink" href={{artist.external_urls.spotify}}>
-            <img class = "artistImage" *ngIf = "artist.images[0] == null" src = "default.png">
-            <img class = "artistImage" *ngIf = "artist.images[0] != null" src = "{{artist.images[0].url}}">
-            <span class = "spans">{{artist.name}}</span>
-          </a>
-          <mat-divider></mat-divider>
-        </div>
-      </div>
-    </mat-card>
-
-    <mat-card class = "topCurrent" *ngIf = "(user && this.isCurrentUser) || user.overlappingArtists.length == 0">
+    <mat-card [ngClass] = "{'topArtists': user.overlappingArtists != [], 'topCurrent': (user.overlappingArtists == []) || (user && this.isCurrentUser)}">
       <div class = "title">
         Top Artists!
       </div>

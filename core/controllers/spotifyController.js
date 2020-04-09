@@ -44,7 +44,7 @@ module.exports = {
           spotify_token: refresh_token
         }));
       } else {
-        throw (err);
+        return res.status(500).json({message: 'Error in Request'});
       }
     });
   },
