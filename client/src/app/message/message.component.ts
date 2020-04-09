@@ -25,6 +25,7 @@ export class MessageComponent implements OnInit {
   public isMobileLayout = false;
   public isMenuOpen = true;
   public chatroomEmpty = false;
+  passedID: String;
 
   constructor(@Inject(DOCUMENT) private document: Document, @Inject(WINDOW) private window: Window, private formBuilder: FormBuilder, public messageService: MessageService, private userService: UsersService, private route: ActivatedRoute) {
     this.messageForm = this.formBuilder.group({
@@ -35,8 +36,8 @@ export class MessageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
-    let id = this.route.snapshot.paramMap.get('id');
-    if (id != null) this.getActiveUser(id);
+    this.passedID = this.route.snapshot.paramMap.get('id');
+    if (this.passedID != null) this.getActiveUser(this.passedID);
 
     this.socketMessages();
 
@@ -109,7 +110,7 @@ export class MessageComponent implements OnInit {
     this.activeChatroom = chatroom;
     this.activeUser = chatroom.user;
     this.getMessages(this.activeUser._id);
-    console.log(this.activeChatroom);
+    this.messageForm.reset();
   }
 
   getMessages(id) {
@@ -141,7 +142,8 @@ export class MessageComponent implements OnInit {
   getInitChatrooms() {
     this.messageService.getInitChatrooms().subscribe(chatrooms => {
       this.chatrooms = chatrooms;
-      if (this.chatrooms.length == 0) {
+      if (chatrooms.length == 0 && (!this.passedID && this.passedID != this.user._id.toString())) {
+        console.log(chatrooms);
         this.chatroomEmpty = true;
       } else {
         this.chatrooms.forEach((e) => {
@@ -176,7 +178,6 @@ export class MessageComponent implements OnInit {
     userData.sender = this.user._id;
     userData.recipient = this.activeUser._id;
     this.messageService.sendMessage(userData);
-    this.messageForm.clear;
-    this.messageForm.body = '';
+    this.messageForm.reset();
   }
 }

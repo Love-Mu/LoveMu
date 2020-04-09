@@ -23,7 +23,7 @@ button{
 }
 
 .registrationCard{
-  background-color: white;
+  background-color: var(--card-background-color);
   border-radius: 5%;
   margin-top: 0%;
   margin-bottom: 2%;

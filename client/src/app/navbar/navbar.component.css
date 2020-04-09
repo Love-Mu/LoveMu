@@ -1,6 +1,6 @@
 .toolbar{
   height: 7vh;
-  background-color: #542361;
+  background-color: var(--navbar-background-color);
 }
 
 a{

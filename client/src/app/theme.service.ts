@@ -6,13 +6,18 @@ export const darkTheme = {
   'accent-color': '#196466',
   'font': 'Roboto Medium',
   'font-transparency': 0.95,
-  'font-color': 'White',
-  'card-background': '#39393B'
+  'font-color': 'white',
+  'card-background-color': '#39393B',
+  'card-text-color': 'white'
 }
 
 export const lightTheme = {
   'background-color': '#ebeeff',
-  'navbar-background-color': '#473f53'
+  'navbar-background-color': '#542361',
+  'accent-color': '#6f94a0',
+  'font-color': 'black',
+  'card-background-color': 'white',
+  'card-text-color': 'black'
 }
 
 @Injectable({
@@ -20,8 +25,8 @@ export const lightTheme = {
 })
 
 export class ThemeService {
-  toggleDarkThemeGreen() {
-    this.setTheme(darkThemeGreen);
+  toggleDarkTheme() {
+    this.setTheme(darkTheme);
   }
 
   toggleLightTheme() {

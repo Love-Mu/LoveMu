@@ -1,3 +1,8 @@
+mat-card-content {
+  background-color: var(--card-background-color);
+  color: var(--card-text-color);
+}
+
 .container{
   display: flex;
   flex-direction: row;
@@ -35,7 +40,7 @@
 .userInfo{
   height: 40px;
   line-height: 40px;
-  background-color: #6c919e;
+  background-color: var(--accent-color);
 }
 
 .vertical{
@@ -47,7 +52,7 @@
 }
 
 .userBio{
-  background-color: #6f94a0;
+  background-color: var(--accent-color);
   height: 80px;
   line-height: 80px;
 }

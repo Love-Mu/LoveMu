@@ -4,6 +4,7 @@ import {Location} from '@angular/common';
 
 import { AuthenticationService } from './authentication.service';
 import { SpotifyService } from './spotify.service';
+import { ThemeService } from './theme.service';
 
 @Component({
   selector: 'app-root',
@@ -13,12 +14,13 @@ import { SpotifyService } from './spotify.service';
 export class AppComponent {
   title = 'LoveMu';
 
-  constructor (private location: Location, private authService: AuthenticationService, private spotifyService: SpotifyService) { }
+  constructor (private location: Location, private authService: AuthenticationService, private spotifyService: SpotifyService, private themeService: ThemeService) { }
 
   ngOnInit() {
     this.authService.isAuthenticated();
     this.spotifyService.handleSpotify();
     this.authService.googleValidate();
+    this.themeService.toggleLightTheme();
   }
 
   cancel() {
