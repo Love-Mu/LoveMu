@@ -1,21 +1,32 @@
 import { Injectable } from '@angular/core';
 
-export const darkThemeGreen = {
+export const darkTheme = {
   'background-color': '#1C1D21',
-  'accent-color': '#70B77E',
+  'navbar-background-color': '#428081',
+  'accent-color': '#196466',
   'font': 'Roboto Medium',
-  'font-color': 'Black'
+  'font-transparency': 0.95,
+  'font-color': 'white',
+  'card-background-color': '#39393B',
+  'card-text-color': 'white'
 }
 
-export const lightTheme = {}
+export const lightTheme = {
+  'background-color': '#ebeeff',
+  'navbar-background-color': '#542361',
+  'accent-color': '#6f94a0',
+  'font-color': 'black',
+  'card-background-color': 'white',
+  'card-text-color': 'black'
+}
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ThemeService {
-  toggleDarkThemeGreen() {
-    this.setTheme(darkThemeGreen);
+  toggleDarkTheme() {
+    this.setTheme(darkTheme);
   }
 
   toggleLightTheme() {

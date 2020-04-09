@@ -135,3 +135,7 @@ button{
   width: 40%;
   height: fit-content;
 }
+.faveSongCard{
+  text-align: center;
+  margin-bottom: 5vh;
+}

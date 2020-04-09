@@ -5,13 +5,14 @@
     <mat-card class = "mainProfile">
       <mat-card-content>
         <div *ngIf = "user && !this.isCurrentUser">
-          <!-- Match % -->
+          <!-- Match % based on music taste -->
           {{user.score}}% Match
           <section class="section">
             <mat-progress-bar value = "{{user.score}}" color = "accent">
             </mat-progress-bar>
           </section>
         </div>
+        <!--Edit profile button only shown if on own profile and block button shown on other users profiles -->
         <div *ngIf = "user && this.isCurrentUser">
           <button (click)="editUser = true" class = "editButton" mat-raised-button>Edit Profile</button>
         </div>
@@ -19,8 +20,7 @@
           <button (click)="blockUser()" class = "editButton" mat-raised-button>Block User</button>
         </div>
         <!-- User image -->
-        <img src = {{user.image}} class = "userImage">
-        <br><br>
+        <img src = {{user.image}} class = "userImage"> <br><br>
         <!-- Name, Sexuality, Gender, Location - with icons -->
         <div class = "info">
           <div class = "basicInfo">
@@ -51,11 +51,11 @@
         <br>
         <mat-divider></mat-divider>
         <br>
+        <!-- Message user button and refresh spotify button -->
         <button *ngIf = "user && !this.isCurrentUser" routerLink="/message/{{user._id}}"mat-raised-button="">Send a message!</button>
         <button *ngIf = "user && this.isCurrentUser" mat-raised-button (click)="spotifyService.refreshSpotify()">Refresh Spotify</button>
       </mat-card-content>
     </mat-card>
-
     <br>
 
     <!-- Second card in profile div: spotify widget -->
@@ -66,8 +66,15 @@
     </mat-card>
   </div> <!-- End of profile div -->
 
-  <!-- this second div will contain music info and will either be to right or underneath above div -->
+  <!-- this second div will contain music info and will either be to right or underneath profile div -->
   <div class = "music">
+    <mat-card class = "faveSongCard">
+      <span class = "title">Favourite song!</span><br>
+      <!--
+      <iframe *ngIf="favouriteSong != undefined"[src]=favouriteSong width="300" height="320" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+   -->
+    </mat-card>
+
 
     <!-- card that displays artists that overlap with current user and user of profile they're viewing -->
     <mat-card class = "overlappingArtists" *ngIf = "(user && !this.isCurrentUser) && (user.overlappingArtists.length != 0)">
