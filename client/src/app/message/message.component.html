@@ -1,4 +1,4 @@
-<div class = "container" *ngIf = "this.chatrooms != null && this.chatrooms != undefined">
+<div class = "container" *ngIf = "!chatroomEmpty">
   <!-- chatlist will have an ngif menu open -->
   <div *ngIf = "isMenuOpen" [ngClass] = "{'openChatlist': isMenuOpen, 'closedChatlist': !isMenuOpen}"  class = "chatList">
     <div style = "text-align: left">
@@ -84,6 +84,6 @@
   </div>
 </div>
 
-<div *ngIf = "this.chatrooms == null" class = "noMessages">
+<div *ngIf = "chatroomEmpty" class = "noMessages">
   <span> We're sorry, you have no messages. <br> To start a conversation, go to a users profile and click message!</span>
 </div>

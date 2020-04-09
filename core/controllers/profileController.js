@@ -9,12 +9,10 @@ const User = require('../models/User');
 
 module.exports = {
   getProfiles: async (req, res, next) => {
-    const curr = await req.user;
-    const id = curr.id;
+    const curr = req.user;
     const sexuality = curr.sexuality;
     const gender = curr.gender;
     const blocked = curr.blocked;
-    console.log
     let filters = {
       _id: {
         $ne: curr._id,
@@ -27,7 +25,7 @@ module.exports = {
         $in: gender
       },
       blocked: {
-        $ne: curr._id
+        $ne: curr.id
       }
     };
     if (req.body.location != null) {
@@ -39,7 +37,7 @@ module.exports = {
           error: err
         })
       }
-      if (!users) {
+      if (users.length == 0) {
         return res.status(200).json({
           message: 'No Users Found'
         });
@@ -59,30 +57,13 @@ module.exports = {
           });
         });
       } else {
-        similarityGeneratorUser(curr, users).then((result) => {
-          console.log(usrs.image);
-          res.json([{
-            _id: users._id,
-            user_name: users.user_name,
-            fname: users.fname,
-            sname: users.sname,
-            gender: users.gender,
-            location: users.location,
-            bio: users.bio,
-            artists: users.artists || new Map(),
-            playlist: users.playlist || '',
-            playlists: users.playlists || [],
-            favouriteSong: users.favouriteSong || '',
-            image: users.image,
-            score: Math.round(result.score) || 0,
-            blocked: users.blocked
-          }]);
-        }).catch((err) => {
-          console.log(err);
-          res.status(500).json({
-            error: err
-          });
-        });
+        res.status(200).json([{
+          _id: users[0]._id,
+          fname: users[0].fname,
+          sname: users[0].sname,
+          bio: users[0].bio,
+          image: users[0].image
+        }]);
       }
     });
   },
@@ -326,28 +307,31 @@ module.exports = {
     }
     const artists = req.user.artists;
     const blockedArtists = req.user.blockedArtists;
-    artists.set(req.body.artist.id, req.body.artist);
-    blockedArtists.delete(req.body.artist.id);
-    User.findOneAndUpdate({
-      _id: req.user.id
-    }, {
-      $set: {
-        artists: artists,
-        blockedArtists: blockedArtists
-      }
-    }).exec((err, user) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          error: err
+    if (!artists.has(req.body.artist.id)) {
+      artists.set(req.body.artist.id, req.body.artist);
+      blockedArtists.delete(req.body.artist.id);
+      User.findOneAndUpdate({
+        _id: req.user.id
+      }, {
+        $set: {
+          artists: artists,
+          blockedArtists: blockedArtists
+        }
+      }).exec((err, user) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            error: err
+          });
+        }
+        return res.status(200).json({
+          message: "Artist Added",
+          artists: Array.from(artists.values()),
+          blockedArtists: Array.from(blockedArtists.values())
         });
-      }
-      return res.status(200).json({
-        message: "Artist Added",
-        artists: Array.from(artists.values()),
-        blockedArtists: Array.from(blockedArtists.values())
       });
-    });
+    }
+    return res.status(500).json({message: "Artist Already Present"});
   }
 };
 
@@ -376,7 +360,11 @@ function similarityGeneratorUser(currUser, user) {
         artists: value[1].artists
       });
     }).catch((error) => {
-      reject(error);
+      resolve({
+        score: 0,
+        overlappingArtists: new Map(),
+        artists: new Map()
+      })
     });
   })
 }
@@ -398,7 +386,17 @@ function similarityGeneratorAll(currUser, users) {
           image: user.image,
           score: Math.round(score * 100) || 0
         });
-      })
+      }).catch((err) => {
+        userArray.push({
+          _id: user._id,
+          fname: user.fname,
+          sname: user.sname,
+          location: user.location,
+          bio: user.bio,
+          image: user.image,
+          score: Math.round(score * 100) || 0
+        });
+      });
     });
     resolve(userArray);
   });
@@ -424,6 +422,14 @@ function compareGenres(usr1, usr2) {
     let keys = [];
     let usr1Score = [];
     let usr2Score = [];
+    if (usr1.genres == null || usr2.genres == null) {
+      reject("Genres are Non-Existant")
+    }
+    if (usr1._id.toString() == usr2._id.toString()) {
+      resolve({
+        score: 100
+      });
+    }
     usr1.genres.forEach((value, key, map) => {
       usr1Score.push(value);
       if (usr2.genres.has(key)) {

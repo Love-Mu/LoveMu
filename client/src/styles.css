@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
+html, body { height: ol 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
@@ -31,14 +31,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 
 
-h2{
+h2 {
   color: white;
   text-align: center;
   font-family: 'Gotu', sans-serif !important;
   font-size: 25px !important;
 }
 
-h3{
+h3 {
   color: white;
   text-align: center;
   font-family: 'Gotu', sans-serif !important;

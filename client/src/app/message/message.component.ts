@@ -141,7 +141,7 @@ export class MessageComponent implements OnInit {
   getInitChatrooms() {
     this.messageService.getInitChatrooms().subscribe(chatrooms => {
       this.chatrooms = chatrooms;
-      if (chatroom.length == 0) {
+      if (this.chatrooms.length == 0) {
         this.chatroomEmpty = true;
       } else {
         this.chatrooms.forEach((e) => {

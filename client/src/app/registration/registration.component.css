@@ -44,3 +44,10 @@ button{
 input[type="email"] {
   text-transform: lowercase;
 }
+
+.userImage{
+  width:100px;
+  height:100px;
+  border-radius: 5%;
+  object-fit:cover;
+}

@@ -6,6 +6,8 @@ export class Track {
         spotify: string;
     };
     name: string;
-    images: Array<Image>;
-    artist: Artist;
+    album: {
+        images: Array<Image>;
+    };
+    artists: Array<Artist>;
 }
