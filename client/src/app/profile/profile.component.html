@@ -96,7 +96,7 @@
           <a class = "artistLink" href={{artist.external_urls.spotify}}>
             <img class = "artistImage" *ngIf = "artist.images[0] == null" src = "default.png">
             <img class = "artistImage" *ngIf = "artist.images[0] != null" src = "{{artist.images[0].url}}">
-            {{artist.name}}
+            <span class = "spans">{{artist.name}}</span>
           </a>
           <mat-divider></mat-divider>
         </div>
@@ -116,7 +116,7 @@
           <a class = "artistLink" href={{artist.external_urls.spotify}}>
             <img class = "artistImage" *ngIf = "artist.images[0] == null" src = "default.png">
             <img class = "artistImage" *ngIf = "artist.images[0] != null" src = "{{artist.images[0].url}}">
-            {{artist.name}}
+            <span class = "spans"> {{artist.name}} </span>
           </a>
           <div class = "addArtistButton">
           <button mat-icon-button *ngIf = "user && this.isCurrentUser && editingArtist" (click)="addArtist(artist)"><mat-icon>add_circle_outline</mat-icon></button>
@@ -130,7 +130,7 @@
           <a class = "artistLink" href={{artist.external_urls.spotify}}>
             <img class = "artistImage" *ngIf = "artist.images[0] == null" src = "default.png">
             <img class = "artistImage" *ngIf = "artist.images[0] != null" src = "{{artist.images[0].url}}">
-            {{artist.name}}
+            <span class = "spans">{{artist.name}}</span>
           </a>
           <div class = "addArtistButton">
           <button mat-icon-button *ngIf = "user && this.isCurrentUser && editingArtist" (click)="addArtist(artist)"><mat-icon>add_circle_outline</mat-icon></button>
@@ -144,7 +144,7 @@
           <a class = "artistLink" href={{artist.external_urls.spotify}}>
             <img class = "artistImage" *ngIf = "artist.images[0] == null" src = "default.png">
             <img class = "artistImage" *ngIf = "artist.images[0] != null" src = "{{artist.images[0].url}}">
-            {{artist.name}}
+            <span class = "spans">{{artist.name}}</span>
           </a>
           <div class = "removeArtistButton">
             <button mat-icon-button *ngIf = "user && this.isCurrentUser && editingArtist" (click)="removeArtist(artist)"><mat-icon>clear</mat-icon></button>
@@ -185,15 +185,12 @@
 
         <br>
 
-        <!--
-        <mat-form-field>
-          <mat-select name="country" placeholder="Country" formControlName = "country">
-            <option *ngFor = "let country of countries" value="{{country??}}">Select Country</option>
-          </mat-select>
-        </mat-form-field>&nbsp;
-        -->
-
-        <br>
+      <mat-form-field>
+        <mat-select placeholder="Country" formControlName="location">
+          <mat-option *ngFor="let location of locations" value="{{location}}">{{location}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="location.hasError('required')">Location is Required</mat-error>
+      </mat-form-field>&nbsp;
 
         <mat-form-field>
           <mat-select formControlName="gender" placeholder="Gender">
@@ -202,7 +199,7 @@
             <mat-option value="Rather Not Say">Rather Not Say</mat-option>
             <mat-option value="Other">Other</mat-option>
           </mat-select>
-        </mat-form-field>&nbsp;
+        </mat-form-field><br>
 
         <mat-form-field>
           <mat-select formControlName="sexuality" placeholder="I want to see">
@@ -219,8 +216,27 @@
           </mat-select>
         </mat-form-field>&nbsp;
         <mat-form-field>
-          <input type="text" matInput placeholder="Search" formControlName="query" (keyup)="search(profileForm.value.query, 'track')">
-        </mat-form-field>
+          <input type="text" matInput placeholder="Favourite Song" formControlName="query" (keyup)="search(profileForm.value.query, 'track')">
+        </mat-form-field> <br>
+        <mat-form-field>
+          <div class = "songSearch">
+            <mat-expansion-panel *ngIf="trackSearchResults.length==0">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Search Results
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div *ngFor = "let song of trackSearchResults">
+                <a class = "songLink" href={{song.external_urls.spotify}}>
+                  <img class = "albumImage" *ngIf = "song.album.images[0] == null" src = "default.png">
+                  <img class = "albumImage" *ngIf = "song.album.images[0] != null" src = "{{song.album.images[0].url}}">
+                  <span style = "display: inline-block; width: 40%; height: fit-content">{{song.name}}</span>
+                </a>
+                <span style = "display: inline-block; width: 20%; height: fit-content">{{song.artists[0].name}}</span>
+              </div>
+            </mat-expansion-panel>
+          </div>
+      </mat-form-field>
         <br>
         <mat-form-field class = "bio">
           <textarea matInput placeholder="Bio" formControlName="bio"></textarea>
@@ -234,21 +250,6 @@
         <mat-error>{{err}}</mat-error>
         <button class = "updateButton" type="submit" mat-raised-button>Change</button>
       </mat-card-footer>
-    </mat-card>
-
-    <mat-card>
-      <div *ngFor = "let artist of trackSearchResults">
-        <a class = "artistLink" href={{artist.external_urls.spotify}}>
-          <img class = "artistImage" *ngIf = "artist.images[0] == null" src = "default.png">
-          <img class = "artistImage" *ngIf = "artist.images[0] != null" src = "{{artist.images[0].url}}">
-          {{artist.name}}
-        </a>
-        <div class = "addArtistButton">
-          <button mat-icon-button *ngIf = "user && this.isCurrentUser && editingArtist" (click)="addArtist(artist)"><mat-icon>add_circle_outline</mat-icon></button>
-        </div>
-        <br>
-        <mat-divider></mat-divider>
-      </div>
     </mat-card>
   </form>
 </div>

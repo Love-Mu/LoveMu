@@ -32,39 +32,8 @@
             <mat-error *ngIf="sname.hasError('required')">Surname is Required</mat-error>
           </mat-form-field>&nbsp;
           <mat-form-field>
-            <mat-select placeholder="County" formControlName="location">
-              <mat-option value="Antrim">Antrim</mat-option>
-              <mat-option value="Armagh">Armagh</mat-option>
-              <mat-option value="Carlow">Carlow</mat-option>
-              <mat-option value="Cavan">Cavan</mat-option>
-              <mat-option value="Clare">Clare</mat-option>
-              <mat-option value="Cork">Cork</mat-option>
-              <mat-option value="Derry">Derry</mat-option>
-              <mat-option value="Donegal">Donegal</mat-option>
-              <mat-option value="Down">Down</mat-option>
-              <mat-option value="Dublin">Dublin</mat-option>
-              <mat-option value="Fermanagh">Fermanagh</mat-option>
-              <mat-option value="Galway">Galway</mat-option>
-              <mat-option value="Kerry">Kerry</mat-option>
-              <mat-option value="Kildare">Kildare</mat-option>
-              <mat-option value="Kilkenny">Kilkenny</mat-option>
-              <mat-option value="Laois">Laois</mat-option>
-              <mat-option value="Leitrim">Leitrim</mat-option>
-              <mat-option value="Limerick">Limerick</mat-option>
-              <mat-option value="Longford">Longford</mat-option>
-              <mat-option value="Louth">Louth</mat-option>
-              <mat-option value="Mayo">Mayo</mat-option>
-              <mat-option value="Meath">Meath</mat-option>
-              <mat-option value="Monaghan">Monaghan</mat-option>
-              <mat-option value="Offaly">Offaly</mat-option>
-              <mat-option value="Roscommon">Roscommon</mat-option>
-              <mat-option value="Sligo">Sligo</mat-option>
-              <mat-option value="Tipperary">Tipperary</mat-option>
-              <mat-option value="Tyrone">Tyrone</mat-option>
-              <mat-option value="Waterford">Waterford</mat-option>
-              <mat-option value="Westmeath">Westmeath</mat-option>
-              <mat-option value="Wexford">Wexford</mat-option>
-              <mat-option value="Wicklow">Wicklow</mat-option>
+            <mat-select placeholder="Country" formControlName="location">
+              <mat-option *ngFor="let location of locations" value="{{location}}">{{location}}</mat-option>
             </mat-select>
             <mat-error *ngIf="location.hasError('required')">Location is Required</mat-error>
           </mat-form-field>
@@ -100,7 +69,7 @@
             <mat-error *ngIf="bio.hasError('required')">Bio is Required</mat-error>
           </mat-form-field>
           <br>
-          <img src = "temp/{{filePath}}" width="20%"><br>
+          <img class = "userImage" src = "temp/{{filePath}}" width="20%"><br>
           <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button><p>{{message}}</p>
           <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;"  (click)="onClick()" />
 

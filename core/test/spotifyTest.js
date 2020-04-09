@@ -10,7 +10,7 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-describe.only('Spotify', () => {
+describe('Spotify', () => {
     let authorisedUser = chai.request.agent(server);
     let token;
     let userID;
