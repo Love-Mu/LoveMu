@@ -69,7 +69,7 @@
             <mat-error *ngIf="bio.hasError('required')">Bio is Required</mat-error>
           </mat-form-field>
           <br>
-          <img class = "userImage" src = "temp/{{filePath}}" width="20%"><br>
+          <img class = "userImage" src = 'temp/{{filePath}}' width="20%"><br>
           <button type="button" mat-raised-button (click)="fileUpload.click()">Upload photo</button><p>{{message}}</p>
           <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;"  (click)="onClick()" />
 
