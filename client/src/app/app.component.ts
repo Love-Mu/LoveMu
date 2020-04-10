@@ -20,7 +20,7 @@ export class AppComponent {
     this.authService.isAuthenticated();
     this.spotifyService.handleSpotify();
     this.authService.googleValidate();
-    this.themeService.toggleDarkTheme();
+    this.themeService.toggleLightTheme();
   }
 
   cancel() {

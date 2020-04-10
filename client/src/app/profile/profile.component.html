@@ -140,34 +140,25 @@
       <mat-card-content>
         <mat-form-field>
           <input matInput placeholder="First Name" formControlName="fname">
+          <mat-error *ngIf="fname.hasError('required')">First Name is Required</mat-error>
         </mat-form-field>&nbsp;
-
         <mat-form-field>
-          <input matInput placeholder="Surname" formControlName = "sname">
-        </mat-form-field>
-
-        <br>
-
+          <input matInput placeholder="Surname" formControlName="sname">
+          <mat-error *ngIf="sname.hasError('required')">Surname is Required</mat-error>
+        </mat-form-field><br>
         <mat-form-field>
-          <input matInput placeholder="Username" formControlName = "user_name">
+          <input matInput placeholder="Username" formControlName="user_name">
+          <mat-error *ngIf="user_name.hasError('required')">Username is Required</mat-error>
+          <mat-error *ngIf="user_name.hasError('minlength')">Username Must Have 5 Characters</mat-error>
+          <mat-error *ngIf="user_name.hasError('maxlength')">Username Must Have Less Than 20 Characters</mat-error>
         </mat-form-field>&nbsp;
-
         <mat-form-field>
-          <mat-label>Date of birth</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="dob">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <mat-select placeholder="Country" formControlName="location">
+            <mat-option *ngFor="let location of locations" value="{{location}}">{{location}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="location.hasError('required')">Location is Required</mat-error>
         </mat-form-field>
-
         <br>
-
-      <mat-form-field>
-        <mat-select placeholder="Country" formControlName="location">
-          <mat-option *ngFor="let location of locations" value="{{location}}">{{location}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="location.hasError('required')">Location is Required</mat-error>
-      </mat-form-field>&nbsp;
-
         <mat-form-field>
           <mat-select formControlName="gender" placeholder="Gender">
             <mat-option value="Female">Female</mat-option>
@@ -175,7 +166,8 @@
             <mat-option value="Rather Not Say">Rather Not Say</mat-option>
             <mat-option value="Other">Other</mat-option>
           </mat-select>
-        </mat-form-field><br>
+          <mat-error *ngIf="gender.hasError('required')">Gender is Required</mat-error>
+        </mat-form-field>&nbsp;
 
         <mat-form-field>
           <mat-select formControlName="sexuality" placeholder="I want to see">
@@ -183,14 +175,21 @@
             <mat-option value="Female"> Women </mat-option>
             <mat-option value="Everyone"> Everyone </mat-option>
           </mat-select>
+          <mat-error *ngIf="sexuality.hasError('required')">Sexuality is Required</mat-error>
         </mat-form-field>
-
         <br>
+        <mat-form-field>
+          <mat-label>Date of birth</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dob">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="dob.hasError('required')">Date of Birth is Required</mat-error>
+        </mat-form-field>&nbsp;
         <mat-form-field>
           <mat-select formControlName="playlist" placeholder="Playlist">
             <mat-option *ngFor="let playlist of user.playlists" value={{playlist.external_urls.spotify}}>{{playlist.name}}</mat-option>
           </mat-select>
-        </mat-form-field>&nbsp;
+        </mat-form-field><br>
         <mat-form-field>
           <input type="text" matInput placeholder="Favourite Song" formControlName="query" (keyup)="search(profileForm.value.query, 'track')">
         </mat-form-field> <br>
@@ -218,6 +217,7 @@
         <br>
         <mat-form-field class = "bio">
           <textarea matInput placeholder="Bio" formControlName="bio"></textarea>
+          <mat-error *ngIf="bio.hasError('required')">Biography is Required</mat-error>
         </mat-form-field>
         <br>
         <img src = "{{filePath}}" class = "updateImage"><br>
