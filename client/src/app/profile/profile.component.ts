@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { User } from '../users/User';
 import { UsersService } from '../users.service';
 import { HttpClient, HttpEventType, HttpErrorResponse } from '@angular/common/http';
@@ -46,15 +46,15 @@ export class ProfileComponent implements OnInit {
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private cookieService: CookieService, private route: ActivatedRoute, private userService: UsersService, private authService: AuthenticationService, private sanitizer: DomSanitizer, public spotifyService: SpotifyService, private uploadService: UploadService) {
     this.profileForm = this.formBuilder.group({
-      fname: '',
-      sname: '',
-      location: '',
+      user_name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]],
+      fname: ['', [Validators.required, Validators.maxLength(30)]],
+      sname: ['', [Validators.required, Validators.maxLength(30)]],
+      location: ['', Validators.required],
+      dob: ['', Validators.required],
+      gender: ['', Validators.required],
+      sexuality: ['', Validators.required],
+      bio: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(240)]],
       image: '',
-      gender: '',
-      sexuality: '',
-      bio: '',
-      user_name: '',
-      dob: '',
       playlist: '',
       favouriteSong: '',
       query: ''
