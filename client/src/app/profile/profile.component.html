@@ -202,13 +202,12 @@
               </mat-expansion-panel-header>
               <mat-radio-group formControlName="favouriteSong">
                 <div *ngFor = "let song of trackSearchResults">
-                  <mat-radio-button value={{song.external_urls.spotify}} labelPosition='before'>
+                  <mat-radio-button value={{song.external_urls.spotify}} labelPosition='after' style = "width: 100%">
                       <a class = "songLink" href={{song.external_urls.spotify}}>
                       <img class = "albumImage" *ngIf = "song.album.images[0] == null" src = "default.png">
                       <img class = "albumImage" *ngIf = "song.album.images[0] != null" src = "{{song.album.images[0].url}}">
-                      <span style = "display: inline-block; width: 40%; height: fit-content">{{song.name}}</span>
+                      <span>{{song.name}} - {{song.artists[0].name}}</span>
                       </a>
-                      <span style = "display: inline-block; width: 20%; height: fit-content">{{song.artists[0].name}}</span>
                   </mat-radio-button>
                 </div>
               </mat-radio-group>
